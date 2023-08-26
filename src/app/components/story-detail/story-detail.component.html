@@ -1,0 +1,76 @@
+<div *ngIf="story">
+  <mat-toolbar>
+    <p class="text-zinc-700 text-xl italic">Truyện tĩnh: {{ story.title }}</p>
+  </mat-toolbar>
+  <hr class="my-4" />
+  <div class="grid grid-cols-1 gap-4">
+    <div class="grid grid-cols-2 gap-4">
+      <mat-card>
+        <mat-card-header>
+          <p class="text-sm font-bold">Story Information [{{ story.id }}]</p>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="grid grid-cols-1 pt-2">
+            <mat-form-field class="w-100">
+              <mat-label>Name story</mat-label>
+              <input matInput [(ngModel)]="story.title" />
+            </mat-form-field>
+            <mat-form-field class="w-100">
+              <mat-label>Author</mat-label>
+              <input matInput [(ngModel)]="story.author" />
+            </mat-form-field>
+            <mat-form-field class="w-100">
+              <mat-label>Illustrator</mat-label>
+              <input matInput [(ngModel)]="story.illustrator" />
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <div>
+        <mat-card>
+          <mat-card-header
+            ><p class="text-sm font-bold">
+              Image [{{ story.image.id }}]
+            </p></mat-card-header
+          >
+          <mat-card-content>
+            <div class="grid grid-cols-1 pt-2">
+              <mat-form-field class="w-100">
+                <mat-label>Path</mat-label>
+                <input matInput [(ngModel)]="story.image.path" />
+              </mat-form-field>
+              <mat-form-field class="w-100">
+                <mat-label>Filename</mat-label>
+                <input matInput [(ngModel)]="story.image.filename" />
+              </mat-form-field>
+              <div class="grid grid-cols-2 gap-4">
+                <mat-form-field class="w-100">
+                  <mat-label>Created At</mat-label>
+                  <input
+                    matInput
+                    [value]="story.image.created_at | date : 'short'"
+                  />
+                </mat-form-field>
+                <mat-form-field class="w-100">
+                  <mat-label>Updated At</mat-label>
+                  <input
+                    matInput
+                    [value]="story.image.updated_at | date : 'short'"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <mat-card>
+      <mat-card-header
+        ><p class="text-sm font-bold">
+          Pages [{{ story.pages.length }}]
+        </p></mat-card-header
+      >
+      <mat-card-content> </mat-card-content>
+    </mat-card>
+  </div>
+</div>

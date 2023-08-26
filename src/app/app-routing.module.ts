@@ -8,6 +8,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { HomeComponent } from './components/home/home.component';
 import { StoryComponent } from './components/story/story.component';
 import { PageComponent } from './components/page/page.component';
+import { StoryDetailComponent } from './components/story-detail/story-detail.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,10 @@ const routes: Routes = [
       {
         path: 'story',
         component: StoryComponent,
+      },
+      {
+        path: 'story/detail/:id',
+        component: StoryDetailComponent,
       },
       {
         path: 'page',

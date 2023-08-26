@@ -18,6 +18,8 @@ import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { StoryCardComponent } from './components/story-card/story-card.component';
 import { MatItemCusComponent } from './components/mat-item-cus/mat-item-cus.component';
+import { HeaderContentComponent } from './components/header-content/header-content.component';
+import { StoryDetailComponent } from './components/story-detail/story-detail.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,7 +42,8 @@ import { MatItemCusComponent } from './components/mat-item-cus/mat-item-cus.comp
     HttpClientModule,
     SidebarComponent,
     StoryCardComponent,
-    MatItemCusComponent,
+    HeaderContentComponent,
+    StoryDetailComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],

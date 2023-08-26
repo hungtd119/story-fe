@@ -11,7 +11,7 @@ export class Story {
   created_at!: string;
   updated_at!: string;
   image!: Image;
-  page!: Page[];
+  pages!: Page[];
 
   constructor(
     id: number,

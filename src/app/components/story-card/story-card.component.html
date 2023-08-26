@@ -1,16 +1,36 @@
-<mat-card class="example-card">
-  <mat-card-header>
-    <mat-card-title>{{ story.title }}</mat-card-title>
-  </mat-card-header>
-  <img mat-card-image src="{{ story.image.path }}" alt="story_image" />
-  <mat-card-content>
-    <p>author : {{ story.author }}</p>
-    <p>illustrator: {{ story.illustrator }}</p>
-    <p>level: {{ story.level }}</p>
-    <p>coin: {{ story.coin }}</p>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-button color="primary">Edit</button>
-    <button mat-button color="warn">Preview</button>
-  </mat-card-actions>
-</mat-card>
+<div class="story-card-wrapper cursor-pointer">
+  <div class="d-flex">
+    <div>
+      <img
+        class="story-card-image"
+        src="https://inquisitive-assets-app2.imgix.net/QcU4Z0e7EyhlI8mSPD2XmVYFZFZMrgfM.jpg?auto=format&fm=pjpg&w=1200&h=1200&q=75&fit=crop&fp-x=0.6567249417249474&fp-y=0.5&fp-z=1&crop=focalpoint&s=ef7fc624b4a70937db9ea30133249e21"
+        alt=""
+        width="200px"
+      />
+    </div>
+    <div class="px-2 position-relative">
+      <div class="tilte text-blue-800">
+        {{ story.title }}
+      </div>
+      <div class="level position-absolute bg-blue-400 text-white">C</div>
+      <div class="d-flex justify-between">
+        <div>
+          <div class="text-sm text-blue-400 font-bold">Author</div>
+          <div class="text-xs italic">{{ story.author }}</div>
+        </div>
+        <div>
+          <div class="text-sm text-blue-400 font-bold">Illustrator</div>
+          <div class="text-xs italic">{{ story.illustrator }}</div>
+        </div>
+      </div>
+      <button
+        mat-raised-button
+        color="warn"
+        class="text-center w-100 mt-2"
+        (click)="gotoDetailStory(story.id)"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
