@@ -1,0 +1,18 @@
+<mat-drawer-container class="sidebar-container" autosize>
+  <mat-drawer #drawer class="sidebar-sidenav" mode="side" opened="true">
+    <nav>
+      <ul>
+        <li class="px-4 py-2">
+          <a routerLink="../home/story">Story List</a>
+        </li>
+        <li class="px-4 py-2">
+          <a routerLink="../home/page">Page List</a>
+        </li>
+      </ul>
+    </nav>
+  </mat-drawer>
+
+  <div class="sidebar-sidenav-content p-[36px]">
+    <router-outlet></router-outlet>
+  </div>
+</mat-drawer-container>

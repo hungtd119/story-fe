@@ -1,0 +1,7 @@
+<div>Story List</div>
+<div class="grid grid-cols-4 gap-4 mt-4">
+  <app-story-card
+    *ngFor="let story of stories"
+    [story]="story"
+  ></app-story-card>
+</div>

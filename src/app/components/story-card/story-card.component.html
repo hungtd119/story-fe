@@ -1,0 +1,16 @@
+<mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title>{{ story.title }}</mat-card-title>
+  </mat-card-header>
+  <img mat-card-image src="{{ story.image.path }}" alt="story_image" />
+  <mat-card-content>
+    <p>author : {{ story.author }}</p>
+    <p>illustrator: {{ story.illustrator }}</p>
+    <p>level: {{ story.level }}</p>
+    <p>coin: {{ story.coin }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button color="primary">Edit</button>
+    <button mat-button color="warn">Preview</button>
+  </mat-card-actions>
+</mat-card>
