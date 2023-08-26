@@ -1,0 +1,13 @@
+.side-item-wrapper {
+  padding: 18px 32px;
+}
+.link-side-item {
+  display: block;
+  transition: 250ms all ease-in-out;
+  :hover {
+    background-color: #f3f5ff;
+  }
+  &.is-active {
+    background-color: #f3f5ff;
+  }
+}

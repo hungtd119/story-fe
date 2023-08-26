@@ -17,6 +17,7 @@ import { StoryComponent } from './components/story/story.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { StoryCardComponent } from './components/story-card/story-card.component';
+import { MatItemCusComponent } from './components/mat-item-cus/mat-item-cus.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,6 +40,7 @@ import { StoryCardComponent } from './components/story-card/story-card.component
     HttpClientModule,
     SidebarComponent,
     StoryCardComponent,
+    MatItemCusComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],
