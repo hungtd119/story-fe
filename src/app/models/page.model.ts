@@ -1,11 +1,13 @@
 import { Image } from './image.model';
+import { Interaction } from './interaction.model';
+import { Text } from './text.model';
 
 export class Page {
   id!: number;
   page_number!: number;
   created_at!: string;
   updated_at!: string;
-  interactions!: [];
+  interactions!: Interaction[];
   image!: Image;
-  texts!: [];
+  texts!: Text[];
 }

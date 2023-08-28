@@ -1,8 +1,9 @@
+import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Story } from 'src/app/models/story.model';
 import { StoryService } from 'src/app/services/story.service';
 import { MatInputModule } from '@angular/material/input';
@@ -10,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-story-detail',
@@ -24,6 +26,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatCardModule,
     MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    RouterModule,
   ],
 })
 export class StoryDetailComponent implements OnInit {

@@ -24,6 +24,11 @@
               <input matInput [(ngModel)]="story.illustrator" />
             </mat-form-field>
           </div>
+          <mat-card-footer>
+            <button mat-raised-button color="primary" class="float-right">
+              Update
+            </button>
+          </mat-card-footer>
         </mat-card-content>
       </mat-card>
       <div>
@@ -60,17 +65,109 @@
                 </mat-form-field>
               </div>
             </div>
+            <mat-card-footer>
+              <button mat-raised-button color="primary" class="float-right">
+                Update
+              </button>
+            </mat-card-footer>
           </mat-card-content>
         </mat-card>
       </div>
     </div>
-    <mat-card>
-      <mat-card-header
-        ><p class="text-sm font-bold">
-          Pages [{{ story.pages.length }}]
-        </p></mat-card-header
-      >
-      <mat-card-content> </mat-card-content>
+    <mat-card class="position-relative">
+      <a routerLink="/home/story/edit/page" class="action-card">
+        <mat-icon class="text-md"> border_color</mat-icon>
+      </a>
+      <mat-card-header>
+        <div class="text-sm font-bold">Pages [{{ story.pages.length }}]</div>
+      </mat-card-header>
+      <mat-card-content>
+        <table class="table table-bordered mt-2">
+          <thead class="text-center">
+            <tr>
+              <th scope="col" rowspan="2" class="w-1 text-sm">Number page</th>
+              <th scope="col" colspan="2" class="w-3/5 text-sm">Content</th>
+              <th scope="col" colspan="2" class="text-sm">Time stamp</th>
+            </tr>
+            <tr>
+              <th class="text-sm font-bold">Texts</th>
+              <th class="text-sm font-bold">Interaction</th>
+              <th class="text-sm font-bold">Created at</th>
+              <th class="text-sm font-bold">Updated at</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let page of story.pages">
+              <th scope="row" class="text-center">
+                <p class="text-sm">Page {{ page.page_number }}</p>
+                <p class="text-sm">[{{ page.id }}]</p>
+              </th>
+              <td>
+                <div>
+                  <mat-card class="my-2" *ngFor="let text of page.texts">
+                    <mat-card-header>
+                      <p class="text-sm font-medium">Text ID [{{ text.id }}]</p>
+                    </mat-card-header>
+                    <mat-card-content class="mt-2">
+                      <div class="text-xs">
+                        <span class="font-bold">Text: </span> {{ text.text }}
+                      </div>
+                      <div class="text-xs">
+                        <span class="font-bold">Position: </span>
+                        <span class="font-bold">[ </span>x:
+                        {{ text.position.position_x }} | y:
+                        {{ text.position.position_y }}
+                        <span class="font-bold">]</span>
+                      </div>
+                      <div class="text-xs">
+                        <span class="font-bold">Word sync :</span>
+                        {{ text.wordSync }}
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </td>
+              <td>
+                <mat-card
+                  class="my-2"
+                  *ngFor="let interact of page.interactions"
+                >
+                  <mat-card-header>
+                    <p class="text-sm font-medium">
+                      Interaction ID [{{ interact.id }}]
+                    </p>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <div class="text-xs d-flex align-items-center my-2">
+                      <span class="font-bold mr-2">Background: </span>
+                      <div
+                        class="w-[50px] h-[15px] rounded-md"
+                        [style.background-color]="interact.bg"
+                      ></div>
+                    </div>
+                    <div class="text-xs">
+                      <span class="font-bold">Position: </span>
+                      <span class="font-bold"
+                        >[{{ interact.positions.length }}]
+                      </span>
+                    </div>
+                    <div class="text-xs">
+                      <span class="font-bold">Image ID: </span>
+                      <span class="font-bold">[{{ interact.image.id }}] </span>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </td>
+              <td class="text-sm text-center font-bold">
+                {{ page.created_at | date : "short" }}
+              </td>
+              <td class="text-sm text-center font-bold">
+                {{ page.updated_at | date : "short" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
     </mat-card>
   </div>
 </div>
