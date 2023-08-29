@@ -9,6 +9,7 @@ import { HomeComponent } from './components/home/home.component';
 import { StoryComponent } from './components/story/story.component';
 import { PageComponent } from './components/page/page.component';
 import { StoryDetailComponent } from './components/story-detail/story-detail.component';
+import { StoryPagesComponent } from './components/story-pages/story-pages.component';
 
 const routes: Routes = [
   {
@@ -28,16 +29,16 @@ const routes: Routes = [
     component: HomeComponent,
     children: [
       {
-        path: 'story',
-        component: StoryComponent,
+        path: 'story/edit/page',
+        component: StoryPagesComponent,
       },
       {
         path: 'story/detail/:id',
         component: StoryDetailComponent,
       },
       {
-        path: 'page',
-        component: PageComponent,
+        path: 'story',
+        component: StoryComponent,
       },
     ],
   },
