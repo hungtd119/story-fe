@@ -20,6 +20,7 @@ import { StoryCardComponent } from './components/story-card/story-card.component
 import { MatItemCusComponent } from './components/mat-item-cus/mat-item-cus.component';
 import { HeaderContentComponent } from './components/header-content/header-content.component';
 import { StoryDetailComponent } from './components/story-detail/story-detail.component';
+import { StoryPagesComponent } from './components/story-pages/story-pages.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +45,7 @@ import { StoryDetailComponent } from './components/story-detail/story-detail.com
     StoryCardComponent,
     HeaderContentComponent,
     StoryDetailComponent,
+    StoryPagesComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],

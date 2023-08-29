@@ -12,6 +12,9 @@ import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { PageTextColComponent } from '../page-text-col/page-text-col.component';
+import { PageInteractionColComponent } from '../page-interaction-col/page-interaction-col.component';
+import { NgPaginatorComponent } from '../ng-paginator/ng-paginator.component';
 
 @Component({
   selector: 'app-story-detail',
@@ -29,6 +32,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
     MatIconModule,
     RouterModule,
+    PageTextColComponent,
+    PageInteractionColComponent,
+    NgPaginatorComponent,
+    MatInputModule,
   ],
 })
 export class StoryDetailComponent implements OnInit {
@@ -53,5 +60,12 @@ export class StoryDetailComponent implements OnInit {
         console.log(error);
       },
     });
+  }
+  getTotalItems(pageId: number): number {
+    const pageIndex = this.story.pages.findIndex((p) => p.id === pageId);
+    if (pageIndex !== -1) {
+      return this.story.pages[pageIndex].texts.length;
+    }
+    return 0;
   }
 }

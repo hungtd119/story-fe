@@ -1,0 +1,32 @@
+<div class="min-h-[400px]">
+  <mat-card class="my-2" *ngFor="let text of textSlice">
+    <mat-card-header>
+      <p class="text-sm font-medium">Text ID [{{ text.id }}]</p>
+    </mat-card-header>
+    <mat-card-content class="mt-2">
+      <div class="text-xs">
+        <span class="font-bold">Text: </span> {{ text.text }}
+      </div>
+      <div class="text-xs">
+        <span class="font-bold">Position: </span>
+        <span class="font-bold">[ </span>x: {{ text.position.position_x }} | y:
+        {{ text.position.position_y }}
+        <span class="font-bold">]</span>
+      </div>
+      <div class="text-xs">
+        <span class="font-bold">Word sync :</span>
+        {{ text.wordSync }}
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+<div class="d-flex justify-start">
+  <mat-paginator
+    [length]="texts.length"
+    [pageSize]="3"
+    [pageSizeOptions]="[3, 5, 7]"
+    (page)="onPageChange($event)"
+    hidePageSize="true"
+  >
+  </mat-paginator>
+</div>

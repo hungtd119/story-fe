@@ -1,0 +1,34 @@
+<div class="min-h-[400px]">
+  <mat-card class="my-2" *ngFor="let interaction of interactionSlice">
+    <mat-card-header>
+      <p class="text-sm font-medium">Interaction ID [{{ interaction.id }}]</p>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="text-xs d-flex align-items-center my-2">
+        <span class="font-bold mr-2">Background: </span>
+        <div
+          class="w-[50px] h-[15px] rounded-md border border-black"
+          [style.background-color]="interaction.bg"
+        ></div>
+      </div>
+      <div class="text-xs">
+        <span class="font-bold">Position: </span>
+        <span class="font-bold">[{{ interaction.positions.length }}] </span>
+      </div>
+      <div class="text-xs">
+        <span class="font-bold">Image ID: </span>
+        <span class="font-bold">[{{ interaction.image.id }}] </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+<div class="d-flex justify-start">
+  <mat-paginator
+    [length]="interactions.length"
+    [pageSize]="3"
+    [pageSizeOptions]="[3, 5, 7]"
+    (page)="onPageChange($event)"
+    hidePageSize="true"
+  >
+  </mat-paginator>
+</div>
