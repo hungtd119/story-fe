@@ -21,6 +21,7 @@ import { MatItemCusComponent } from './components/mat-item-cus/mat-item-cus.comp
 import { HeaderContentComponent } from './components/header-content/header-content.component';
 import { StoryDetailComponent } from './components/story-detail/story-detail.component';
 import { StoryPagesComponent } from './components/story-pages/story-pages.component';
+import { StoreModule } from '@ngrx/store';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,6 +47,7 @@ import { StoryPagesComponent } from './components/story-pages/story-pages.compon
     HeaderContentComponent,
     StoryDetailComponent,
     StoryPagesComponent,
+    StoreModule.forRoot({}),
   ],
   providers: [],
   bootstrap: [AppComponent],
