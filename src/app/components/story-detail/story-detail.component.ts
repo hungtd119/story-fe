@@ -1,20 +1,24 @@
-import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { Story } from 'src/app/models/story.model';
 import { StoryService } from 'src/app/services/story.service';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { PageTextColComponent } from '../page-text-col/page-text-col.component';
-import { PageInteractionColComponent } from '../page-interaction-col/page-interaction-col.component';
+import { loadStory } from 'src/app/store/story/story.actions';
+import { StoryState } from 'src/app/store/story/story.reducer';
+import { selectStory } from 'src/app/store/story/story.selector';
 import { NgPaginatorComponent } from '../ng-paginator/ng-paginator.component';
+import { PageInteractionColComponent } from '../page-interaction-col/page-interaction-col.component';
+import { PageTextColComponent } from '../page-text-col/page-text-col.component';
 
 @Component({
   selector: 'app-story-detail',
@@ -40,32 +44,23 @@ import { NgPaginatorComponent } from '../ng-paginator/ng-paginator.component';
 })
 export class StoryDetailComponent implements OnInit {
   id!: string;
-  story!: Story;
+  story$: Observable<Story> = this.store.select(selectStory);
+  dataLoaded: boolean = false;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.store.dispatch(loadStory({ id: this.id }));
+    this.dataLoaded = true;
+  }
   constructor(
     private route: ActivatedRoute,
-    private storyService: StoryService
+    private router: Router,
+    private store: Store<StoryState>
   ) {
     this.route.params.subscribe((params) => {
       this.id = params['id'];
     });
-    this.storyService.getStory(this.id).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.story = response.data;
-        }
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
   }
-  getTotalItems(pageId: number): number {
-    const pageIndex = this.story.pages.findIndex((p) => p.id === pageId);
-    if (pageIndex !== -1) {
-      return this.story.pages[pageIndex].texts.length;
-    }
-    return 0;
+  gotoStoryPageConfig(id: number) {
+    this.router.navigate(['/home/story/edit/page', id]);
   }
 }

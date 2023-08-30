@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Story } from 'src/app/models/story.model';
 import { StoryService } from 'src/app/services/story.service';
+import { Store } from '@ngrx/store';
+import { loadStories } from 'src/app/store/story/story.actions';
+import { Observable, map } from 'rxjs';
+import { StoryState } from 'src/app/store/story/story.reducer';
+import {
+  selectStories,
+  storyFeature,
+} from 'src/app/store/story/story.selector';
 
 @Component({
   selector: 'app-story',
@@ -8,16 +16,10 @@ import { StoryService } from 'src/app/services/story.service';
   styleUrls: ['./story.component.scss'],
 })
 export class StoryComponent implements OnInit {
-  stories: Story[] = [];
-  constructor(private storyService: StoryService) {
-    this.storyService.getStories().subscribe({
-      next: (response) => {
-        if (response.success) this.stories = response.data;
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
+  stories$: Observable<Story[]> = this.store.select(selectStories);
+
+  constructor(private store: Store<StoryState>) {}
+  ngOnInit(): void {
+    this.store.dispatch(loadStories());
   }
-  ngOnInit(): void {}
 }

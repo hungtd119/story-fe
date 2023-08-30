@@ -1,9 +1,9 @@
-<div *ngIf="story">
+<div *ngIf="story$ | async as story">
   <mat-toolbar>
     <p class="text-zinc-700 text-xl italic">Truyện tĩnh: {{ story.title }}</p>
   </mat-toolbar>
-  <hr class="my-4" />
-  <div class="grid grid-cols-1 gap-4">
+  <hr class="my-2" />
+  <div class="grid grid-cols-1 gap-4" *ngIf="story.image">
     <div class="grid grid-cols-2 gap-4">
       <mat-card>
         <mat-card-header>
@@ -75,9 +75,9 @@
       </div>
     </div>
     <mat-card class="position-relative">
-      <a routerLink="/home/story/edit/page" class="action-card">
+      <div (click)="gotoStoryPageConfig(story.id)" class="action-card">
         <mat-icon class="text-md"> border_color</mat-icon>
-      </a>
+      </div>
       <mat-card-header>
         <div class="text-sm font-bold">Pages [{{ story.pages.length }}]</div>
       </mat-card-header>

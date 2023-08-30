@@ -21,6 +21,13 @@ import { MatItemCusComponent } from './components/mat-item-cus/mat-item-cus.comp
 import { HeaderContentComponent } from './components/header-content/header-content.component';
 import { StoryDetailComponent } from './components/story-detail/story-detail.component';
 import { StoryPagesComponent } from './components/story-pages/story-pages.component';
+import { StoreModule } from '@ngrx/store';
+import { storyReducer } from './store/story/story.reducer';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import * as pageEffects from './store/page/page.effects';
+import * as storyEffects from './store/story/story.effects';
+import { pageReducer } from './store/page/page.reducers';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,6 +53,12 @@ import { StoryPagesComponent } from './components/story-pages/story-pages.compon
     HeaderContentComponent,
     StoryDetailComponent,
     StoryPagesComponent,
+    StoreModule.forRoot({ story: storyReducer, pages: pageReducer }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: true,
+    }),
+    EffectsModule.forRoot(storyEffects, pageEffects),
   ],
   providers: [],
   bootstrap: [AppComponent],

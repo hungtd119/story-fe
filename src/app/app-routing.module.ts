@@ -29,7 +29,7 @@ const routes: Routes = [
     component: HomeComponent,
     children: [
       {
-        path: 'story/edit/page',
+        path: 'story/edit/page/:id',
         component: StoryPagesComponent,
       },
       {
