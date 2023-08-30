@@ -1,1 +1,9 @@
-<p>story-pages works!</p>
+<div *ngIf="pages$ | async as pages">
+  <mat-tab-group>
+    <mat-tab *ngFor="let page of pages" [label]="page.page_number.toString()">
+      <div>Page [{{ page.id }}]</div>
+      <div>Page [{{ page.image | json }}]</div>
+      <div>Page [{{ page.interactions | json }}]</div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
