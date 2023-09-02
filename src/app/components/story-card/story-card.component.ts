@@ -18,4 +18,7 @@ export class StoryCardComponent {
   gotoDetailStory(id: number) {
     this.router.navigate(['home/story/detail', id]);
   }
+  gotoPlayStory(id: number, page: number) {
+    this.router.navigate(['home/story/play', id, page]);
+  }
 }

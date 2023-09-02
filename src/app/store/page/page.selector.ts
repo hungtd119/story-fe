@@ -5,3 +5,7 @@ export const selectPages = createSelector(
   pageFeature,
   (state: PageState) => state.pages
 );
+export const selectPage = createSelector(
+  pageFeature,
+  (state: PageState) => state.page
+);

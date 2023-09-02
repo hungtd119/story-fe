@@ -28,6 +28,9 @@ import { EffectsModule } from '@ngrx/effects';
 import * as pageEffects from './store/page/page.effects';
 import * as storyEffects from './store/story/story.effects';
 import { pageReducer } from './store/page/page.reducers';
+import { ConfigPageComponent } from './components/config-page/config-page.component';
+import { StoryPlayComponent } from './components/story-play/story-play.component';
+import { StoryPlayCanvasComponent } from './components/story-play-canvas/story-play-canvas.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,6 +56,9 @@ import { pageReducer } from './store/page/page.reducers';
     HeaderContentComponent,
     StoryDetailComponent,
     StoryPagesComponent,
+    ConfigPageComponent,
+    StoryPlayComponent,
+    StoryPlayCanvasComponent,
     StoreModule.forRoot({ story: storyReducer, pages: pageReducer }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,

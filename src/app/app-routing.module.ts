@@ -10,6 +10,7 @@ import { StoryComponent } from './components/story/story.component';
 import { PageComponent } from './components/page/page.component';
 import { StoryDetailComponent } from './components/story-detail/story-detail.component';
 import { StoryPagesComponent } from './components/story-pages/story-pages.component';
+import { StoryPlayComponent } from './components/story-play/story-play.component';
 
 const routes: Routes = [
   {
@@ -35,6 +36,10 @@ const routes: Routes = [
       {
         path: 'story/detail/:id',
         component: StoryDetailComponent,
+      },
+      {
+        path: 'story/play/:id/:page',
+        component: StoryPlayComponent,
       },
       {
         path: 'story',

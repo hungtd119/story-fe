@@ -1,9 +1,24 @@
 <div *ngIf="pages$ | async as pages">
-  <mat-tab-group>
-    <mat-tab *ngFor="let page of pages" [label]="page.page_number.toString()">
-      <div>Page [{{ page.id }}]</div>
-      <div>Page [{{ page.image | json }}]</div>
-      <div>Page [{{ page.interactions | json }}]</div>
-    </mat-tab>
-  </mat-tab-group>
+  <mat-toolbar>
+    <p>Config Object</p>
+  </mat-toolbar>
+  <mat-card class="mt-2">
+    <mat-card-content>
+      <mat-tab-group>
+        <mat-tab
+          class="font-bold"
+          *ngFor="let page of pages"
+          [label]="'Trang ' + page.page_number.toString()"
+        >
+          <div class="my-4">
+            <mat-card>
+              <mat-card-content>
+                <app-config-page></app-config-page>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
 </div>

@@ -7,7 +7,7 @@
       <div class="text-xs">
         <span class="font-bold">Text: </span> {{ text.text }}
       </div>
-      <div class="text-xs">
+      <div class="text-xs" *ngIf="text.position">
         <span class="font-bold">Position: </span>
         <span class="font-bold">[ </span>x: {{ text.position.position_x }} | y:
         {{ text.position.position_y }}
