@@ -1,0 +1,9 @@
+#bg {
+  position: absolute;
+  z-index: 1; /* Đặt lớp trên cùng */
+}
+
+#com {
+  position: absolute;
+  z-index: 2; /* Đặt lớp nằm phía dưới */
+}

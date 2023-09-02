@@ -29,6 +29,8 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
   page!: Page;
   @ViewChild('myCanvas', { static: false })
   myCanvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('secondCanvas', { static: false })
+  secondCanvasRef!: ElementRef<HTMLCanvasElement>;
   page$: Observable<Page> = this.store.select(selectPage);
 
   interactions: any[] = [
@@ -53,7 +55,7 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
       bg: 'grey',
       positions: [
         { x: 500, y: 100, width: 50, height: 50 },
-        { x: 500, y: 200, width: 50, height: 50 },
+        { x: 540, y: 270, width: 80, height: 38 },
       ],
     },
   ];
@@ -75,7 +77,11 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
       next: (pg) => {
         const canvas: HTMLCanvasElement = this.myCanvasRef.nativeElement;
         const ctx = canvas.getContext('2d');
-        if (ctx) {
+
+        const canvasCom: HTMLCanvasElement = this.secondCanvasRef.nativeElement;
+        const ctxCom = canvasCom.getContext('2d');
+        if (ctx && ctxCom) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
           const img = new Image();
           img.src = pg.image?.path;
           img.onload = () => {
@@ -90,42 +96,62 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
             );
             this.interactions.forEach((interaction) => {
               interaction.positions.forEach((position: any) => {
-                ctx.fillStyle = interaction.bg;
-                ctx.fillRect(
+                ctxCom.fillStyle = interaction.bg;
+                ctxCom.fillRect(
                   position.x,
                   position.y,
                   position.width,
                   position.height
                 );
-                this.renderer.listen(canvas, 'click', (event: MouseEvent) => {
-                  const x = event.clientX - canvas.getBoundingClientRect().left;
-                  const y = event.clientY - canvas.getBoundingClientRect().top;
+                this.renderer.listen(
+                  canvasCom,
+                  'click',
+                  (event: MouseEvent) => {
+                    const x =
+                      event.clientX - canvasCom.getBoundingClientRect().left;
+                    const y =
+                      event.clientY - canvasCom.getBoundingClientRect().top;
 
-                  interaction.positions.forEach((position: any) => {
-                    if (
-                      x >= position.x &&
-                      x <= position.x + position.width &&
-                      y >= position.y &&
-                      y <= position.y + position.height
-                    ) {
-                      ctx.fillStyle = interaction.bg;
-                      ctx.fillRect(
-                        position.x,
-                        position.y + position.height,
-                        position.width + 20,
-                        position.height
-                      );
-                      setTimeout(() => {
-                        ctx.clearRect(
-                          position.x,
-                          position.y + position.height,
-                          position.width + 20,
-                          position.height
+                    interaction.positions.forEach((position: any) => {
+                      if (
+                        x >= position.x &&
+                        x <= position.x + position.width &&
+                        y >= position.y &&
+                        y <= position.y + position.height
+                      ) {
+                        // ctxCom.fillStyle = interaction.bg;
+                        // ctxCom.fillRect(
+                        //   position.x,
+                        //   position.y + position.height,
+                        //   position.width + 20,
+                        //   position.height
+                        // );
+                        const fontSize = 16;
+                        ctxCom.font = fontSize + 'px Arial';
+                        const textWidth = ctxCom.measureText(
+                          interaction.text.text
+                        ).width;
+
+                        const padding = 10;
+                        const rectWidth = textWidth + 2 * padding;
+                        const rectHeight = fontSize + 2 * padding;
+
+                        ctxCom.fillStyle = 'lightblue';
+                        ctxCom.fillRect(x, y, rectWidth, rectHeight);
+
+                        ctxCom.fillStyle = 'black';
+                        ctxCom.fillText(
+                          interaction.text.text,
+                          x + padding,
+                          y + padding + fontSize
                         );
-                      }, 2000);
-                    }
-                  });
-                });
+                        setTimeout(() => {
+                          ctxCom.clearRect(x, y, rectWidth, rectHeight);
+                        }, 2000);
+                      }
+                    });
+                  }
+                );
               });
             });
           };
