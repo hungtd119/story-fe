@@ -1,13 +1,15 @@
 import { createReducer, on } from '@ngrx/store';
 import { Page } from 'src/app/models/page.model';
-import { loadPagesSuccess } from './page.actions';
+import { loadPageSuccess, loadPagesSuccess } from './page.actions';
 
 export interface PageState {
   pages: Page[];
+  page: any;
 }
 
 export const initialState: PageState = {
   pages: [],
+  page: {},
 };
 
 export const pageReducer = createReducer(
@@ -15,5 +17,9 @@ export const pageReducer = createReducer(
   on(loadPagesSuccess, (state, payload) => ({
     ...state,
     pages: payload.value,
+  })),
+  on(loadPageSuccess, (state, payload) => ({
+    ...state,
+    page: payload.value,
   }))
 );

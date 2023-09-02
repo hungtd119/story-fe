@@ -12,3 +12,12 @@ export const loadPagesFailure = createAction(
   '[Page API] Load Page Failure',
   props<{ errorMsg: string }>()
 );
+
+export const loadPage = createAction(
+  '[Page PAGE] Load Page',
+  props<{ id: number }>()
+);
+export const loadPageSuccess = createAction(
+  '[Page API] Load Page Success',
+  props<{ value: Page }>()
+);

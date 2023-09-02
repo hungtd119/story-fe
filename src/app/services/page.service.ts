@@ -10,4 +10,7 @@ export class PageService {
   getPageByStoryId(id: number): Observable<any> {
     return this.httpClient.get(this.apiUrl + `/findByStoryId/${id}`);
   }
+  getPageById(id: number): Observable<any> {
+    return this.httpClient.get(this.apiUrl + `/find/${id}`);
+  }
 }
