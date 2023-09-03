@@ -35,26 +35,26 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
 
   interactions: any[] = [
     {
-      text: { text: 'salad bowl' },
+      text: { text: 'girl' },
       bg: 'red',
       positions: [
-        { x: 100, y: 100, width: 50, height: 50 },
-        { x: 100, y: 200, width: 50, height: 50 },
+        { x: 750, y: 435, width: 50, height: 50 },
+        { x: 710, y: 465, width: 50, height: 50 },
       ],
     },
     {
       text: { text: 'boy' },
       bg: 'brown',
       positions: [
-        { x: 300, y: 100, width: 50, height: 50 },
-        { x: 300, y: 200, width: 50, height: 50 },
+        { x: 430, y: 465, width: 50, height: 50 },
+        { x: 400, y: 435, width: 50, height: 50 },
       ],
     },
     {
-      text: { text: 'girl' },
+      text: { text: 'Salad Bowl' },
       bg: 'grey',
       positions: [
-        { x: 500, y: 100, width: 50, height: 50 },
+        { x: 517, y: 232, width: 130, height: 50 },
         { x: 540, y: 270, width: 80, height: 38 },
       ],
     },
@@ -94,15 +94,8 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
               canvas.width / 2,
               canvas.height / 10
             );
-            this.interactions.forEach((interaction) => {
+            pg.interactions.forEach((interaction) => {
               interaction.positions.forEach((position: any) => {
-                ctxCom.fillStyle = interaction.bg;
-                ctxCom.fillRect(
-                  position.x,
-                  position.y,
-                  position.width,
-                  position.height
-                );
                 this.renderer.listen(
                   canvasCom,
                   'click',
@@ -114,40 +107,67 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
 
                     interaction.positions.forEach((position: any) => {
                       if (
-                        x >= position.x &&
-                        x <= position.x + position.width &&
-                        y >= position.y &&
-                        y <= position.y + position.height
+                        x >= position.position_x &&
+                        x <= position.position_x + position.width &&
+                        y >= position.position_y &&
+                        y <= position.position_y + position.height
                       ) {
-                        // ctxCom.fillStyle = interaction.bg;
-                        // ctxCom.fillRect(
-                        //   position.x,
-                        //   position.y + position.height,
-                        //   position.width + 20,
-                        //   position.height
-                        // );
-                        const fontSize = 16;
+                        const fontSize = 18;
+                        const borderRadius = 6;
+
                         ctxCom.font = fontSize + 'px Arial';
                         const textWidth = ctxCom.measureText(
                           interaction.text.text
                         ).width;
 
-                        const padding = 10;
+                        const padding = 6;
                         const rectWidth = textWidth + 2 * padding;
-                        const rectHeight = fontSize + 2 * padding;
+                        const rectHeight = fontSize + 2 * padding + 4;
 
-                        ctxCom.fillStyle = 'lightblue';
-                        ctxCom.fillRect(x, y, rectWidth, rectHeight);
+                        ctxCom.beginPath();
+                        ctxCom.moveTo(x + borderRadius, y);
+                        ctxCom.lineTo(x + rectWidth - borderRadius, y);
+                        ctxCom.arcTo(
+                          x + rectWidth,
+                          y,
+                          x + rectWidth,
+                          y + borderRadius,
+                          borderRadius
+                        );
+                        ctxCom.lineTo(
+                          x + rectWidth,
+                          y + rectHeight - borderRadius
+                        );
+                        ctxCom.arcTo(
+                          x + rectWidth,
+                          y + rectHeight,
+                          x + rectWidth - borderRadius,
+                          y + rectHeight,
+                          borderRadius
+                        );
+                        ctxCom.lineTo(x + borderRadius, y + rectHeight);
+                        ctxCom.arcTo(
+                          x,
+                          y + rectHeight,
+                          x,
+                          y + rectHeight - borderRadius,
+                          borderRadius
+                        );
+                        ctxCom.lineTo(x, y + borderRadius);
+                        ctxCom.arcTo(x, y, x + borderRadius, y, borderRadius);
 
                         ctxCom.fillStyle = 'black';
+                        ctxCom.fill();
+
+                        ctxCom.fillStyle = 'white';
                         ctxCom.fillText(
                           interaction.text.text,
                           x + padding,
                           y + padding + fontSize
                         );
                         setTimeout(() => {
-                          ctxCom.clearRect(x, y, rectWidth, rectHeight);
-                        }, 2000);
+                          ctxCom.clearRect(x, y, rectWidth + 1, rectHeight);
+                        }, 1000);
                       }
                     });
                   }

@@ -1,44 +1,59 @@
-<div class="story-card-wrapper cursor-pointer">
-  <div class="d-flex">
-    <div>
+<mat-card class="story-card-wrapper cursor-pointer">
+  <mat-card-header>
+    <p class="text-xl text-blue-900 font-bold">{{ story.title }}</p>
+  </mat-card-header>
+  <mat-card-content class="mt-2">
+    <div class="grid grid-cols-2 gap-2">
       <img
-        class="story-card-image"
-        src="https://inquisitive-assets-app2.imgix.net/QcU4Z0e7EyhlI8mSPD2XmVYFZFZMrgfM.jpg?auto=format&fm=pjpg&w=1200&h=1200&q=75&fit=crop&fp-x=0.6567249417249474&fp-y=0.5&fp-z=1&crop=focalpoint&s=ef7fc624b4a70937db9ea30133249e21"
-        alt=""
-        width="200px"
+        src="https://wingiare.com/wp-content/uploads/2023/03/Monkey-Junior.png"
+        alt="monkey-image"
       />
-    </div>
-    <div class="px-2 position-relative">
-      <div class="tilte text-blue-800">
-        {{ story.title }}
-      </div>
-      <div class="level position-absolute bg-blue-400 text-white">C</div>
-      <div class="d-flex justify-between">
-        <div>
-          <div class="text-sm text-blue-400 font-bold">Author</div>
-          <div class="text-xs italic">{{ story.author }}</div>
+      <div class="grid grid-cols-1">
+        <div class="grid grid-cols-2">
+          <div>
+            <div class="text-sm font-bold text-blue-400">Tác giả</div>
+            <div class="text-one-in-line text-sm font-bold text-blue-900">
+              {{ story.author }}
+            </div>
+          </div>
+          <div>
+            <div class="text-sm font-bold text-blue-400">Minh họa</div>
+            <div class="text-sm font-bold text-blue-900">
+              {{ story.illustrator }}
+            </div>
+          </div>
         </div>
-        <div>
-          <div class="text-sm text-blue-400 font-bold">Illustrator</div>
-          <div class="text-xs italic">{{ story.illustrator }}</div>
+        <div class="grid grid-cols-2">
+          <div>
+            <div class="text-sm font-bold text-blue-400">Coin</div>
+            <div class="text-sm font-bold text-blue-900">
+              {{ story.coin }}
+            </div>
+          </div>
+          <div>
+            <div class="text-sm font-bold text-blue-400">Level</div>
+            <div class="text-sm font-bold text-blue-900">
+              {{ story.level }}
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="gotoDetailStory(story.id)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="gotoPlayStory(story.id, story.pages[0].id)"
+          >
+            <mat-icon>play_arrow</mat-icon>
+          </button>
         </div>
       </div>
-      <button
-        mat-raised-button
-        color="warn"
-        class="text-center w-100 mt-2"
-        (click)="gotoDetailStory(story.id)"
-      >
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button
-        mat-raised-button
-        color="primary"
-        class="text-center w-100 mt-2"
-        (click)="gotoPlayStory(story.id, story.pages[0].id)"
-      >
-        <mat-icon>play_arrow</mat-icon>
-      </button>
     </div>
-  </div>
-</div>
+  </mat-card-content>
+</mat-card>
