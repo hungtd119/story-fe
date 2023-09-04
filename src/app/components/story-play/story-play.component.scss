@@ -5,5 +5,9 @@
 
 #com {
   position: absolute;
-  z-index: 2; /* Đặt lớp nằm phía dưới */
+  z-index: 3; /* Đặt lớp nằm phía dưới */
+}
+#text {
+  position: absolute;
+  z-index: 2;
 }
