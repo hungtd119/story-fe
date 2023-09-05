@@ -26,15 +26,19 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [CommonModule, StoryPlayCanvasComponent, MatButtonModule],
 })
 export class StoryPlayComponent implements OnInit, AfterViewInit {
-  pageId!: number;
-
-  page!: Page;
-  @ViewChild('myCanvas', { static: false })
+  @ViewChild('myCanvas', { static: true })
   myCanvasRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('secondCanvas', { static: false })
-  secondCanvasRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('textCanvas', { static: false })
+  @ViewChild('interactionCanvas', { static: true })
+  interactionCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('textCanvas', { static: true })
   textCanvasRef!: ElementRef<HTMLCanvasElement>;
+
+  ctxRoot!: CanvasRenderingContext2D;
+  ctxInteraction!: CanvasRenderingContext2D;
+  ctxText!: CanvasRenderingContext2D;
+
+  pageId!: number;
+  page!: Page;
   page$: Observable<Page> = this.store.select(selectPage);
 
   animationStarted = false;
@@ -64,206 +68,196 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
     });
   }
   ngOnInit(): void {
+    this.ctxRoot = this.myCanvasRef.nativeElement.getContext('2d')!;
+    this.ctxInteraction =
+      this.interactionCanvas.nativeElement.getContext('2d')!;
+    this.ctxText = this.textCanvasRef.nativeElement.getContext('2d')!;
     this.store.dispatch(loadPage({ id: this.pageId }));
   }
   ngAfterViewInit(): void {
     this.page$.subscribe({
       next: (pg) => {
-        const canvas: HTMLCanvasElement = this.myCanvasRef.nativeElement;
-        const ctx = canvas.getContext('2d');
+        this.ctxRoot.clearRect(
+          0,
+          0,
+          this.myCanvasRef.nativeElement.width,
+          this.myCanvasRef.nativeElement.height
+        );
+        const img = new Image();
+        img.src = pg.image?.path;
+        img.onload = () => {
+          this.ctxRoot.drawImage(
+            img,
+            0,
+            80,
+            this.myCanvasRef.nativeElement.width,
+            this.myCanvasRef.nativeElement.height - 100
+          );
 
-        const canvasCom: HTMLCanvasElement = this.secondCanvasRef.nativeElement;
-        const ctxCom = canvasCom.getContext('2d');
+          this.drawText(
+            this.textCanvasRef.nativeElement.width / 4,
+            this.textCanvasRef.nativeElement.height / 10,
+            '48px serif',
+            'black'
+          );
 
-        const canvasText: HTMLCanvasElement = this.textCanvasRef.nativeElement;
-        const ctxText = canvasText.getContext('2d');
-        if (ctx && ctxCom && ctxText) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          const img = new Image();
-          img.src = pg.image?.path;
-          img.onload = () => {
-            ctx.drawImage(img, 0, 80, canvas.width, canvas.height - 100);
-            console.log(canvasText.height / 10);
-
-            this.drawText(
-              ctxText,
-              canvasText.width / 4,
-              canvasText.height / 10,
-              '48px serif',
-              'black'
+          setTimeout(() => {
+            this.hightLightText(
+              this.textCanvasRef.nativeElement.width / 4,
+              this.textCanvasRef.nativeElement.height / 10
             );
+          }, 1000);
+          pg.interactions.forEach((interaction) => {
+            interaction.positions.forEach((position: any) => {
+              this.renderer.listen(
+                this.interactionCanvas.nativeElement,
+                'click',
+                (event: MouseEvent) => {
+                  const x =
+                    event.clientX -
+                    this.interactionCanvas.nativeElement.getBoundingClientRect()
+                      .left;
+                  const y =
+                    event.clientY -
+                    this.interactionCanvas.nativeElement.getBoundingClientRect()
+                      .top;
 
-            setTimeout(() => {
-              this.hightLightText(
-                ctxText,
-                this.textCanvasRef,
-                canvasText.width / 4,
-                canvasText.height / 10
+                  interaction.positions.forEach((position: any) => {
+                    if (
+                      x >= position.position_x &&
+                      x <= position.position_x + position.width &&
+                      y >= position.position_y &&
+                      y <= position.position_y + position.height
+                    ) {
+                      // play audio
+                      console.log(interaction.text.audio.path);
+
+                      this.clearCanvas(
+                        this.ctxInteraction,
+                        this.interactionCanvas
+                      );
+                      this.showCom(
+                        position.position_x,
+                        position.position_y,
+                        interaction.text.text
+                      );
+                      this.jumpText(interaction);
+                    }
+                  });
+                }
               );
-            }, 1000);
-            pg.interactions.forEach((interaction) => {
-              interaction.positions.forEach((position: any) => {
-                this.renderer.listen(
-                  canvasCom,
-                  'click',
-                  (event: MouseEvent) => {
-                    const x =
-                      event.clientX - canvasCom.getBoundingClientRect().left;
-                    const y =
-                      event.clientY - canvasCom.getBoundingClientRect().top;
-
-                    interaction.positions.forEach((position: any) => {
-                      if (
-                        x >= position.position_x &&
-                        x <= position.position_x + position.width &&
-                        y >= position.position_y &&
-                        y <= position.position_y + position.height
-                      ) {
-                        // play audio
-                        console.log(interaction.text.audio.path);
-
-                        this.clearCanvas(ctxCom, this.secondCanvasRef);
-                        this.showCom(
-                          ctxCom,
-                          this.secondCanvasRef,
-                          position.position_x,
-                          position.position_y,
-                          interaction.text.text
-                        );
-                        this.jumpText(ctxText, interaction);
-                      }
-                    });
-                  }
-                );
-              });
             });
-          };
-        }
+          });
+        };
       },
       error: (error) => {
         console.log(error);
       },
     });
   }
-  showCom(
-    ctx: CanvasRenderingContext2D,
-    canvasRef: ElementRef,
-    x: number,
-    y: number,
-    text: string
-  ) {
+  showCom(x: number, y: number, text: string) {
     const fontSize = 18;
     const borderRadius = 6;
 
-    ctx.font = fontSize + 'px Arial';
-    const textWidth = ctx.measureText(text).width;
+    this.ctxInteraction.font = fontSize + 'px Arial';
+    const textWidth = this.ctxInteraction.measureText(text).width;
 
     const padding = 6;
     const rectWidth = textWidth + 2 * padding;
     const rectHeight = fontSize + 2 * padding + 4;
 
-    ctx.beginPath();
-    ctx.moveTo(x + borderRadius, y);
-    ctx.lineTo(x + rectWidth - borderRadius, y);
-    ctx.arcTo(x + rectWidth, y, x + rectWidth, y + borderRadius, borderRadius);
-    ctx.lineTo(x + rectWidth, y + rectHeight - borderRadius);
-    ctx.arcTo(
+    this.ctxInteraction.beginPath();
+    this.ctxInteraction.moveTo(x + borderRadius, y);
+    this.ctxInteraction.lineTo(x + rectWidth - borderRadius, y);
+    this.ctxInteraction.arcTo(
+      x + rectWidth,
+      y,
+      x + rectWidth,
+      y + borderRadius,
+      borderRadius
+    );
+    this.ctxInteraction.lineTo(x + rectWidth, y + rectHeight - borderRadius);
+    this.ctxInteraction.arcTo(
       x + rectWidth,
       y + rectHeight,
       x + rectWidth - borderRadius,
       y + rectHeight,
       borderRadius
     );
-    ctx.lineTo(x + borderRadius, y + rectHeight);
-    ctx.arcTo(
+    this.ctxInteraction.lineTo(x + borderRadius, y + rectHeight);
+    this.ctxInteraction.arcTo(
       x,
       y + rectHeight,
       x,
       y + rectHeight - borderRadius,
       borderRadius
     );
-    ctx.lineTo(x, y + borderRadius);
-    ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
+    this.ctxInteraction.lineTo(x, y + borderRadius);
+    this.ctxInteraction.arcTo(x, y, x + borderRadius, y, borderRadius);
 
-    ctx.fillStyle = 'black';
-    ctx.fill();
+    this.ctxInteraction.fillStyle = 'black';
+    this.ctxInteraction.fill();
 
-    ctx.fillStyle = 'white';
-    ctx.fillText(text, x + padding, y + padding + fontSize);
+    this.ctxInteraction.fillStyle = 'white';
+    this.ctxInteraction.fillText(text, x + padding, y + padding + fontSize);
     setTimeout(() => {
-      ctx.clearRect(x, y, rectWidth + 1, rectHeight);
+      this.ctxInteraction.clearRect(x, y, rectWidth + 1, rectHeight);
     }, 3000);
   }
-  jumpText(ctx: CanvasRenderingContext2D, interaction: Interaction) {
-    this.clearCanvas(ctx, this.textCanvasRef);
+  jumpText(interaction: Interaction) {
+    this.clearCanvas(this.ctxText, this.textCanvasRef);
 
     const padding = 10;
-    ctx.font = '48px serif';
+    this.ctxText.font = '48px serif';
     let currentX = this.x_root;
     for (let index = 0; index < this.syncText.length; index++) {
       const word = this.syncText[index].w;
-      ctx.fillStyle = 'black';
+      this.ctxText.fillStyle = 'black';
       if (this.syncText[index].w === interaction.text.text) {
-        ctx.fillStyle = 'red';
+        this.ctxText.fillStyle = 'red';
         const y_new = this.y_root - 20;
-        const wordWidth = ctx.measureText(word).width;
+        const wordWidth = this.ctxText.measureText(word).width;
         // add animation here
         const animate = () => {
-          ctx.fillText(word, currentX, y_new);
+          this.ctxText.fillText(word, currentX, y_new);
         };
         animate();
         currentX += wordWidth + padding;
       } else {
-        ctx.fillText(word, currentX, this.y_root);
-        const widthWord = ctx.measureText(word).width;
+        this.ctxText.fillText(word, currentX, this.y_root);
+        const widthWord = this.ctxText.measureText(word).width;
         currentX += widthWord + padding;
       }
     }
     setTimeout(() => {
-      this.clearCanvas(ctx, this.textCanvasRef);
+      this.clearCanvas(this.ctxText, this.textCanvasRef);
 
-      this.drawText(ctx, this.x_root, this.y_root, '48px serif', 'black');
+      this.drawText(this.x_root, this.y_root, '48px serif', 'black');
     }, 1000);
   }
-  drawText(
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    font: string,
-    color: string
-  ) {
+  drawText(x: number, y: number, font: string, color: string) {
     const fontSize = 16;
     const padding = 10;
-    ctx.font = font;
-    ctx.textBaseline = 'middle';
+    this.ctxText.font = font;
+    this.ctxText.textBaseline = 'middle';
     let currentX = x;
     for (let index = 0; index < this.syncText.length; index++) {
       const word = this.syncText[index].w;
-      ctx.fillStyle = color;
-      ctx.fillText(word, currentX, y);
-      const wordWidth = ctx.measureText(word).width;
+      this.ctxText.fillStyle = color;
+      this.ctxText.fillText(word, currentX, y);
+      const wordWidth = this.ctxText.measureText(word).width;
       currentX += wordWidth + padding;
     }
   }
-  hightLightText(
-    ctx: CanvasRenderingContext2D,
-    canvasRef: ElementRef,
-    x: number,
-    y: number
-  ) {
+  hightLightText(x: number, y: number) {
     this.audio = new Audio();
     this.audio.src =
       'https://firebasestorage.googleapis.com/v0/b/monkey-22059.appspot.com/o/wzEzNjrTTb9fLv10XTZNtQ1672993841348.mp3?alt=media&token=6abb7540-036e-4531-9b27-d98eb5c9c4ac';
     this.audio.play();
     this.currentIndex = 0;
-    this.animateHightLight(ctx, canvasRef, x, y);
+    this.animateHightLight(x, y);
   }
-  animateHightLight(
-    ctx: CanvasRenderingContext2D,
-    canvasRef: ElementRef,
-    x: number,
-    y: number
-  ) {
+  animateHightLight(x: number, y: number) {
     if (this.currentIndex >= this.syncText.length) {
       return;
     }
@@ -276,16 +270,16 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
       const process =
         (currentTime - startTime) / (currentWord.e - currentWord.s);
       if (process >= 1) {
-        this.clearCanvas(ctx, canvasRef);
-        this.hightLightingText(currentWord, x, y, ctx);
+        this.clearCanvas(this.ctxText, this.textCanvasRef);
+        this.hightLightingText(currentWord, x, y);
         this.currentIndex++;
 
         if (this.currentIndex < this.syncText.length) {
-          this.animateHightLight(ctx, canvasRef, x, y);
+          this.animateHightLight(x, y);
         }
       } else {
-        this.clearCanvas(ctx, canvasRef);
-        this.hightLightingText(currentWord, x, y, ctx);
+        this.clearCanvas(this.ctxText, this.textCanvasRef);
+        this.hightLightingText(currentWord, x, y);
         requestAnimationFrame(animate);
       }
     };
@@ -299,21 +293,16 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
       canvasRef.nativeElement.height
     );
   }
-  hightLightingText(
-    currentWord: any,
-    x: number,
-    y: number,
-    ctx: CanvasRenderingContext2D
-  ) {
+  hightLightingText(currentWord: any, x: number, y: number) {
     const padding = 10;
-    ctx.font = '48px serif';
+    this.ctxText.font = '48px serif';
     let currentX = x;
     for (let i = 0; i < this.syncText.length; i++) {
       const word = this.syncText[i].w;
-      ctx.fillStyle = 'black';
-      if (this.syncText[i].w === currentWord.w) ctx.fillStyle = 'red';
-      ctx.fillText(word, currentX, y);
-      const wordWidth = ctx.measureText(word).width;
+      this.ctxText.fillStyle = 'black';
+      if (this.syncText[i].w === currentWord.w) this.ctxText.fillStyle = 'red';
+      this.ctxText.fillText(word, currentX, y);
+      const wordWidth = this.ctxText.measureText(word).width;
       currentX += wordWidth + padding;
     }
   }
