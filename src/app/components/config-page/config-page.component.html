@@ -1,1 +1,12 @@
-<canvas #hung width="1200px" height="574px"></canvas>
+<div id="wrapper">
+  <canvas id="bg" #bg width="1200px" height="574px"></canvas>
+  <canvas
+    id="interact"
+    #interact
+    width="1200px"
+    height="574px"
+    (mousedown)="onMouseDown($event)"
+    (mousemove)="onMouseMove($event)"
+    (mouseup)="onMouseUp()"
+  ></canvas>
+</div>

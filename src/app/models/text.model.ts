@@ -1,3 +1,4 @@
+import { Audio } from './audio.model';
 import { Position } from './position.model';
 
 export class Text {
@@ -7,6 +8,6 @@ export class Text {
   wordSync!: string;
   created_at!: string;
   updated_at!: string;
-  audio!: object;
+  audio!: Audio;
   position!: Position;
 }

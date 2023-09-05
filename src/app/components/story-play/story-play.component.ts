@@ -15,13 +15,15 @@ import { loadPage } from 'src/app/store/page/page.actions';
 import { PageState } from 'src/app/store/page/page.reducers';
 import { selectPage } from 'src/app/store/page/page.selector';
 import { StoryPlayCanvasComponent } from '../story-play-canvas/story-play-canvas.component';
+import { Interaction } from 'src/app/models/interaction.model';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-story-play',
   templateUrl: './story-play.component.html',
   styleUrls: ['./story-play.component.scss'],
   standalone: true,
-  imports: [CommonModule, StoryPlayCanvasComponent],
+  imports: [CommonModule, StoryPlayCanvasComponent, MatButtonModule],
 })
 export class StoryPlayComponent implements OnInit, AfterViewInit {
   pageId!: number;
@@ -35,45 +37,22 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
   textCanvasRef!: ElementRef<HTMLCanvasElement>;
   page$: Observable<Page> = this.store.select(selectPage);
 
+  animationStarted = false;
+
   syncText = [
-    { s: 0, e: 1200, w: 'Hey,' },
-    { s: 1200, e: 1490, w: 'do' },
-    { s: 1490, e: 1700, w: 'you' },
-    { s: 1700, e: 2100, w: 'want' },
-    { s: 2100, e: 2260, w: 'to' },
-    { s: 2260, e: 3580, w: 'eat' },
-    { s: 3580, e: 3880, w: 'salad' },
+    { s: 0, e: 1200, w: 'Finally,' },
+    { s: 1200, e: 1490, w: 'I' },
+    { s: 1490, e: 1700, w: 'will' },
+    { s: 1700, e: 2100, w: 'add' },
+    { s: 2100, e: 2260, w: 'the' },
+    { s: 2260, e: 3580, w: 'dressing' },
     { s: 3880, e: 3880, w: '' },
   ];
 
-  interactions: any[] = [
-    {
-      text: { text: 'girl' },
-      bg: 'red',
-      positions: [
-        { x: 750, y: 435, width: 50, height: 50 },
-        { x: 710, y: 465, width: 50, height: 50 },
-      ],
-    },
-    {
-      text: { text: 'boy' },
-      bg: 'brown',
-      positions: [
-        { x: 430, y: 465, width: 50, height: 50 },
-        { x: 400, y: 435, width: 50, height: 50 },
-      ],
-    },
-    {
-      text: { text: 'Salad Bowl' },
-      bg: 'grey',
-      positions: [
-        { x: 517, y: 232, width: 130, height: 50 },
-        { x: 540, y: 270, width: 80, height: 38 },
-      ],
-    },
-  ];
-
+  x_root = 300;
+  y_root = 70;
   currentIndex: number = 0;
+  audio!: HTMLAudioElement;
 
   constructor(
     private route: ActivatedRoute,
@@ -97,13 +76,15 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
         const ctxCom = canvasCom.getContext('2d');
 
         const canvasText: HTMLCanvasElement = this.textCanvasRef.nativeElement;
-        const ctxText = canvasCom.getContext('2d');
+        const ctxText = canvasText.getContext('2d');
         if (ctx && ctxCom && ctxText) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           const img = new Image();
           img.src = pg.image?.path;
           img.onload = () => {
             ctx.drawImage(img, 0, 80, canvas.width, canvas.height - 100);
+            console.log(canvasText.height / 10);
+
             this.drawText(
               ctxText,
               canvasText.width / 4,
@@ -111,6 +92,7 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
               '48px serif',
               'black'
             );
+
             setTimeout(() => {
               this.hightLightText(
                 ctxText,
@@ -137,7 +119,18 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
                         y >= position.position_y &&
                         y <= position.position_y + position.height
                       ) {
-                        console.log(interaction);
+                        // play audio
+                        console.log(interaction.text.audio.path);
+
+                        this.clearCanvas(ctxCom, this.secondCanvasRef);
+                        this.showCom(
+                          ctxCom,
+                          this.secondCanvasRef,
+                          position.position_x,
+                          position.position_y,
+                          interaction.text.text
+                        );
+                        this.jumpText(ctxText, interaction);
                       }
                     });
                   }
@@ -151,6 +144,86 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
         console.log(error);
       },
     });
+  }
+  showCom(
+    ctx: CanvasRenderingContext2D,
+    canvasRef: ElementRef,
+    x: number,
+    y: number,
+    text: string
+  ) {
+    const fontSize = 18;
+    const borderRadius = 6;
+
+    ctx.font = fontSize + 'px Arial';
+    const textWidth = ctx.measureText(text).width;
+
+    const padding = 6;
+    const rectWidth = textWidth + 2 * padding;
+    const rectHeight = fontSize + 2 * padding + 4;
+
+    ctx.beginPath();
+    ctx.moveTo(x + borderRadius, y);
+    ctx.lineTo(x + rectWidth - borderRadius, y);
+    ctx.arcTo(x + rectWidth, y, x + rectWidth, y + borderRadius, borderRadius);
+    ctx.lineTo(x + rectWidth, y + rectHeight - borderRadius);
+    ctx.arcTo(
+      x + rectWidth,
+      y + rectHeight,
+      x + rectWidth - borderRadius,
+      y + rectHeight,
+      borderRadius
+    );
+    ctx.lineTo(x + borderRadius, y + rectHeight);
+    ctx.arcTo(
+      x,
+      y + rectHeight,
+      x,
+      y + rectHeight - borderRadius,
+      borderRadius
+    );
+    ctx.lineTo(x, y + borderRadius);
+    ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
+
+    ctx.fillStyle = 'black';
+    ctx.fill();
+
+    ctx.fillStyle = 'white';
+    ctx.fillText(text, x + padding, y + padding + fontSize);
+    setTimeout(() => {
+      ctx.clearRect(x, y, rectWidth + 1, rectHeight);
+    }, 3000);
+  }
+  jumpText(ctx: CanvasRenderingContext2D, interaction: Interaction) {
+    this.clearCanvas(ctx, this.textCanvasRef);
+
+    const padding = 10;
+    ctx.font = '48px serif';
+    let currentX = this.x_root;
+    for (let index = 0; index < this.syncText.length; index++) {
+      const word = this.syncText[index].w;
+      ctx.fillStyle = 'black';
+      if (this.syncText[index].w === interaction.text.text) {
+        ctx.fillStyle = 'red';
+        const y_new = this.y_root - 20;
+        const wordWidth = ctx.measureText(word).width;
+        // add animation here
+        const animate = () => {
+          ctx.fillText(word, currentX, y_new);
+        };
+        animate();
+        currentX += wordWidth + padding;
+      } else {
+        ctx.fillText(word, currentX, this.y_root);
+        const widthWord = ctx.measureText(word).width;
+        currentX += widthWord + padding;
+      }
+    }
+    setTimeout(() => {
+      this.clearCanvas(ctx, this.textCanvasRef);
+
+      this.drawText(ctx, this.x_root, this.y_root, '48px serif', 'black');
+    }, 1000);
   }
   drawText(
     ctx: CanvasRenderingContext2D,
@@ -178,6 +251,10 @@ export class StoryPlayComponent implements OnInit, AfterViewInit {
     x: number,
     y: number
   ) {
+    this.audio = new Audio();
+    this.audio.src =
+      'https://firebasestorage.googleapis.com/v0/b/monkey-22059.appspot.com/o/wzEzNjrTTb9fLv10XTZNtQ1672993841348.mp3?alt=media&token=6abb7540-036e-4531-9b27-d98eb5c9c4ac';
+    this.audio.play();
     this.currentIndex = 0;
     this.animateHightLight(ctx, canvasRef, x, y);
   }
