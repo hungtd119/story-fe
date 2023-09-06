@@ -21,15 +21,87 @@ export class ConfigPageComponent implements AfterViewInit, OnInit {
   ctx!: CanvasRenderingContext2D;
   ctxInteract!: CanvasRenderingContext2D;
 
-  rect = {
-    isDragging: false,
-    dragStartX: 0,
-    dragStartY: 0,
-    rectX: 50,
-    rectY: 50,
-    rectWidth: 50,
-    rectHeight: 50,
-  };
+  isEResize = false;
+  isNResize = false;
+  isDrag = false;
+
+  stroke = 3;
+
+  interactions = [
+    {
+      bg: 'red',
+      text: 'Boy',
+      positions: [
+        {
+          isDragging: false,
+          isResizing: false,
+          resizeDirect: '',
+          dragStartX: 0,
+          dragStartY: 0,
+          rectX: 50,
+          rectY: 50,
+          rectWidth: 50,
+          rectHeight: 50,
+        },
+      ],
+    },
+    {
+      bg: 'yellow',
+      text: 'Salad Bowl',
+      positions: [
+        {
+          isDragging: false,
+          isResizing: false,
+          resizeDirect: '',
+          dragStartX: 0,
+          dragStartY: 0,
+          rectX: 200,
+          rectY: 200,
+          rectWidth: 50,
+          rectHeight: 50,
+        },
+        {
+          isDragging: false,
+          isResizing: false,
+          resizeDirect: '',
+          dragStartX: 0,
+          dragStartY: 0,
+          rectX: 400,
+          rectY: 500,
+          rectWidth: 50,
+          rectHeight: 50,
+        },
+        {
+          isDragging: false,
+          isResizing: false,
+          resizeDirect: '',
+          dragStartX: 0,
+          dragStartY: 0,
+          rectX: 150,
+          rectY: 150,
+          rectWidth: 50,
+          rectHeight: 50,
+        },
+      ],
+    },
+    {
+      text: 'Girl',
+      bg: 'brown',
+      positions: [
+        {
+          isDragging: false,
+          isResizing: false,
+          resizeDirect: '',
+          dragStartX: 0,
+          dragStartY: 0,
+          rectX: 300,
+          rectY: 300,
+          rectWidth: 50,
+          rectHeight: 50,
+        },
+      ],
+    },
+  ];
 
   ngOnInit(): void {
     this.ctx = this.canvasBgRef.nativeElement.getContext('2d')!;
@@ -47,53 +119,204 @@ export class ConfigPageComponent implements AfterViewInit, OnInit {
         this.canvasBgRef.nativeElement.width,
         this.canvasBgRef.nativeElement.height
       );
-      this.ctxInteract.fillStyle = 'red';
-      this.ctxInteract.fillRect(
-        this.rect.rectX,
-        this.rect.rectY,
-        this.rect.rectWidth,
-        this.rect.rectHeight
-      );
+      this.interactions.filter((interaction) => {
+        this.ctxInteract.fillStyle = interaction.bg;
+        interaction.positions.filter((position) => {
+          this.ctxInteract.fillRect(
+            position.rectX,
+            position.rectY,
+            position.rectWidth,
+            position.rectHeight
+          );
+          this.ctxInteract.beginPath();
+          this.ctxInteract.moveTo(
+            position.rectX + position.rectWidth,
+            position.rectY
+          );
+          this.ctxInteract.lineTo(
+            position.rectX + position.rectWidth,
+            position.rectY + position.rectHeight
+          );
+          this.ctxInteract.stroke();
+
+          this.ctxInteract.beginPath();
+          this.ctxInteract.moveTo(
+            position.rectX,
+            position.rectY + position.rectHeight
+          );
+          this.ctxInteract.lineTo(
+            position.rectX + position.rectWidth,
+            position.rectY + position.rectHeight
+          );
+          this.ctxInteract.stroke();
+        });
+      });
     };
   }
   onMouseUp() {
-    this.rect.isDragging = false;
-    console.log('move up');
+    this.interactions.filter((interaction) => {
+      interaction.positions.filter((position) => {
+        position.isDragging = false;
+        position.isResizing = false;
+      });
+    });
   }
   onMouseDown(event: MouseEvent) {
     const rect = this.canvasInteractRef.nativeElement.getBoundingClientRect(); // chỉ số của khung canvas
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    if (
-      mouseX >= this.rect.rectX &&
-      mouseX <= this.rect.rectX + this.rect.rectWidth &&
-      mouseY >= this.rect.rectY &&
-      mouseY <= this.rect.rectY + this.rect.rectHeight
-    ) {
-      this.rect.isDragging = true;
-      this.rect.dragStartX = mouseX;
-      this.rect.dragStartY = mouseY;
-    }
+    this.interactions.filter((interaction) => {
+      interaction.positions.filter((position) => {
+        if (
+          mouseX >= position.rectX + this.stroke &&
+          mouseX <= position.rectX + position.rectWidth - this.stroke &&
+          mouseY >= position.rectY + this.stroke &&
+          mouseY <= position.rectY + position.rectHeight - this.stroke
+        ) {
+          position.isDragging = true;
+          position.isResizing = false;
+          position.dragStartX = mouseX;
+          position.dragStartY = mouseY;
+        }
+        if (
+          mouseX >= position.rectX &&
+          mouseX <= position.rectX + position.rectWidth &&
+          mouseY >= position.rectY &&
+          mouseY <= position.rectY + position.rectHeight
+        ) {
+          const offsetX = mouseX - position.rectX;
+          const offsetY = mouseY - position.rectY;
+
+          const borderSize = 4;
+
+          if (
+            offsetX >= position.rectWidth - borderSize &&
+            offsetX <= position.rectWidth
+          ) {
+            position.isDragging = false;
+            position.isResizing = true;
+            position.resizeDirect = 'r';
+          }
+
+          if (
+            offsetY >= position.rectHeight - borderSize &&
+            offsetY <= position.rectHeight
+          ) {
+            position.isDragging = false;
+            position.isResizing = true;
+            position.resizeDirect = 'b';
+          }
+        }
+      });
+    });
   }
   onMouseMove(event: MouseEvent) {
-    if (this.rect.isDragging) {
-      const rect = this.canvasInteractRef.nativeElement.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
+    this.isDrag = false;
+    this.isEResize = false;
+    this.isNResize = false;
+    const rect = this.canvasInteractRef.nativeElement.getBoundingClientRect(); // chỉ số của khung canvas
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
 
-      // khoảng cách chuột đã di chuyển
-      const deltaX = mouseX - this.rect.dragStartX;
-      const deltaY = mouseY - this.rect.dragStartY;
+    this.interactions.filter((interaction) => {
+      interaction.positions.filter((position) => {
+        if (
+          mouseX >= position.rectX + this.stroke &&
+          mouseX <= position.rectX + position.rectWidth - this.stroke &&
+          mouseY >= position.rectY + this.stroke &&
+          mouseY <= position.rectY + position.rectHeight - this.stroke
+        ) {
+          this.isDrag = true;
+          this.isEResize = false;
+          this.isNResize = false;
+        }
+        if (
+          mouseX >= position.rectX &&
+          mouseX <= position.rectX + position.rectWidth &&
+          mouseY >= position.rectY &&
+          mouseY <= position.rectY + position.rectHeight
+        ) {
+          const offsetX = mouseX - position.rectX;
+          const offsetY = mouseY - position.rectY;
 
-      this.rect.rectX += deltaX;
-      this.rect.rectY += deltaY;
+          const borderSize = 4;
 
-      this.reDrawCanvas();
+          if (offsetX >= 0 && offsetX <= borderSize) {
+            this.isDrag = false;
+            this.isEResize = true;
+            this.isNResize = false;
+          }
 
-      this.rect.dragStartX = mouseX;
-      this.rect.dragStartY = mouseY;
-    }
+          if (
+            offsetX >= position.rectWidth - borderSize &&
+            offsetX <= position.rectWidth
+          ) {
+            this.isDrag = false;
+            this.isEResize = true;
+            this.isNResize = false;
+          }
+
+          if (offsetY >= 0 && offsetY <= borderSize) {
+            this.isDrag = false;
+            this.isEResize = false;
+            this.isNResize = true;
+          }
+
+          if (
+            offsetY >= position.rectHeight - borderSize &&
+            offsetY <= position.rectHeight
+          ) {
+            this.isDrag = false;
+            this.isEResize = false;
+            this.isNResize = true;
+          }
+        }
+      });
+    });
+
+    this.interactions.filter((interaction) => {
+      interaction.positions.filter((position) => {
+        if (position.isDragging) {
+          const rect =
+            this.canvasInteractRef.nativeElement.getBoundingClientRect();
+          const mouseX = event.clientX - rect.left;
+          const mouseY = event.clientY - rect.top;
+
+          // khoảng cách chuột đã di chuyển
+          const deltaX = mouseX - position.dragStartX;
+          const deltaY = mouseY - position.dragStartY;
+
+          position.rectX += deltaX;
+          position.rectY += deltaY;
+
+          this.reDrawCanvas();
+
+          position.dragStartX = mouseX;
+          position.dragStartY = mouseY;
+        }
+        if (position.isResizing) {
+          switch (position.resizeDirect) {
+            case 'r':
+              let deltaX = event.offsetX - position.rectX;
+              if (deltaX <= 50) {
+                deltaX = 50;
+              }
+              position.rectWidth = deltaX;
+              this.reDrawCanvas();
+              break;
+            case 'b':
+              let deltaY = event.offsetY - position.rectY;
+              if (deltaY <= 50) {
+                deltaX = 50;
+              }
+              position.rectHeight = deltaY;
+              this.reDrawCanvas();
+              break;
+          }
+        }
+      });
+    });
   }
   reDrawCanvas() {
     this.ctxInteract.clearRect(
@@ -102,12 +325,37 @@ export class ConfigPageComponent implements AfterViewInit, OnInit {
       this.canvasInteractRef.nativeElement.width,
       this.canvasInteractRef.nativeElement.height
     );
-    this.ctxInteract.fillStyle = 'red';
-    this.ctxInteract.fillRect(
-      this.rect.rectX,
-      this.rect.rectY,
-      this.rect.rectWidth,
-      this.rect.rectHeight
-    );
+    this.interactions.filter((interaction) => {
+      this.ctxInteract.fillStyle = interaction.bg;
+      interaction.positions.filter((position) => {
+        this.ctxInteract.fillRect(
+          position.rectX,
+          position.rectY,
+          position.rectWidth,
+          position.rectHeight
+        );
+        this.ctxInteract.beginPath();
+        this.ctxInteract.moveTo(
+          position.rectX + position.rectWidth,
+          position.rectY
+        );
+        this.ctxInteract.lineTo(
+          position.rectX + position.rectWidth,
+          position.rectY + position.rectHeight
+        );
+        this.ctxInteract.stroke();
+
+        this.ctxInteract.beginPath();
+        this.ctxInteract.moveTo(
+          position.rectX,
+          position.rectY + position.rectHeight
+        );
+        this.ctxInteract.lineTo(
+          position.rectX + position.rectWidth,
+          position.rectY + position.rectHeight
+        );
+        this.ctxInteract.stroke();
+      });
+    });
   }
 }

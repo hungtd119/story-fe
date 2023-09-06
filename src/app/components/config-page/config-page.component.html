@@ -1,4 +1,9 @@
-<div id="wrapper">
+<div
+  id="wrapper"
+  [class.isEResize]="isEResize"
+  [class.isNResize]="isNResize"
+  [class.isDrag]="isDrag"
+>
   <canvas id="bg" #bg width="1200px" height="574px"></canvas>
   <canvas
     id="interact"
