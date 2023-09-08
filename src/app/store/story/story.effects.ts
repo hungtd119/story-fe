@@ -9,6 +9,7 @@ import {
   loadStoriesSuccess,
   loadStory,
   loadStorySuccess,
+  loadStoriesCard,
 } from './story.actions';
 
 export const getStories = createEffect(
@@ -37,6 +38,24 @@ export const getStory = createEffect(
         storyService.getStory(id).pipe(
           map((response) => {
             return loadStorySuccess({ value: response.data });
+          }),
+          catchError((error: { message: string }) =>
+            of(loadStoryFailure({ errorMsg: error.message }))
+          )
+        )
+      )
+    );
+  },
+  { functional: true }
+);
+export const getStoriesCard = createEffect(
+  (actions$ = inject(Actions), storyService = inject(StoryService)) => {
+    return actions$.pipe(
+      ofType(loadStoriesCard),
+      exhaustMap(() =>
+        storyService.getStoriesCard().pipe(
+          map((response) => {
+            return loadStoriesSuccess({ value: response.data });
           }),
           catchError((error: { message: string }) =>
             of(loadStoryFailure({ errorMsg: error.message }))

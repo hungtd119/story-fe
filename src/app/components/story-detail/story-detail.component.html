@@ -1,9 +1,6 @@
 <div *ngIf="dataLoaded; else loading">
   <div *ngIf="story$ | async as story">
-    <mat-toolbar>
-      <p class="text-zinc-700 text-xl italic">Truyện tĩnh: {{ story.title }}</p>
-    </mat-toolbar>
-    <hr class="my-2" />
+    <app-header-content [label]="story.title"></app-header-content>
     <div class="grid grid-cols-1 gap-4" *ngIf="story.image">
       <div class="grid grid-cols-2 gap-4">
         <mat-card>

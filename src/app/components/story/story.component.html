@@ -1,7 +1,109 @@
-<app-header-content label="Danh Sách Truyện [Story]"></app-header-content>
-<div *ngIf="stories$ | async as stories" class="grid grid-cols-3 gap-4 mt-4">
-  <app-story-card
-    *ngFor="let story of stories"
-    [story]="story"
-  ></app-story-card>
-</div>
+<nz-page-header nzTitle="Story List"></nz-page-header>
+<nz-page-header-subtitle>
+  <p class="text-xl">Filter Story</p>
+  <div class="d-flex align-items-center justify-end">
+    <div class="grid grid-cols-3 gap-2 my-2">
+      <nz-input-group>
+        <input nz-input placeholder="Enter Title" />
+      </nz-input-group>
+      <nz-input-group>
+        <input nz-input placeholder="Enter Id" />
+      </nz-input-group>
+      <nz-input-group>
+        <input nz-input placeholder="Enter Author" />
+      </nz-input-group>
+    </div>
+    <button nz-button nzType="primary" class="ml-2">
+      <span nz-icon nzType="search"></span>
+    </button>
+  </div>
+</nz-page-header-subtitle>
+<nz-page-header-content>
+  <table
+    *ngIf="stories$ | async as stories"
+    class="table table-hover table-bordered w-100"
+  >
+    <thead>
+      <tr class="text-center">
+        <th scope="col" class="w-1">Story Id</th>
+        <th scope="col">Thumbnail</th>
+        <th scope="col">Content</th>
+        <th scope="col">Pages</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let story of stories">
+        <th class="text-center text-sm">[{{ story.id }}]</th>
+        <td>
+          <div class="max-h-[200px] rounded-md d-flex justify-center">
+            <img
+              class="rounded-md"
+              [src]="story.image.path"
+              alt="thumbnail"
+              width="150"
+            />
+          </div>
+        </td>
+        <td>
+          <table>
+            <tr>
+              <td class="text-sm font-bold">Title :</td>
+              <td class="text-sm px-2 py-[2px]">{{ story.title }}</td>
+            </tr>
+            <tr>
+              <td class="text-sm font-bold">Level :</td>
+              <td class="text-sm px-2 py-[2px]">{{ story.level }}</td>
+            </tr>
+            <tr>
+              <td class="text-sm font-bold">Coin :</td>
+              <td class="text-sm px-2 py-[2px]">{{ story.coin }}</td>
+            </tr>
+            <tr>
+              <td class="text-sm font-bold">Author :</td>
+              <td class="text-sm px-2 py-[2px]">{{ story.author }}</td>
+            </tr>
+            <tr>
+              <td class="text-sm font-bold">Illustrator :</td>
+              <td class="text-sm px-2 py-[2px]">{{ story.illustrator }}</td>
+            </tr>
+            <tr>
+              <td class="text-sm font-bold">Created at :</td>
+              <td class="text-sm px-2 py-[2px]">
+                {{ story.created_at | date : "short" }}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-sm font-bold">Updated at :</td>
+              <td class="text-sm px-2 py-[2px]">
+                {{ story.updated_at | date : "short" }}
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <div>
+            <div
+              *ngFor="let page of story.pages"
+              class="bg-slate-200 p-2 rounded-md my-2"
+            >
+              <table>
+                <tr>
+                  <td class="text-xs font-bold">ID :</td>
+                  <td class="text-xs px-2 py-[2px]">{{ page.id }}</td>
+                </tr>
+                <tr>
+                  <td class="text-xs font-bold">Page Number :</td>
+                  <td class="text-xs px-2 py-[2px]">{{ page.page_number }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex justify-center"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</nz-page-header-content>

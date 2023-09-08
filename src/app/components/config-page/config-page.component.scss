@@ -1,3 +1,16 @@
+#wrapper {
+  width: 1200px;
+  min-height: 600px;
+  &.isEResize {
+    cursor: e-resize;
+  }
+  &.isNResize {
+    cursor: n-resize;
+  }
+  &.isDrag {
+    cursor: move;
+  }
+}
 #bg {
   position: absolute;
   z-index: 1;
@@ -5,7 +18,4 @@
 #interact {
   position: absolute;
   z-index: 2;
-}
-#wrapper {
-  width: 1200px;
 }

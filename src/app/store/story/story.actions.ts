@@ -19,3 +19,4 @@ export const loadStorySuccess = createAction(
   '[Story API] Load Story Detail Success',
   props<{ value: Story }>()
 );
+export const loadStoriesCard = createAction('[Stories Page] Load Stories Card');

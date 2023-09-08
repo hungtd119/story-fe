@@ -1,4 +1,9 @@
-<div id="wrapper">
+<div
+  id="wrapper"
+  [class.isEResize]="isEResize"
+  [class.isNResize]="isNResize"
+  [class.isDrag]="isDrag"
+>
   <canvas id="bg" #bg width="1200px" height="574px"></canvas>
   <canvas
     id="interact"
@@ -9,4 +14,77 @@
     (mousemove)="onMouseMove($event)"
     (mouseup)="onMouseUp()"
   ></canvas>
+</div>
+<hr class="my-4" />
+<div>
+  <mat-toolbar class="rounded-lg my-2">
+    <mat-label class="font-bold">Interactions</mat-label>
+  </mat-toolbar>
+  <div class="grid grid-cols-2 gap-2 p-2">
+    <mat-card *ngFor="let interact of interactions">
+      <mat-card-header class="italic text-sm text-orange-600"
+        >Interaction [id]</mat-card-header
+      >
+      <mat-card-content class="mt-2">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <mat-form-field class="w-100">
+              <mat-label>Bg:</mat-label>
+              <input matInput [(ngModel)]="interact.bg" />
+            </mat-form-field>
+            <div class="text-xs d-flex align-items-center">
+              <span class="font-bold mr-2">Background: </span>
+              <div
+                class="w-[50px] h-[15px] rounded-md border border-black"
+                [style.background-color]="interact.bg"
+              ></div>
+            </div>
+          </div>
+          <div>
+            <mat-form-field class="w-100">
+              <mat-label>Text</mat-label>
+              <mat-select [(ngModel)]="interact.text.text">
+                <mat-option value="Salad Bowl">Salad Bowl</mat-option>
+                <mat-option value="Boy">Boy</mat-option>
+                <mat-option value="Girl">Girl</mat-option>
+                <mat-option value="Man">Man</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div>
+          <mat-toolbar class="mt-2 rounded-lg"
+            ><mat-label class="text-sm italic font-bold"
+              >Positions</mat-label
+            ></mat-toolbar
+          >
+          <div class="grid grid-cols-2 gap-2">
+            <mat-card *ngFor="let position of interact.positions">
+              <mat-card-content class="grid grid-cols-2 gap-2">
+                <mat-form-field class="w-1/2">
+                  <mat-label>x</mat-label>
+                  <input matInput [(ngModel)]="position.rectX" />
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                  <mat-label>y</mat-label>
+                  <input matInput [(ngModel)]="position.rectY" />
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                  <mat-label>width</mat-label>
+                  <input matInput [(ngModel)]="position.rectWidth" />
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                  <mat-label>height</mat-label>
+                  <input matInput [(ngModel)]="position.rectHeight" />
+                </mat-form-field>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <button mat-raised-button color="primary" (click)="handleClickSavePosition()">
+    Save
+  </button>
 </div>
