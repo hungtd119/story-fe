@@ -35,7 +35,6 @@ import { StoryPlayCanvasComponent } from './components/story-play-canvas/story-p
   declarations: [
     AppComponent,
     PageNotFoundComponent,
-    StoryComponent,
     PageComponent,
     HomeComponent,
   ],
@@ -59,6 +58,7 @@ import { StoryPlayCanvasComponent } from './components/story-play-canvas/story-p
     ConfigPageComponent,
     StoryPlayComponent,
     StoryPlayCanvasComponent,
+    StoryComponent,
     StoreModule.forRoot({ story: storyReducer, pages: pageReducer }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,

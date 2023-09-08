@@ -17,4 +17,7 @@ export class StoryService {
   getStory(id: string): Observable<any> {
     return this.http.get<any>(this.apiUrl + `/find/${id}`);
   }
+  getStoriesCard(): Observable<any> {
+    return this.http.get<any>(this.apiUrl + '/cards');
+  }
 }

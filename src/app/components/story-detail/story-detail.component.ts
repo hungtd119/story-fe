@@ -19,6 +19,7 @@ import { selectStory } from 'src/app/store/story/story.selector';
 import { NgPaginatorComponent } from '../ng-paginator/ng-paginator.component';
 import { PageInteractionColComponent } from '../page-interaction-col/page-interaction-col.component';
 import { PageTextColComponent } from '../page-text-col/page-text-col.component';
+import { HeaderContentComponent } from '../header-content/header-content.component';
 
 @Component({
   selector: 'app-story-detail',
@@ -40,6 +41,7 @@ import { PageTextColComponent } from '../page-text-col/page-text-col.component';
     PageInteractionColComponent,
     NgPaginatorComponent,
     MatInputModule,
+    HeaderContentComponent,
   ],
 })
 export class StoryDetailComponent implements OnInit {

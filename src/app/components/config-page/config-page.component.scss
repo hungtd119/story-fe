@@ -1,5 +1,6 @@
 #wrapper {
   width: 1200px;
+  min-height: 600px;
   &.isEResize {
     cursor: e-resize;
   }

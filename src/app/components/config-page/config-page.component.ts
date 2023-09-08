@@ -1,3 +1,4 @@
+import { MatSelectModule } from '@angular/material/select';
 import {
   Component,
   ViewChild,
@@ -5,12 +6,29 @@ import {
   AfterViewInit,
   OnInit,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-config-page',
   templateUrl: './config-page.component.html',
   styleUrls: ['./config-page.component.scss'],
   standalone: true,
+  imports: [
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    MatSelectModule,
+    CommonModule,
+    MatToolbarModule,
+    FormsModule,
+  ],
 })
 export class ConfigPageComponent implements AfterViewInit, OnInit {
   @ViewChild('bg', { static: true })
@@ -30,7 +48,7 @@ export class ConfigPageComponent implements AfterViewInit, OnInit {
   interactions = [
     {
       bg: 'red',
-      text: 'Boy',
+      text: { text: 'Boy' },
       positions: [
         {
           isDragging: false,
@@ -47,7 +65,7 @@ export class ConfigPageComponent implements AfterViewInit, OnInit {
     },
     {
       bg: 'yellow',
-      text: 'Salad Bowl',
+      text: { text: 'Salad Bowl' },
       positions: [
         {
           isDragging: false,
@@ -71,21 +89,10 @@ export class ConfigPageComponent implements AfterViewInit, OnInit {
           rectWidth: 50,
           rectHeight: 50,
         },
-        {
-          isDragging: false,
-          isResizing: false,
-          resizeDirect: '',
-          dragStartX: 0,
-          dragStartY: 0,
-          rectX: 150,
-          rectY: 150,
-          rectWidth: 50,
-          rectHeight: 50,
-        },
       ],
     },
     {
-      text: 'Girl',
+      text: { text: 'Girl' },
       bg: 'brown',
       positions: [
         {
@@ -119,39 +126,11 @@ export class ConfigPageComponent implements AfterViewInit, OnInit {
         this.canvasBgRef.nativeElement.width,
         this.canvasBgRef.nativeElement.height
       );
-      this.interactions.filter((interaction) => {
-        this.ctxInteract.fillStyle = interaction.bg;
-        interaction.positions.filter((position) => {
-          this.ctxInteract.fillRect(
-            position.rectX,
-            position.rectY,
-            position.rectWidth,
-            position.rectHeight
-          );
-          this.ctxInteract.beginPath();
-          this.ctxInteract.moveTo(
-            position.rectX + position.rectWidth,
-            position.rectY
-          );
-          this.ctxInteract.lineTo(
-            position.rectX + position.rectWidth,
-            position.rectY + position.rectHeight
-          );
-          this.ctxInteract.stroke();
-
-          this.ctxInteract.beginPath();
-          this.ctxInteract.moveTo(
-            position.rectX,
-            position.rectY + position.rectHeight
-          );
-          this.ctxInteract.lineTo(
-            position.rectX + position.rectWidth,
-            position.rectY + position.rectHeight
-          );
-          this.ctxInteract.stroke();
-        });
-      });
+      this.drawPositionOfInteractions();
     };
+  }
+  handleClickSavePosition() {
+    console.log(this.interactions);
   }
   onMouseUp() {
     this.interactions.filter((interaction) => {
@@ -290,7 +269,7 @@ export class ConfigPageComponent implements AfterViewInit, OnInit {
           position.rectX += deltaX;
           position.rectY += deltaY;
 
-          this.reDrawCanvas();
+          this.drawPositionOfInteractions();
 
           position.dragStartX = mouseX;
           position.dragStartY = mouseY;
@@ -299,26 +278,24 @@ export class ConfigPageComponent implements AfterViewInit, OnInit {
           switch (position.resizeDirect) {
             case 'r':
               let deltaX = event.offsetX - position.rectX;
-              if (deltaX <= 50) {
-                deltaX = 50;
-              }
+              if (deltaX <= 50) deltaX = 50;
+
               position.rectWidth = deltaX;
-              this.reDrawCanvas();
+              this.drawPositionOfInteractions();
               break;
             case 'b':
               let deltaY = event.offsetY - position.rectY;
-              if (deltaY <= 50) {
-                deltaX = 50;
-              }
+              if (deltaY <= 50) deltaX = 50;
+
               position.rectHeight = deltaY;
-              this.reDrawCanvas();
+              this.drawPositionOfInteractions();
               break;
           }
         }
       });
     });
   }
-  reDrawCanvas() {
+  drawPositionOfInteractions() {
     this.ctxInteract.clearRect(
       0,
       0,
