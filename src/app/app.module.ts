@@ -31,6 +31,17 @@ import { pageReducer } from './store/page/page.reducers';
 import { ConfigPageComponent } from './components/config-page/config-page.component';
 import { StoryPlayComponent } from './components/story-play/story-play.component';
 import { StoryPlayCanvasComponent } from './components/story-play-canvas/story-play-canvas.component';
+import { NZ_I18N } from 'ng-zorro-antd/i18n';
+import { en_US } from 'ng-zorro-antd/i18n';
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { StoryModule } from './components/story/story.module';
+
+registerLocaleData(en);
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,6 +50,12 @@ import { StoryPlayCanvasComponent } from './components/story-play-canvas/story-p
     HomeComponent,
   ],
   imports: [
+    StoreModule.forRoot({ story: storyReducer, pages: pageReducer }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: true,
+    }),
+    EffectsModule.forRoot(storyEffects, pageEffects),
     BrowserModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
@@ -58,15 +75,12 @@ import { StoryPlayCanvasComponent } from './components/story-play-canvas/story-p
     ConfigPageComponent,
     StoryPlayComponent,
     StoryPlayCanvasComponent,
-    StoryComponent,
-    StoreModule.forRoot({ story: storyReducer, pages: pageReducer }),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: true,
-    }),
-    EffectsModule.forRoot(storyEffects, pageEffects),
+    NzButtonModule,
+    NzLayoutModule,
+    NzMenuModule,
+    NzIconModule,
   ],
-  providers: [],
+  providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -13,43 +13,51 @@ import { StoryPagesComponent } from './components/story-pages/story-pages.compon
 import { StoryPlayComponent } from './components/story-play/story-play.component';
 
 const routes: Routes = [
+  // {
+  //   path: 'login',
+  //   component: LoginComponent,
+  // },
+  // {
+  //   path: 'register',
+  //   component: RegisterComponent,
+  // },
+  // {
+  //   path: 'forgot-password',
+  //   component: ForgotPasswordComponent,
+  // },
+  { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
   {
-    path: 'login',
-    component: LoginComponent,
+    path: 'dashboard',
+    loadChildren: () =>
+      import('./pages/dashboard/dashboard.module').then(
+        (m) => m.DashboardModule
+      ),
   },
-  {
-    path: 'register',
-    component: RegisterComponent,
-  },
-  {
-    path: 'forgot-password',
-    component: ForgotPasswordComponent,
-  },
-  {
-    path: 'home',
-    component: HomeComponent,
-    children: [
-      {
-        path: 'story/edit/page/:id',
-        component: StoryPagesComponent,
-      },
-      {
-        path: 'story/detail/:id',
-        component: StoryDetailComponent,
-      },
-      {
-        path: 'story/play/:id/:page',
-        component: StoryPlayComponent,
-      },
-      {
-        path: 'story',
-        component: StoryComponent,
-      },
-    ],
-  },
+  // {
+  //   path: 'home',
+  //   component: HomeComponent,
+  //   children: [
+  //     {
+  //       path: 'story/edit/page/:id',
+  //       component: StoryPagesComponent,
+  //     },
+  //     {
+  //       path: 'story/detail/:id',
+  //       component: StoryDetailComponent,
+  //     },
+  //     {
+  //       path: 'story/play/:id/:page',
+  //       component: StoryPlayComponent,
+  //     },
+  //     {
+  //       path: 'story',
+  //       component: StoryComponent,
+  //     },
+  //   ],
+  // },
 
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', component: PageNotFoundComponent },
+  // { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({

@@ -13,29 +13,11 @@ import {
   selectStories,
   storyFeature,
 } from 'src/app/store/story/story.selector';
-import { MatTableModule } from '@angular/material/table';
-import { HeaderContentComponent } from '../header-content/header-content.component';
-import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-story',
   templateUrl: './story.component.html',
   styleUrls: ['./story.component.scss'],
-  standalone: true,
-  imports: [
-    MatTableModule,
-    HeaderContentComponent,
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-  ],
 })
 export class StoryComponent implements OnInit {
   stories$: Observable<Story[]> = this.store.select(selectStories);
