@@ -1,14 +1,24 @@
 import { createReducer, on } from '@ngrx/store';
 import { Page } from 'src/app/models/page.model';
-import { loadPageSuccess, loadPagesSuccess } from './page.actions';
+import {
+  loadPageSuccess,
+  loadPageToConfigByStoryId,
+  loadPagesSuccess,
+} from './page.actions';
 
 export interface PageState {
-  pages: Page[];
+  pages: {
+    pages: Page[];
+    count: number;
+  };
   page: any;
 }
 
 export const initialState: PageState = {
-  pages: [],
+  pages: {
+    pages: [],
+    count: 0,
+  },
   page: {},
 };
 

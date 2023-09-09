@@ -15,9 +15,11 @@ export class StoryService {
     return this.http.get<any>(this.apiUrl);
   }
   getStory(id: string): Observable<any> {
-    return this.http.get<any>(this.apiUrl + `/find/${id}`);
+    return this.http.get<any>(this.apiUrl + `/detail/${id}`);
   }
-  getStoriesCard(): Observable<any> {
-    return this.http.get<any>(this.apiUrl + '/cards');
+  getStoriesCard(limit: number, page: number): Observable<any> {
+    return this.http.get<any>(
+      this.apiUrl + `/cards?limit=${limit}&page=${page}`
+    );
   }
 }

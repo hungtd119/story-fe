@@ -7,10 +7,21 @@ import { Observable } from 'rxjs';
 export class PageService {
   private apiUrl = 'http://127.0.0.1:8000/api/page';
   constructor(private httpClient: HttpClient) {}
-  getPageByStoryId(id: number): Observable<any> {
-    return this.httpClient.get(this.apiUrl + `/findByStoryId/${id}`);
+  getPageByStoryId(
+    id: string,
+    $limit: number,
+    $pageNumber: number
+  ): Observable<any> {
+    return this.httpClient.get(
+      this.apiUrl + `/findByStoryId/${id}?limit=${$limit}&page=${$pageNumber}`
+    );
   }
   getPageById(id: number): Observable<any> {
     return this.httpClient.get(this.apiUrl + `/find/${id}`);
+  }
+  getPagesFullByStoryId(storyId: string, pageId: string): Observable<any> {
+    return this.httpClient.get(
+      this.apiUrl + `/getByStoryId?storyId=${storyId}&pageId=${pageId}`
+    );
   }
 }

@@ -2,23 +2,46 @@
 <nz-page-header-subtitle>
   <p class="text-xl">Filter Story</p>
   <div class="d-flex align-items-center justify-end">
-    <div class="grid grid-cols-3 gap-2 my-2">
-      <nz-input-group>
-        <input nz-input placeholder="Enter Title" />
-      </nz-input-group>
-      <nz-input-group>
-        <input nz-input placeholder="Enter Id" />
-      </nz-input-group>
-      <nz-input-group>
-        <input nz-input placeholder="Enter Author" />
+    <div class="my-2 w-1/3">
+      <nz-input-group class="w-100">
+        <input nz-input placeholder="Enter your keyword" />
       </nz-input-group>
     </div>
     <button nz-button nzType="primary" class="ml-2">
       <span nz-icon nzType="search"></span>
     </button>
+    <button nz-button nzType="default" class="ml-2" (click)="showModal()">
+      <span nz-icon nzType="down"></span>
+    </button>
+    <nz-modal
+      [(nzVisible)]="isVisible"
+      nzTitle="Advance Search"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+    >
+      <ng-container *nzModalContent>
+        <div class="grid grid-cols-2 gap-2">
+          <nz-input-group>
+            <input nz-input placeholder="Enter your title" />
+          </nz-input-group>
+          <nz-input-group>
+            <input nz-input placeholder="Enter your id" />
+          </nz-input-group>
+          <nz-input-group>
+            <input nz-input placeholder="Enter your author" />
+          </nz-input-group>
+          <nz-input-group>
+            <input nz-input placeholder="Enter your illustrator" />
+          </nz-input-group>
+        </div>
+      </ng-container>
+    </nz-modal>
   </div>
 </nz-page-header-subtitle>
 <nz-page-header-content>
+  <nz-page-header-subtitle>
+    <p class="text-xl">Danh sách story</p>
+  </nz-page-header-subtitle>
   <table
     *ngIf="stories$ | async as stories"
     class="table table-hover table-bordered w-100"
@@ -101,9 +124,29 @@
           </div>
         </td>
         <td>
-          <div class="d-flex justify-center"></div>
+          <div class="d-flex justify-center">
+            <button
+              nz-button
+              nzType="default"
+              nzShape="circle"
+              (click)="gotoDetailStory(story.id)"
+            >
+              <span nz-icon nzType="select"></span>
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
+  <div class="d-flex justify-center">
+    <nz-pagination
+      [nzPageIndex]="pageIndex"
+      [nzTotal]="count$ | async"
+      [nzPageSize]="perPageSize"
+      nzShowSizeChanger
+      [nzPageSizeOptions]="[2, 4, 8, 10]"
+      (nzPageIndexChange)="handleChangePageIndex($event)"
+      (nzPageSizeChange)="handleChangePerPageSize($event)"
+    ></nz-pagination>
+  </div>
 </nz-page-header-content>

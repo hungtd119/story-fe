@@ -8,7 +8,7 @@
     [nzTrigger]="null"
   >
     <div class="sidebar-logo">
-      <a href="https://ng.ant.design/" target="_blank">
+      <a routerLink="/dashboard">
         <img src="../assets/logo.png" alt="logo" />
         <h1>Monkey X</h1>
       </a>
@@ -22,7 +22,7 @@
       <li nz-submenu nzOpen nzTitle="Story" nzIcon="book">
         <ul>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/dashboard">List Story</a>
+            <a routerLink="/dashboard/story">List Story</a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <a>Monitor</a>

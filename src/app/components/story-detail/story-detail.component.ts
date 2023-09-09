@@ -1,68 +1,99 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { Page } from 'src/app/models/page.model';
 import { Story } from 'src/app/models/story.model';
-import { StoryService } from 'src/app/services/story.service';
+import { loadPages } from 'src/app/store/page/page.actions';
+import {
+  selectPages,
+  selectPagesCount,
+} from 'src/app/store/page/page.selector';
 import { loadStory } from 'src/app/store/story/story.actions';
 import { StoryState } from 'src/app/store/story/story.reducer';
-import { selectStory } from 'src/app/store/story/story.selector';
-import { NgPaginatorComponent } from '../ng-paginator/ng-paginator.component';
-import { PageInteractionColComponent } from '../page-interaction-col/page-interaction-col.component';
-import { PageTextColComponent } from '../page-text-col/page-text-col.component';
-import { HeaderContentComponent } from '../header-content/header-content.component';
+import {
+  selectPageStory,
+  selectStory,
+} from 'src/app/store/story/story.selector';
 
 @Component({
   selector: 'app-story-detail',
   templateUrl: './story-detail.component.html',
   styleUrls: ['./story-detail.component.scss'],
-  standalone: true,
-  imports: [
-    MatToolbarModule,
-    CommonModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    RouterModule,
-    PageTextColComponent,
-    PageInteractionColComponent,
-    NgPaginatorComponent,
-    MatInputModule,
-    HeaderContentComponent,
-  ],
 })
 export class StoryDetailComponent implements OnInit {
   id!: string;
   story$: Observable<Story> = this.store.select(selectStory);
+  pages$: Observable<Page[]> = this.store.select(selectPages);
+  pageCount$: Observable<number> = this.store.select(selectPagesCount);
+  story!: any;
   dataLoaded: boolean = false;
+  validateFormStoryInfo!: UntypedFormGroup;
+  validateFormCreator!: UntypedFormGroup;
+  pageIndex = 1;
+  perPageSize = 2;
 
   ngOnInit(): void {
     this.store.dispatch(loadStory({ id: this.id }));
+    this.story = this.story$.subscribe((story) => {
+      this.validateFormStoryInfo = this.fb.group({
+        id: [story.id, [Validators.required]],
+        title: [story.title, [Validators.required]],
+        level: [story.level, Validators.required],
+        coin: [story.coin, Validators.required],
+      });
+      this.validateFormCreator = this.fb.group({
+        author: [story.author, [Validators.required]],
+        illustrator: [story.illustrator, [Validators.required]],
+      });
+    });
+    this.store.dispatch(
+      loadPages({
+        id: this.id,
+        limit: this.perPageSize,
+        pageNumber: this.pageIndex,
+      })
+    );
+
     this.dataLoaded = true;
   }
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store<StoryState>
+    private store: Store<StoryState>,
+    private fb: UntypedFormBuilder
   ) {
     this.route.params.subscribe((params) => {
       this.id = params['id'];
     });
   }
+  submitStoryInfo(): void {
+    console.log('submit', this.validateFormStoryInfo.value);
+  }
+  submitFormCreator(): void {
+    console.log('submit', this.validateFormCreator.value);
+  }
+  handleChangePerPageSize(event: number) {
+    this.store.dispatch(
+      loadPages({ id: this.id, limit: event, pageNumber: this.pageIndex })
+    );
+    this.perPageSize = event;
+  }
+  handleChangePageIndex(event: number) {
+    this.store.dispatch(
+      loadPages({ id: this.id, limit: this.perPageSize, pageNumber: event })
+    );
+    this.pageIndex = event;
+  }
   gotoStoryPageConfig(id: number) {
     this.router.navigate(['/home/story/edit/page', id]);
+  }
+  gotoConfigPages(storyId: number, pageId: number) {
+    this.router.navigate(['dashboard/story-config-page', storyId, pageId]);
   }
 }
