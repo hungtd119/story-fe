@@ -1,25 +1,23 @@
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StoryComponent } from './story.component';
-import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzModalModule } from 'ng-zorro-antd/modal';
-import { NzPaginationModule } from 'ng-zorro-antd/pagination';
-import { StoryDetailComponent } from '../story-detail/story-detail.component';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
-import { StoryConfigPageComponent } from 'src/app/components/story-config-page/story-config-page.component';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { StoryConfigPageModule } from '../story-config-page/story-config-page.module';
+import { StoryDetailComponent } from '../story-detail/story-detail.component';
+import { StoryComponent } from './story.component';
 
 @NgModule({
-  declarations: [
-    StoryComponent,
-    StoryDetailComponent,
-    StoryConfigPageComponent,
-  ],
+  declarations: [StoryComponent, StoryDetailComponent],
   imports: [
     CommonModule,
     NzPageHeaderModule,
@@ -33,6 +31,9 @@ import { StoryConfigPageComponent } from 'src/app/components/story-config-page/s
     FormsModule,
     ReactiveFormsModule,
     NzBadgeModule,
+    NzTabsModule,
+    RouterModule,
+    StoryConfigPageModule,
   ],
 })
 export class StoryModule {}

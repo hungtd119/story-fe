@@ -1,1 +1,11 @@
-
+<nz-page-header nzTitle="Page Config"></nz-page-header>
+<nz-page-header-content *ngIf="$pagesId | async as pagesId">
+  <nz-tabset (nzSelectChange)="handleSelectTabChange($event)">
+    <nz-tab *ngFor="let page of pagesId" [nzTitle]="titleTemplate">
+      <ng-template #titleTemplate> Page {{ page.page_number }} </ng-template>
+      <ng-template nz-tab>
+        <app-config-page-canvas></app-config-page-canvas>
+      </ng-template>
+    </nz-tab>
+  </nz-tabset>
+</nz-page-header-content>

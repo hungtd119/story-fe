@@ -117,7 +117,7 @@ export class ConfigPageComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
     const image = new Image();
     image.src =
-      'https://firebasestorage.googleapis.com/v0/b/monkey-22059.appspot.com/o/Lg4oU6Aq4DxsWdwLByyCax1672904703767_trong.png?alt=media&token=bd7d5bc4-6ed3-4939-9336-af7f38a31a5b';
+      'https://firebasestorage.googleapis.com/v0/b/monkey-22059.appspot.com/o/page%20bg%2FLg4oU6Aq4DxsWdwLByyCax1672904703767_trong.png?alt=media&token=151894f8-e68c-42ba-9136-10ca71634386';
     image.onload = () => {
       this.ctx.drawImage(
         image,

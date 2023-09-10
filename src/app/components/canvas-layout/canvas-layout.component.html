@@ -1,0 +1,12 @@
+<canvas
+  #canvas
+  id="canvas"
+  width="1200px"
+  height="571px"
+  (mousedown)="onMouseDown($event)"
+  (mousemove)="onMouseMove($event)"
+  (mouseup)="onMouseUp()"
+  [class.isEResize]="isEResize"
+  [class.isNResize]="isNResize"
+  [class.isDrag]="isDrag"
+></canvas>

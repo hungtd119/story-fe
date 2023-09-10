@@ -13,3 +13,11 @@ export const selectPage = createSelector(
   pageFeature,
   (state: PageState) => state.page
 );
+export const selectPageCount = createSelector(
+  pageFeature,
+  (state: PageState) => state.page.count
+);
+export const selectPagesId = createSelector(
+  pageFeature,
+  (state: PageState) => state.pagesId
+);

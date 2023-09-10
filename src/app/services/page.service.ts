@@ -24,4 +24,10 @@ export class PageService {
       this.apiUrl + `/getByStoryId?storyId=${storyId}&pageId=${pageId}`
     );
   }
+  getPagesIdByStoryId(storyId: string): Observable<any> {
+    return this.httpClient.get(this.apiUrl + `/id/${storyId}`);
+  }
+  getPageToConfig(id: string): Observable<any> {
+    return this.httpClient.get(this.apiUrl + '/config/' + id);
+  }
 }

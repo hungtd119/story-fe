@@ -5,9 +5,12 @@ import { PageService } from 'src/app/services/page.service';
 import {
   loadPage,
   loadPageSuccess,
+  loadPageToConfig,
   loadPageToConfigByStoryId,
   loadPages,
   loadPagesFailure,
+  loadPagesId,
+  loadPagesIdSuccess,
   loadPagesSuccess,
 } from './page.actions';
 export const getPages = createEffect(
@@ -49,6 +52,38 @@ export const getPagesFullByStoryId = createEffect(
       ofType(loadPageToConfigByStoryId),
       exhaustMap(({ storyId, pageId }) =>
         pageService.getPagesFullByStoryId(storyId, pageId).pipe(
+          map((response) => loadPageSuccess({ value: response.data })),
+          catchError((error: { message: string }) =>
+            of(loadPagesFailure({ errorMsg: error.message }))
+          )
+        )
+      )
+    );
+  },
+  { functional: true }
+);
+export const getPagesIdByStoryId = createEffect(
+  (actions$ = inject(Actions), pageService = inject(PageService)) => {
+    return actions$.pipe(
+      ofType(loadPagesId),
+      exhaustMap(({ storyId }) =>
+        pageService.getPagesIdByStoryId(storyId).pipe(
+          map((response) => loadPagesIdSuccess({ value: response.data })),
+          catchError((error: { message: string }) =>
+            of(loadPagesFailure({ errorMsg: error.message }))
+          )
+        )
+      )
+    );
+  },
+  { functional: true }
+);
+export const getPageToConfig = createEffect(
+  (actions$ = inject(Actions), pageService = inject(PageService)) => {
+    return actions$.pipe(
+      ofType(loadPageToConfig),
+      exhaustMap(({ id }) =>
+        pageService.getPageToConfig(id).pipe(
           map((response) => loadPageSuccess({ value: response.data })),
           catchError((error: { message: string }) =>
             of(loadPagesFailure({ errorMsg: error.message }))

@@ -93,7 +93,7 @@ export class StoryDetailComponent implements OnInit {
   gotoStoryPageConfig(id: number) {
     this.router.navigate(['/home/story/edit/page', id]);
   }
-  gotoConfigPages(storyId: number, pageId: number) {
-    this.router.navigate(['dashboard/story-config-page', storyId, pageId]);
+  gotoConfigPages(storyId: number) {
+    this.router.navigate(['dashboard/story-config-page', storyId]);
   }
 }

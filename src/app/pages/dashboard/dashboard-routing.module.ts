@@ -13,7 +13,7 @@ const routes: Routes = [
       { path: 'story', component: StoryComponent },
       { path: 'story-detail/:id', component: StoryDetailComponent },
       {
-        path: 'story-config-page/:storyId/:pageId',
+        path: 'story-config-page/:storyId',
         component: StoryConfigPageComponent,
       },
     ],

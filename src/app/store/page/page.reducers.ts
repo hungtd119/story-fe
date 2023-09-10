@@ -3,6 +3,7 @@ import { Page } from 'src/app/models/page.model';
 import {
   loadPageSuccess,
   loadPageToConfigByStoryId,
+  loadPagesIdSuccess,
   loadPagesSuccess,
 } from './page.actions';
 
@@ -12,6 +13,7 @@ export interface PageState {
     count: number;
   };
   page: any;
+  pagesId: [];
 }
 
 export const initialState: PageState = {
@@ -20,6 +22,7 @@ export const initialState: PageState = {
     count: 0,
   },
   page: {},
+  pagesId: [],
 };
 
 export const pageReducer = createReducer(
@@ -31,5 +34,9 @@ export const pageReducer = createReducer(
   on(loadPageSuccess, (state, payload) => ({
     ...state,
     page: payload.value,
+  })),
+  on(loadPagesIdSuccess, (state, payload) => ({
+    ...state,
+    pagesId: payload.value,
   }))
 );

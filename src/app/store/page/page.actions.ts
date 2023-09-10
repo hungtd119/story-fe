@@ -17,6 +17,10 @@ export const loadPage = createAction(
   '[Page PAGE] Load Page',
   props<{ id: number }>()
 );
+export const loadPageToConfig = createAction(
+  '[Page PAGE] Load Page To Config',
+  props<{ id: string }>()
+);
 export const loadPageToConfigByStoryId = createAction(
   '[Page PAGE] Load Page to config',
   props<{ storyId: string; pageId: string }>()
@@ -24,4 +28,12 @@ export const loadPageToConfigByStoryId = createAction(
 export const loadPageSuccess = createAction(
   '[Page API] Load Page Success',
   props<{ value: Page }>()
+);
+export const loadPagesId = createAction(
+  '[Page PAGE] Load Pages Id',
+  props<{ storyId: string }>()
+);
+export const loadPagesIdSuccess = createAction(
+  '[Page API] Load Pages id Success',
+  props<{ value: [] }>()
 );
