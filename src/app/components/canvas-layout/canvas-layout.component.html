@@ -1,12 +1,110 @@
-<canvas
-  #canvas
-  id="canvas"
-  width="1200px"
-  height="571px"
-  (mousedown)="onMouseDown($event)"
-  (mousemove)="onMouseMove($event)"
-  (mouseup)="onMouseUp()"
-  [class.isEResize]="isEResize"
-  [class.isNResize]="isNResize"
-  [class.isDrag]="isDrag"
-></canvas>
+<nz-card>
+  <canvas
+    #canvas
+    id="canvas"
+    width="1170px"
+    height="571px"
+    (mousedown)="onMouseDown($event)"
+    (mousemove)="onMouseMove($event)"
+    (mouseup)="onMouseUp()"
+    [class.isEResize]="isEResize"
+    [class.isNResize]="isNResize"
+    [class.isDrag]="isDrag"
+  ></canvas>
+</nz-card>
+<nz-card
+  class="mt-4"
+  nzTitle="Interactions config"
+  *ngIf="$page | async as page"
+>
+  <nz-tabset nzTabPosition="left">
+    <nz-tab
+      *ngFor="let interaction of page.interactions; let i = index"
+      [nzTitle]="'Interaction ' + (i + 1)"
+    >
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <nz-ribbon [nzText]="interaction.id">
+          <nz-card>
+            <div class="grid grid-cols-1 gap-4">
+              <div class="grid grid-cols-2 gap-4">
+                <nz-input-group nzAddOnBefore="Positions">
+                  <input type="number" nz-input readonly />
+                </nz-input-group>
+                <nz-input-group nzAddOnBefore="Background">
+                  <input type="text" nz-input />
+                </nz-input-group>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <nz-input-group nzAddOnBefore="Created at">
+                  <input type="text" nz-input readonly />
+                </nz-input-group>
+                <nz-input-group nzAddOnBefore="Updated At">
+                  <input type="text" nz-input readonly />
+                </nz-input-group>
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button nzType="primary">Update</button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </nz-card>
+        </nz-ribbon>
+        <nz-ribbon [nzText]="interaction.text.id">
+          <nz-card>
+            <div class="grid grid-cols-1 gap-2">
+              <form nz-form [nzLayout]="'vertical'">
+                <div>
+                  <nz-form-item>
+                    <nz-form-label class="font-bold" nzRequired="true"
+                      >Text</nz-form-label
+                    ><nz-form-control>
+                      <nz-input-group>
+                        <input nz-input formControlName="text" />
+                      </nz-input-group>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-control>
+                      <button nz-button nzType="primary">Update</button>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </form>
+            </div>
+          </nz-card>
+        </nz-ribbon>
+      </div>
+      <div class="grid grid-cols-4 gap-2">
+        <div *ngFor="let position of interaction.positions">
+          <nz-ribbon [nzText]="position.id" [nzColor]="interaction.bg">
+            <nz-card nzTitle="Position">
+              <div class="grid grid-cols-2 gap-2">
+                <nz-input-group nzAddOnBefore="x">
+                  <input type="number" nz-input />
+                </nz-input-group>
+                <nz-input-group nzAddOnBefore="y">
+                  <input type="number" nz-input />
+                </nz-input-group>
+              </div>
+              <div class="grid grid-cols-2 gap-2 mt-2">
+                <nz-input-group nzAddOnBefore="w">
+                  <input type="number" nz-input />
+                </nz-input-group>
+                <nz-input-group nzAddOnBefore="h">
+                  <input type="number" nz-input />
+                </nz-input-group>
+              </div>
+            </nz-card>
+          </nz-ribbon>
+        </div>
+        <div class="d-flex justify-center align-items-center">
+          <button nz-button nzType="dashed" class="d-flex align-items-center">
+            <span nz-icon nzType="plus"></span>
+            Add
+          </button>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</nz-card>

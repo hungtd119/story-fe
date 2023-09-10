@@ -12,6 +12,12 @@ import { Store } from '@ngrx/store';
 import { selectPage } from 'src/app/store/page/page.selector';
 import { CanvasObject } from 'src/app/models/canvasObject.model';
 import { InteractionCanvas } from 'src/app/models/interactionCanvas';
+import { NzButtonSize } from 'ng-zorro-antd/button';
+import {
+  FormBuilder,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+} from '@angular/forms';
 @Component({
   selector: 'app-canvas-layout',
   templateUrl: './canvas-layout.component.html',
@@ -28,6 +34,8 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
   isEResize = false;
   isNResize = false;
   isDrag = false;
+
+  size: NzButtonSize = 'large';
 
   interactions = [
     {
@@ -95,7 +103,9 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
   ];
 
   canvasObject!: CanvasObject;
-  constructor(private store: Store) {}
+
+  validateFormTextInteraction!: UntypedFormGroup;
+  constructor(private store: Store, private fb: UntypedFormBuilder) {}
   ngOnInit(): void {
     this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
     this.canvasObject = new CanvasObject();

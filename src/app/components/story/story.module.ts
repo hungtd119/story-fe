@@ -15,6 +15,9 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { StoryConfigPageModule } from '../story-config-page/story-config-page.module';
 import { StoryDetailComponent } from '../story-detail/story-detail.component';
 import { StoryComponent } from './story.component';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
 
 @NgModule({
   declarations: [StoryComponent, StoryDetailComponent],
@@ -34,6 +37,9 @@ import { StoryComponent } from './story.component';
     NzTabsModule,
     RouterModule,
     StoryConfigPageModule,
+    NzDrawerModule,
+    NzSelectModule,
+    NzNotificationModule,
   ],
 })
 export class StoryModule {}

@@ -23,3 +23,16 @@ export const loadStoriesCard = createAction(
   '[Stories Page] Load Stories Card',
   props<{ limit: number; pageNumber: number }>()
 );
+
+export const postStory = createAction(
+  '[Story Page] Post Story',
+  props<{ value: Story }>()
+);
+export const postStorySuccess = createAction(
+  '[Story Page] Post Story Success',
+  props<{ value: Story }>()
+);
+export const postStoryFailure = createAction(
+  '[Story API] Post Story Failure',
+  props<{ errorMsg: string }>()
+);

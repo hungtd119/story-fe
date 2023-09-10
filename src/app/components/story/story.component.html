@@ -39,6 +39,129 @@
   </div>
 </nz-page-header-subtitle>
 <nz-page-header-content>
+  <nz-page-header-extra class="float-right">
+    <button
+      nz-button
+      nzType="primary"
+      class="d-flex align-items-center"
+      (click)="open()"
+    >
+      <span nz-icon nzType="plus"></span>
+      Create
+    </button>
+    <nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMaskClosable]="false"
+      [nzWidth]="720"
+      [nzVisible]="visible"
+      nzTitle="Create Story"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="close()"
+    >
+      <form
+        nz-form
+        *nzDrawerContent
+        nzLayout="vertical"
+        [formGroup]="formCreateStory"
+        (ngSubmit)="submitCreateStory()"
+      >
+        <div nz-row [nzGutter]="8">
+          <div nz-col nzSpan="24">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Title</nz-form-label>
+              <nz-form-control nzErrorTip="Please input title">
+                <input
+                  nz-input
+                  placeholder="Enter title"
+                  formControlName="title"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Author</nz-form-label>
+              <nz-form-control nzErrorTip="Please input author">
+                <input
+                  nz-input
+                  placeholder="Enter author"
+                  formControlName="author"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Illustrator</nz-form-label>
+              <nz-form-control nzErrorTip="Please input illustrator">
+                <input
+                  nz-input
+                  placeholder="Enter illustrator"
+                  formControlName="illustrator"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Level</nz-form-label>
+              <nz-form-control nzErrorTip="Please input level">
+                <input
+                  nz-input
+                  placeholder="Enter level"
+                  formControlName="level"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Coin</nz-form-label>
+              <nz-form-control nzErrorTip="Please input coin">
+                <input
+                  nz-input
+                  placeholder="Enter coin"
+                  formControlName="coin"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="24">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Image</nz-form-label>
+              <nz-form-control nzErrorTip="Please choose image id">
+                <nz-select
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Select Image"
+                  formControlName="image_id"
+                >
+                  <nz-option
+                    *ngFor="let image of images"
+                    [nzLabel]="image.id"
+                    [nzValue]="image.id"
+                  >
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-control>
+                <button nz-button nzType="primary">Create</button>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </form>
+      <ng-template #footerTpl>
+        <div style="float: right">
+          <button nz-button style="margin-right: 8px" (click)="close()">
+            Cancel
+          </button>
+        </div>
+      </ng-template>
+    </nz-drawer>
+  </nz-page-header-extra>
   <nz-page-header-subtitle>
     <p class="text-xl">Danh sách story</p>
   </nz-page-header-subtitle>
