@@ -15,8 +15,10 @@ import { InteractionCanvas } from 'src/app/models/interactionCanvas';
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import {
   FormBuilder,
+  FormGroup,
   UntypedFormBuilder,
   UntypedFormGroup,
+  Validators,
 } from '@angular/forms';
 @Component({
   selector: 'app-canvas-layout',
@@ -104,11 +106,15 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
 
   canvasObject!: CanvasObject;
 
-  validateFormTextInteraction!: UntypedFormGroup;
-  constructor(private store: Store, private fb: UntypedFormBuilder) {}
+  formText!: FormGroup;
+  constructor(private store: Store, private fb: FormBuilder) {}
   ngOnInit(): void {
     this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
     this.canvasObject = new CanvasObject();
+    this.formText = this.fb.group({
+      id: ['', Validators.required],
+      text: ['', Validators.required],
+    });
   }
   ngAfterViewInit(): void {
     this.$page.subscribe((page) => {

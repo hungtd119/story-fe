@@ -99,7 +99,8 @@ export class StoryComponent implements OnInit {
   }
 
   submitCreateStory() {
-    if (!this.formCreateStory.valid) {
+    if (this.formCreateStory.invalid) {
+      this.createNotification('error', 'Validate form invalid');
       return;
     } else {
       this.storyService

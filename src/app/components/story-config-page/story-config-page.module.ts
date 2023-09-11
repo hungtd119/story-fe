@@ -17,6 +17,7 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
 @NgModule({
   declarations: [
     StoryConfigPageComponent,
@@ -40,6 +41,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
     FormsModule,
     ReactiveFormsModule,
     NzFormModule,
+    NzUploadModule,
   ],
 })
 export class StoryConfigPageModule {}

@@ -18,6 +18,8 @@ import { StoryComponent } from './story.component';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzImageModule } from 'ng-zorro-antd/image';
 
 @NgModule({
   declarations: [StoryComponent, StoryDetailComponent],
@@ -40,6 +42,8 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
     NzDrawerModule,
     NzSelectModule,
     NzNotificationModule,
+    NzUploadModule,
+    NzImageModule,
   ],
 })
 export class StoryModule {}

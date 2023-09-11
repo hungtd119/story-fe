@@ -12,4 +12,14 @@ export class ImageService {
   getImages(): Observable<any> {
     return this.http.get(this.apiUrl + '/');
   }
+  uploadSignature(vals: any): Observable<any> {
+    let data = vals;
+    return this.http.post(
+      'https://api.cloudinary.com/v1_1/dhhahwrmr/image/upload',
+      data
+    );
+  }
+  createImage(body: any): Observable<any> {
+    return this.http.post(this.apiUrl, body);
+  }
 }

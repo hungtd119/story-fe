@@ -105,12 +105,20 @@
           <div nz-col nzSpan="12">
             <nz-form-item>
               <nz-form-label nzRequired="true">Level</nz-form-label>
-              <nz-form-control nzErrorTip="Please input level">
-                <input
-                  nz-input
-                  placeholder="Enter level"
+              <nz-form-control nzErrorTip="Please choose level">
+                <nz-select
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Select Level"
                   formControlName="level"
-                />
+                >
+                  <nz-option
+                    *ngFor="let level of ['A', 'B', 'C', 'D', 'E', 'F']"
+                    [nzValue]="level"
+                    [nzLabel]="level"
+                  >
+                  </nz-option>
+                </nz-select>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -135,12 +143,17 @@
                   nzAllowClear
                   nzPlaceHolder="Select Image"
                   formControlName="image_id"
+                  [nzOptionHeightPx]="100"
                 >
                   <nz-option
+                    nzCustomContent
                     *ngFor="let image of images"
-                    [nzLabel]="image.id"
                     [nzValue]="image.id"
+                    [nzLabel]="image.id"
                   >
+                    <div class="w-[100px] h-[100px]">
+                      <img [src]="image.path" alt="image bg page" />
+                    </div>
                   </nz-option>
                 </nz-select>
               </nz-form-control>

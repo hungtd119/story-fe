@@ -53,7 +53,7 @@
         <nz-ribbon [nzText]="interaction.text.id">
           <nz-card>
             <div class="grid grid-cols-1 gap-2">
-              <form nz-form [nzLayout]="'vertical'">
+              <form nz-form [nzLayout]="'vertical'" [formGroup]="formText">
                 <div>
                   <nz-form-item>
                     <nz-form-label class="font-bold" nzRequired="true"

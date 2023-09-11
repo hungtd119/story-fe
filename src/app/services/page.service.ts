@@ -30,4 +30,7 @@ export class PageService {
   getPageToConfig(id: string): Observable<any> {
     return this.httpClient.get(this.apiUrl + '/config/' + id);
   }
+  createPage(body: any): Observable<any> {
+    return this.httpClient.post(this.apiUrl, body);
+  }
 }

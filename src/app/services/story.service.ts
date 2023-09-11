@@ -31,8 +31,8 @@ export class StoryService {
       this.apiUrl,
       {
         ...story,
-      },
-      { headers: headersUrl }
+      }
+      // { headers: headersUrl }
     );
   }
 }
