@@ -4,6 +4,7 @@ import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { PageService } from 'src/app/services/page.service';
 import {
   loadPage,
+  loadPagePlay,
   loadPageSuccess,
   loadPageToConfig,
   loadPageToConfigByStoryId,
@@ -84,6 +85,22 @@ export const getPageToConfig = createEffect(
       ofType(loadPageToConfig),
       exhaustMap(({ id }) =>
         pageService.getPageToConfig(id).pipe(
+          map((response) => loadPageSuccess({ value: response.data })),
+          catchError((error: { message: string }) =>
+            of(loadPagesFailure({ errorMsg: error.message }))
+          )
+        )
+      )
+    );
+  },
+  { functional: true }
+);
+export const getPageToPlay = createEffect(
+  (actions$ = inject(Actions), pageService = inject(PageService)) => {
+    return actions$.pipe(
+      ofType(loadPagePlay),
+      exhaustMap(({ id }) =>
+        pageService.getPageToPlay(id).pipe(
           map((response) => loadPageSuccess({ value: response.data })),
           catchError((error: { message: string }) =>
             of(loadPagesFailure({ errorMsg: error.message }))

@@ -129,4 +129,7 @@ export class StoryComponent implements OnInit {
   gotoDetailStory(id: number) {
     this.router.navigate(['dashboard/story-detail', id]);
   }
+  gotoPlayStory(id: number) {
+    this.router.navigate(['dashboard/story-play', id]);
+  }
 }

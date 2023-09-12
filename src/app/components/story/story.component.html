@@ -260,7 +260,7 @@
           </div>
         </td>
         <td>
-          <div class="d-flex justify-center">
+          <div class="d-flex justify-center align-items-center">
             <button
               nz-button
               nzType="default"
@@ -268,6 +268,16 @@
               (click)="gotoDetailStory(story.id)"
             >
               <span nz-icon nzType="select"></span>
+            </button>
+          </div>
+          <div class="d-flex justify-center align-items-center mt-2">
+            <button
+              nz-button
+              nzType="default"
+              nzShape="circle"
+              (click)="gotoPlayStory(story.id)"
+            >
+              <span nz-icon nzType="play-circle" nzTheme="outline"></span>
             </button>
           </div>
         </td>

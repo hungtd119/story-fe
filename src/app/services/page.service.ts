@@ -33,4 +33,7 @@ export class PageService {
   createPage(body: any): Observable<any> {
     return this.httpClient.post(this.apiUrl, body);
   }
+  getPageToPlay(id: string): Observable<any> {
+    return this.httpClient.get(this.apiUrl + '/play/' + id);
+  }
 }

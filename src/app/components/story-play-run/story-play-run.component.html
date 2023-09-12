@@ -1,0 +1,14 @@
+<nz-header class="text-white font-bold">Play Page</nz-header>
+<nz-content class="mt-4">
+  <div *ngIf="pagesId">
+    <button
+      nz-button
+      nzType="primary"
+      *ngFor="let pageId of pagesId"
+      class="mr-2"
+      (click)="gotoPlayPage(pageId.id)"
+    >
+      Page {{ pageId.page_number }}
+    </button>
+  </div>
+</nz-content>

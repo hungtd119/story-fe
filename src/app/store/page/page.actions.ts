@@ -21,6 +21,10 @@ export const loadPageToConfig = createAction(
   '[Page PAGE] Load Page To Config',
   props<{ id: string }>()
 );
+export const loadPagePlay = createAction(
+  '[Page PAGE] Load Page Play',
+  props<{ id: string }>()
+);
 export const loadPageToConfigByStoryId = createAction(
   '[Page PAGE] Load Page to config',
   props<{ storyId: string; pageId: string }>()

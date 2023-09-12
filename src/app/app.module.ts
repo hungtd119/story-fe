@@ -37,6 +37,8 @@ import { pageReducer } from './store/page/page.reducers';
 import * as storyEffects from './store/story/story.effects';
 import { storyReducer } from './store/story/story.reducer';
 import { CloudinaryModule } from '@cloudinary/ng';
+import { StoryPlayRunComponent } from './components/story-play-run/story-play-run.component';
+import { StoryPlayPageComponent } from './components/story-play-page/story-play-page.component';
 
 registerLocaleData(en);
 @NgModule({
@@ -45,6 +47,8 @@ registerLocaleData(en);
     PageNotFoundComponent,
     PageComponent,
     HomeComponent,
+    StoryPlayRunComponent,
+    StoryPlayPageComponent,
   ],
   imports: [
     StoreModule.forRoot({ story: storyReducer, pages: pageReducer }),

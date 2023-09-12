@@ -154,6 +154,7 @@
             <tr class="text-center">
               <th scope="col" class="w-1">Page Id</th>
               <th scope="col">Meta</th>
+              <th scope="col">Background</th>
               <th scope="col">Content</th>
               <th scope="col">Interactions</th>
               <th scope="col">Actions</th>
@@ -162,6 +163,16 @@
           <tbody>
             <tr *ngFor="let page of pages" class="my-2">
               <th class="text-center text-sm">[{{ page.id }}]</th>
+              <td>
+                <div class="max-h-[200px] rounded-md d-flex justify-center">
+                  <img
+                    class="rounded-md"
+                    [src]="page.image.path"
+                    alt="thumbnail"
+                    width="150"
+                  />
+                </div>
+              </td>
               <td>
                 <table>
                   <tr>
