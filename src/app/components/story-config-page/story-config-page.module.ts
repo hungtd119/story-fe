@@ -18,6 +18,10 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzImageModule } from 'ng-zorro-antd/image';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 @NgModule({
   declarations: [
     StoryConfigPageComponent,
@@ -42,6 +46,10 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
     ReactiveFormsModule,
     NzFormModule,
     NzUploadModule,
+    NzModalModule,
+    NzDrawerModule,
+    NzImageModule,
+    NzSelectModule,
   ],
 })
 export class StoryConfigPageModule {}

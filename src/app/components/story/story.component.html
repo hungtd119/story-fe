@@ -135,6 +135,49 @@
             </nz-form-item>
           </div>
           <div nz-col nzSpan="24">
+            <nz-badge [nzCount]="1">
+              <button
+                nz-button
+                nzType="dashed"
+                type="button"
+                (click)="showModalUploadImage()"
+              >
+                <span>Upload image</span>
+              </button>
+            </nz-badge>
+            <nz-modal
+              [(nzVisible)]="isVisibleUploadImage"
+              nzTitle="Upload Image"
+              (nzOnCancel)="handleCancelUploadImage()"
+              (nzOnOk)="handleOkUploadImage()"
+            >
+              <ng-container *nzModalContent>
+                <nz-upload
+                  nzAction="https://api.cloudinary.com/v1_1/dhhahwrmr/upload?upload_preset=ml_default"
+                  (nzChange)="handleChangeUploadImage($event)"
+                >
+                  <button nz-button class="d-flex align-items-center">
+                    <span nz-icon nzType="upload"></span>
+                    Click to Upload
+                  </button>
+                </nz-upload>
+              </ng-container>
+            </nz-modal>
+          </div>
+          <div nz-col nzSpan="24" class="mb-4">
+            <nz-badge [nzCount]="2">
+              <div class="w-[200px] h-[200px]">
+                <img
+                  nz-image
+                  width="200px"
+                  height="200px"
+                  [nzSrc]="pathPageImage"
+                  alt=""
+                />
+              </div>
+            </nz-badge>
+          </div>
+          <div nz-col nzSpan="24">
             <nz-form-item>
               <nz-form-label nzRequired="true">Image</nz-form-label>
               <nz-form-control nzErrorTip="Please choose image id">

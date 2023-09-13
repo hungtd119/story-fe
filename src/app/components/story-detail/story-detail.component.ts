@@ -159,7 +159,7 @@ export class StoryDetailComponent implements OnInit {
           image.id = response.data.id;
           image.created_at = response.data.created_at;
           image.updated_at = response.data.updated_at;
-          this.images.unshift(image);
+          this.images.push(image);
           this.pathPageImage = response.data.path;
           this.isVisible = false;
         });

@@ -35,10 +35,12 @@ import { StoryModule } from './components/story/story.module';
 import * as pageEffects from './store/page/page.effects';
 import { pageReducer } from './store/page/page.reducers';
 import * as storyEffects from './store/story/story.effects';
+import * as interactionEffects from './store/Interaction/interaction.effects';
 import { storyReducer } from './store/story/story.reducer';
 import { CloudinaryModule } from '@cloudinary/ng';
 import { StoryPlayRunComponent } from './components/story-play-run/story-play-run.component';
 import { StoryPlayPageComponent } from './components/story-play-page/story-play-page.component';
+import { interactionReducer } from './store/Interaction/interaction.reducers';
 
 registerLocaleData(en);
 @NgModule({
@@ -51,12 +53,16 @@ registerLocaleData(en);
     StoryPlayPageComponent,
   ],
   imports: [
-    StoreModule.forRoot({ story: storyReducer, pages: pageReducer }),
+    StoreModule.forRoot({
+      story: storyReducer,
+      pages: pageReducer,
+      interactions: interactionReducer,
+    }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: true,
     }),
-    EffectsModule.forRoot(storyEffects, pageEffects),
+    EffectsModule.forRoot(storyEffects, pageEffects, interactionEffects),
     BrowserModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,

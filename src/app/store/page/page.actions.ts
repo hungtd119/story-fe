@@ -1,5 +1,7 @@
 import { createAction, props } from '@ngrx/store';
+import { Interaction } from 'src/app/models/interaction.model';
 import { Page } from 'src/app/models/page.model';
+import { Position } from 'src/app/models/position.model';
 export const loadPages = createAction(
   '[Page PAGE] Load Pages',
   props<{ id: string; limit: number; pageNumber: number }>()
@@ -7,6 +9,10 @@ export const loadPages = createAction(
 export const loadPagesSuccess = createAction(
   '[Page API] Load Pages Success',
   props<{ value: any }>()
+);
+export const loadPageInteractions = createAction(
+  '[Page PAGE] Load Page interaction',
+  props<{ value: Interaction[] }>()
 );
 export const loadPagesFailure = createAction(
   '[Page API] Load Page Failure',
@@ -40,4 +46,8 @@ export const loadPagesId = createAction(
 export const loadPagesIdSuccess = createAction(
   '[Page API] Load Pages id Success',
   props<{ value: [] }>()
+);
+export const setPosition = createAction(
+  '[Page Page] Set Position',
+  props<{ value: Position; interactionId: number }>()
 );
