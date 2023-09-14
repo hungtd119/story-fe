@@ -35,6 +35,9 @@ import {
 } from 'src/app/store/page/page.actions';
 import { CanvasConfigObject } from 'src/app/models/canvasConfigObject.model';
 import { Position } from 'src/app/models/position.model';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { PositionService } from 'src/app/services/position.service';
+import { NewPosition } from 'src/app/models/newPosition.model';
 @Component({
   selector: 'app-canvas-layout',
   templateUrl: './canvas-layout.component.html',
@@ -47,6 +50,7 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
 
   $page: Observable<any> = this.store.select(selectPage);
   $interactions: Observable<any> = this.store.select(selectInteractions);
+  newPositions: NewPosition[] = [];
   stroke = 3;
   isEResize = false;
   isNResize = false;
@@ -140,11 +144,18 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
     private imageService: ImageService,
     private textService: TextService,
     private interactionService: InteractionService,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private modal: NzModalService,
+    private positionService: PositionService
   ) {}
   ngOnInit(): void {
     this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
-    this.canvasObject = new CanvasConfigObject();
+    this.$page.subscribe((page) => {
+      this.canvasObject = new CanvasConfigObject();
+      this.canvasObject.bg = page.image?.path;
+      this.canvasObject.interactionsCanvas = page.interactions;
+      this.drawCanvas();
+    });
     this.formCreateText = this.fb.group({
       text: ['', Validators.required],
       icon: ['', Validators.required],
@@ -174,13 +185,7 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
       this.texts = response.data;
     });
   }
-  ngAfterViewInit(): void {
-    this.$page.subscribe((page) => {
-      this.canvasObject.bg = page.image?.path;
-      this.canvasObject.interactionsCanvas = page.interactions;
-      this.drawCanvas();
-    });
-  }
+  ngAfterViewInit(): void {}
   showModalText(): void {
     this.isVisibleText = true;
   }
@@ -190,7 +195,6 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
   }
 
   handleCancelText(): void {
-    console.log('Button cancel clicked!');
     this.isVisibleText = false;
   }
   open(): void {
@@ -216,14 +220,24 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
 
     this.isVisibleAddPosition = true;
   }
-
+  showConfirm(): void {
+    this.modal.confirm({
+      nzTitle: '<i>Do you Want to save positions?</i>',
+      nzContent: '<b>Save position of this</b>',
+      nzOnOk: () => {
+        this.positionService
+          .createPositionsByInteractionId(this.newPositions)
+          .subscribe((response) => {
+            console.log(response);
+          });
+      },
+    });
+  }
   handleOkAddPosition(): void {
-    console.log('Button ok clicked!');
     this.isVisibleAddPosition = false;
   }
 
   handleCancelAddPosition(): void {
-    console.log('Button cancel clicked!');
     this.isVisibleAddPosition = false;
   }
   handleSubmitCreatePosition() {
@@ -241,6 +255,10 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
           positions: [...interaction.positions, { ...newPosition }],
         };
       });
+    this.newPositions.push({
+      interactionId: this.interactionId,
+      position: newPosition,
+    });
     this.drawCanvas();
     this.isVisibleAddPosition = false;
     this.createNotification(
@@ -346,9 +364,6 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
           const offsetY = mouseY - position.position_y;
           const borderSize = 4;
 
-          console.log(offsetX, offsetY);
-          console.log(position.width - borderSize, position.width);
-
           if (
             offsetX >= position.width - borderSize &&
             offsetX <= position.width
@@ -356,7 +371,6 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
             position.isDragging = false;
             position.isResizing = true;
             position.resizeDirect = 'r';
-            console.log('resizing r');
           }
 
           if (
@@ -366,7 +380,6 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
             position.isDragging = false;
             position.isResizing = true;
             position.resizeDirect = 'b';
-            console.log('resizing b');
           }
         }
       });

@@ -19,7 +19,17 @@
   [nzExtra]="action"
 >
   <ng-template #action>
-    <button nz-button nzType="primary" (click)="open()">Add More</button>
+    <button
+      nz-button
+      nzDanger
+      class="mr-2"
+      nzType="primary"
+      (click)="showConfirm()"
+    >
+      Save
+    </button>
+    <nz-modal> </nz-modal>
+    <button nz-button nzType="primary" (click)="open()">Add</button>
     <nz-drawer
       [nzBodyStyle]="{ overflow: 'auto' }"
       [nzMaskClosable]="false"
@@ -292,35 +302,36 @@
             </div>
           </nz-card>
         </nz-ribbon>
-        <nz-ribbon [nzText]="interaction.text.id.toString()">
-          <nz-card>
-            <div class="grid grid-cols-1 gap-2">
-              <div>
-                <nz-input-group nzAddOnBefore="Text">
-                  <input nz-input [value]="interaction.text.text" readonly />
-                </nz-input-group>
-              </div>
-              <div class="grid grid-cols-2 gap-2">
-                <nz-input-group nzAddOnBefore="Created">
-                  <input
-                    type="text"
-                    nz-input
-                    readonly
-                    [value]="interaction.text.created_at | date : 'short'"
-                  />
-                </nz-input-group>
-                <nz-input-group nzAddOnBefore="Updated">
-                  <input
-                    type="text"
-                    nz-input
-                    readonly
-                    [value]="interaction.text.updated_at | date : 'short'"
-                  />
-                </nz-input-group>
-              </div>
+        <nz-card>
+          <div class="grid grid-cols-1 gap-2">
+            <div>
+              <nz-input-group
+                nzAddOnBefore="Text"
+                [nzAddOnAfter]="interaction.text.id.toString()"
+              >
+                <input nz-input [value]="interaction.text.text" readonly />
+              </nz-input-group>
             </div>
-          </nz-card>
-        </nz-ribbon>
+            <div class="grid grid-cols-2 gap-2">
+              <nz-input-group nzAddOnBefore="Created">
+                <input
+                  type="text"
+                  nz-input
+                  readonly
+                  [value]="interaction.text.created_at | date : 'short'"
+                />
+              </nz-input-group>
+              <nz-input-group nzAddOnBefore="Updated">
+                <input
+                  type="text"
+                  nz-input
+                  readonly
+                  [value]="interaction.text.updated_at | date : 'short'"
+                />
+              </nz-input-group>
+            </div>
+          </div>
+        </nz-card>
       </div>
       <div class="grid grid-cols-4 gap-2">
         <div *ngFor="let position of interaction.positions">

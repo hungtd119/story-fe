@@ -15,7 +15,7 @@ export class Position {
     id: number = Math.floor(Math.random() * 90000) + 10000,
     isDragging: boolean = false,
     isResizing: boolean = false,
-    resizeDirect: string = '',
+    resizeDirect: string = 'o',
     dragStartX: number = 0,
     dragStartY: number = 0,
     created_at: string = Date.now().toString(),
