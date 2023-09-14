@@ -243,11 +243,14 @@
 
   <nz-tabset nzTabPosition="left">
     <nz-tab
-      *ngFor="let interaction of page.interactions; let i = index"
+      *ngFor="let interaction of canvasObject.interactionsCanvas; let i = index"
       [nzTitle]="'Interaction ' + (i + 1)"
     >
       <div class="grid grid-cols-2 gap-4 mb-4">
-        <nz-ribbon [nzText]="interaction.id" [nzColor]="interaction.bg">
+        <nz-ribbon
+          [nzText]="interaction.id.toString()"
+          [nzColor]="interaction.bg"
+        >
           <nz-card>
             <div class="grid grid-cols-1 gap-2">
               <div class="grid grid-cols-2 gap-2">
@@ -289,7 +292,7 @@
             </div>
           </nz-card>
         </nz-ribbon>
-        <nz-ribbon [nzText]="interaction.text.id">
+        <nz-ribbon [nzText]="interaction.text.id.toString()">
           <nz-card>
             <div class="grid grid-cols-1 gap-2">
               <div>
@@ -321,22 +324,45 @@
       </div>
       <div class="grid grid-cols-4 gap-2">
         <div *ngFor="let position of interaction.positions">
-          <nz-ribbon [nzText]="position.id" [nzColor]="interaction.bg">
+          <nz-ribbon
+            [nzText]="position.id.toString()"
+            [nzColor]="interaction.bg"
+          >
             <nz-card nzTitle="Position">
               <div class="grid grid-cols-2 gap-2">
                 <nz-input-group nzAddOnBefore="x">
-                  <input type="number" nz-input />
+                  <input
+                    type="number"
+                    nz-input
+                    [ngModel]="position.position_x"
+                    readonly
+                  />
                 </nz-input-group>
                 <nz-input-group nzAddOnBefore="y">
-                  <input type="number" nz-input />
+                  <input
+                    type="number"
+                    nz-input
+                    [(ngModel)]="position.position_y"
+                    readonly
+                  />
                 </nz-input-group>
               </div>
               <div class="grid grid-cols-2 gap-2 mt-2">
                 <nz-input-group nzAddOnBefore="w">
-                  <input type="number" nz-input />
+                  <input
+                    type="number"
+                    nz-input
+                    [(ngModel)]="position.width"
+                    readonly
+                  />
                 </nz-input-group>
                 <nz-input-group nzAddOnBefore="h">
-                  <input type="number" nz-input />
+                  <input
+                    type="number"
+                    nz-input
+                    [(ngModel)]="position.height"
+                    readonly
+                  />
                 </nz-input-group>
               </div>
             </nz-card>

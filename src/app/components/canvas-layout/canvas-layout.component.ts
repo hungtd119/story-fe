@@ -241,9 +241,6 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
           positions: [...interaction.positions, { ...newPosition }],
         };
       });
-    // this.store.dispatch(
-    //   setPosition({ value: newPosition, interactionId: this.interactionId })
-    // );
     this.drawCanvas();
     this.isVisibleAddPosition = false;
     this.createNotification(
