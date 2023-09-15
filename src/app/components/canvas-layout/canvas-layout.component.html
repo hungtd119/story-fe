@@ -336,7 +336,11 @@
       <div class="grid grid-cols-4 gap-2">
         <div *ngFor="let position of interaction.positions">
           <nz-ribbon
-            [nzText]="position.id.toString()"
+            [nzText]="
+              position.id
+                ? position.id.toString()
+                : interaction.positions.length.toString()
+            "
             [nzColor]="interaction.bg"
           >
             <nz-card nzTitle="Position">

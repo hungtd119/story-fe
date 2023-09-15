@@ -226,9 +226,11 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
       nzContent: '<b>Save position of this</b>',
       nzOnOk: () => {
         this.positionService
-          .createPositionsByInteractionId(this.newPositions)
+          .createPositionsByInteractionId(this.canvasObject.interactionsCanvas)
           .subscribe((response) => {
-            console.log(response);
+            if (response.success) {
+              this.createNotification('success', response.message);
+            }
           });
       },
     });
@@ -248,7 +250,7 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
     newPosition.height = this.formCreatePosition.value.height;
 
     this.canvasObject.interactionsCanvas =
-      this.canvasObject.interactionsCanvas.map((interaction) => {
+      this.canvasObject.interactionsCanvas?.map((interaction) => {
         if (interaction.id !== this.interactionId) return interaction;
         return {
           ...interaction,
@@ -329,72 +331,93 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
     this.notification.create(type, 'Interactions Notification', message);
   }
   onMouseUp() {
-    this.canvasObject.interactionsCanvas.filter((interaction) => {
-      interaction.positions.filter((position) => {
-        position.isDragging = false;
-        position.isResizing = false;
+    this.canvasObject.interactionsCanvas =
+      this.canvasObject.interactionsCanvas?.map((interaction) => {
+        return {
+          ...interaction,
+          positions: [
+            ...interaction.positions?.map((position) => ({
+              ...position,
+              isDragging: 0,
+              isResizing: 0,
+            })),
+          ],
+        };
       });
-    });
   }
   onMouseDown(event: MouseEvent) {
     const rect = this.canvasRef.nativeElement.getBoundingClientRect(); // chỉ số của khung canvas
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    this.canvasObject.interactionsCanvas.filter((interaction) => {
-      interaction.positions.filter((position) => {
-        if (
-          mouseX >= position.position_x + this.stroke &&
-          mouseX <= position.position_x + position.width - this.stroke &&
-          mouseY >= position.position_y + this.stroke &&
-          mouseY <= position.position_y + position.height - this.stroke
-        ) {
-          position.isDragging = true;
-          position.isResizing = false;
-          position.dragStartX = mouseX;
-          position.dragStartY = mouseY;
-        }
-        if (
-          mouseX >= position.position_x &&
-          mouseX <= position.position_x + position.width &&
-          mouseY >= position.position_y &&
-          mouseY <= position.position_y + position.height
-        ) {
-          const offsetX = mouseX - position.position_x;
-          const offsetY = mouseY - position.position_y;
-          const borderSize = 4;
+    this.canvasObject.interactionsCanvas =
+      this.canvasObject.interactionsCanvas?.map((interaction) => {
+        return {
+          ...interaction,
+          positions: interaction.positions?.map((position) => {
+            if (
+              mouseX >= position.position_x + this.stroke &&
+              mouseX <= position.position_x + position.width - this.stroke &&
+              mouseY >= position.position_y + this.stroke &&
+              mouseY <= position.position_y + position.height - this.stroke
+            ) {
+              return {
+                ...position,
+                isDragging: 1,
+                isResizing: 0,
+                dragStartX: mouseX,
+                dragStartY: mouseY,
+              };
+            } else if (
+              mouseX >= position.position_x &&
+              mouseX <= position.position_x + position.width &&
+              mouseY >= position.position_y &&
+              mouseY <= position.position_y + position.height
+            ) {
+              const offsetX = mouseX - position.position_x;
+              const offsetY = mouseY - position.position_y;
+              const borderSize = 4;
 
-          if (
-            offsetX >= position.width - borderSize &&
-            offsetX <= position.width
-          ) {
-            position.isDragging = false;
-            position.isResizing = true;
-            position.resizeDirect = 'r';
-          }
-
-          if (
-            offsetY >= position.height - borderSize &&
-            offsetY <= position.height
-          ) {
-            position.isDragging = false;
-            position.isResizing = true;
-            position.resizeDirect = 'b';
-          }
-        }
+              if (
+                offsetX >= position.width - borderSize &&
+                offsetX <= position.width
+              ) {
+                return {
+                  ...position,
+                  isDragging: 0,
+                  isResizing: 1,
+                  resizeDirect: 'r',
+                };
+              } else if (
+                offsetY >= position.height - borderSize &&
+                offsetY <= position.height
+              ) {
+                return {
+                  ...position,
+                  isDragging: 0,
+                  isResizing: 1,
+                  resizeDirect: 'b',
+                };
+              } else {
+                return position;
+              }
+            } else {
+              return position;
+            }
+          }),
+        };
       });
-    });
   }
   onMouseMove(event: MouseEvent) {
     this.isDrag = false;
     this.isEResize = false;
     this.isNResize = false;
-    const rect = this.canvasRef.nativeElement.getBoundingClientRect(); // chỉ số của khung canvas
+    const rect = this.canvasRef.nativeElement.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    this.canvasObject.interactionsCanvas.filter((interaction) => {
-      interaction.positions.filter((position) => {
+    this.canvasObject.interactionsCanvas?.map((interaction) => {
+      interaction.positions?.map((position) => {
         if (
           mouseX >= position.position_x + this.stroke &&
           mouseX <= position.position_x + position.width - this.stroke &&
@@ -449,14 +472,13 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
       });
     });
 
-    this.canvasObject.interactionsCanvas.filter((interaction) => {
-      interaction.positions.filter((position) => {
-        if (position.isDragging) {
+    this.canvasObject.interactionsCanvas?.forEach((interaction) => {
+      interaction.positions?.forEach((position) => {
+        if (position.isDragging === 1) {
           const rect = this.canvasRef.nativeElement.getBoundingClientRect();
           const mouseX = event.clientX - rect.left;
           const mouseY = event.clientY - rect.top;
 
-          // khoảng cách chuột đã di chuyển
           const deltaX = mouseX - position.dragStartX;
           const deltaY = mouseY - position.dragStartY;
 
@@ -468,7 +490,7 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
           position.dragStartX = mouseX;
           position.dragStartY = mouseY;
         }
-        if (position.isResizing) {
+        if (position.isResizing === 1) {
           switch (position.resizeDirect) {
             case 'r':
               let deltaX = event.offsetX - position.position_x;
@@ -505,9 +527,9 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
     };
   }
   drawInteractions() {
-    this.canvasObject.interactionsCanvas.filter((interaction) => {
+    this.canvasObject.interactionsCanvas?.forEach((interaction) => {
       this.ctx.fillStyle = interaction.bg;
-      interaction.positions.filter((position) => {
+      interaction.positions?.forEach((position) => {
         this.ctx.fillRect(
           position.position_x,
           position.position_y,
