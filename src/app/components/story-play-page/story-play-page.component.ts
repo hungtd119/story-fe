@@ -1,22 +1,21 @@
-import { Observable } from 'rxjs';
 import {
-  Component,
-  Input,
-  OnInit,
   AfterViewInit,
-  ViewChild,
+  Component,
   ElementRef,
+  OnInit,
   Renderer2,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Page } from 'src/app/models/page.model';
-import { PageService } from 'src/app/services/page.service';
-import { loadPagePlay } from 'src/app/store/page/page.actions';
-import { selectPage } from 'src/app/store/page/page.selector';
+import { Observable } from 'rxjs';
+import { CanvasConfigObject } from 'src/app/models/canvasConfigObject.model';
 import { CanvasObject } from 'src/app/models/canvasObject.model';
 import { Interaction } from 'src/app/models/interaction.model';
 import { InteractionCanvas } from 'src/app/models/interactionCanvas';
+import { Page } from 'src/app/models/page.model';
+import { loadPagePlay } from 'src/app/store/page/page.actions';
+import { selectPage } from 'src/app/store/page/page.selector';
 
 @Component({
   selector: 'app-story-play-page',
@@ -38,10 +37,11 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
   pageId!: string;
   audio!: HTMLAudioElement;
   page$: Observable<Page> = this.store.select(selectPage);
-  canvasObject!: CanvasObject;
+  canvasObject!: CanvasConfigObject;
   currentIndex: number = 0;
   animationStarted = false;
   timer!: number;
+  timerStartHightLight!: number;
   syncText = [
     { s: 0, e: 1200, w: 'Finally,' },
     { s: 1200, e: 1490, w: 'I' },
@@ -135,13 +135,13 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
     this.ctxInteraction =
       this.interactionCanvas.nativeElement.getContext('2d')!;
     this.ctxText = this.textCanvasRef.nativeElement.getContext('2d')!;
-    this.canvasObject = new CanvasObject();
+    this.canvasObject = new CanvasConfigObject();
   }
   ngAfterViewInit(): void {
     this.page$.subscribe({
       next: (page) => {
         this.canvasObject.bg = page.image?.path;
-        this.canvasObject.interactionsCanvas = this.interactions;
+        this.canvasObject.interactionsCanvas = page.interactions;
         this.startCanvas();
       },
     });
@@ -153,15 +153,27 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
       this.myCanvasRef.nativeElement.width,
       this.myCanvasRef.nativeElement.height
     );
+    this.ctxInteraction.clearRect(
+      0,
+      0,
+      this.interactionCanvas.nativeElement.width,
+      this.interactionCanvas.nativeElement.height
+    );
+    this.ctxText.clearRect(
+      0,
+      0,
+      this.textCanvasRef.nativeElement.width,
+      this.textCanvasRef.nativeElement.height
+    );
     const img = new Image();
     img.src = this.canvasObject.bg;
     img.onload = () => {
       this.ctxRoot.drawImage(
         img,
         0,
-        80,
+        0,
         this.myCanvasRef.nativeElement.width,
-        this.myCanvasRef.nativeElement.height - 100
+        this.myCanvasRef.nativeElement.height
       );
 
       this.drawText(
@@ -171,12 +183,15 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
         'black'
       );
 
-      setTimeout(() => {
+      if (this.timerStartHightLight) {
+        clearTimeout(this.timerStartHightLight);
+      }
+      this.timerStartHightLight = window.setTimeout(() => {
         this.hightLightText(
           this.textCanvasRef.nativeElement.width / 4,
           this.textCanvasRef.nativeElement.height / 10
         );
-      }, 1000);
+      }, 2000);
       this.canvasObject.interactionsCanvas.forEach((interaction) => {
         interaction.positions.forEach((position: any) => {
           this.ctxInteraction.fillStyle = interaction.bg;
@@ -225,7 +240,6 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
   }
   showCom(x: number, y: number, textObj: any) {
     const text = textObj.text;
-    console.log(text);
 
     const fontSize = 18;
     const borderRadius = 6;
@@ -278,10 +292,10 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
     }
     this.timer = window.setTimeout(() => {
       this.ctxInteraction.clearRect(x, y, rectWidth + 1, rectHeight);
-    }, 3000);
+    }, 2000);
   }
 
-  jumpText(interaction: InteractionCanvas) {
+  jumpText(interaction: Interaction) {
     this.clearCanvas(this.ctxText, this.textCanvasRef);
 
     const padding = 10;

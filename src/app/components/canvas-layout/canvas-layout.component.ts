@@ -1,43 +1,30 @@
-import { Observable } from 'rxjs';
 import {
+  AfterViewInit,
   Component,
-  Input,
-  ViewChild,
   ElementRef,
   OnInit,
-  AfterViewInit,
+  ViewChild,
 } from '@angular/core';
-import { Page } from 'src/app/models/page.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { selectPage } from 'src/app/store/page/page.selector';
-import { CanvasObject } from 'src/app/models/canvasObject.model';
-import { InteractionCanvas } from 'src/app/models/interactionCanvas';
 import { NzButtonSize } from 'ng-zorro-antd/button';
-import {
-  FormBuilder,
-  FormGroup,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
-import { ImageService } from 'src/app/services/image.service';
+import { Observable } from 'rxjs';
+import { CanvasConfigObject } from 'src/app/models/canvasConfigObject.model';
 import { Image as ImageModel } from 'src/app/models/image.model';
+import { NewPosition } from 'src/app/models/newPosition.model';
+import { Position } from 'src/app/models/position.model';
 import { Text } from 'src/app/models/text.model';
-import { TextService } from 'src/app/services/text.service';
+import { ImageService } from 'src/app/services/image.service';
 import { InteractionService } from 'src/app/services/interaction.service';
+import { PositionService } from 'src/app/services/position.service';
+import { TextService } from 'src/app/services/text.service';
 import { loadInteractionByPageId } from 'src/app/store/Interaction/interaction.actions';
 import { selectInteractions } from 'src/app/store/Interaction/interaction.selector';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import {
-  loadPageInteractions,
-  setPosition,
-} from 'src/app/store/page/page.actions';
-import { CanvasConfigObject } from 'src/app/models/canvasConfigObject.model';
-import { Position } from 'src/app/models/position.model';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { PositionService } from 'src/app/services/position.service';
-import { NewPosition } from 'src/app/models/newPosition.model';
+import { loadPageInteractions } from 'src/app/store/page/page.actions';
+import { selectPage } from 'src/app/store/page/page.selector';
 @Component({
   selector: 'app-canvas-layout',
   templateUrl: './canvas-layout.component.html',

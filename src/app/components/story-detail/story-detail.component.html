@@ -155,7 +155,7 @@
               <th scope="col" class="w-1">Page Id</th>
               <th scope="col">Meta</th>
               <th scope="col">Background</th>
-              <th scope="col">Content</th>
+              <th scope="col">Texts</th>
               <th scope="col">Interactions</th>
               <th scope="col">Actions</th>
             </tr>
@@ -264,6 +264,7 @@
             (nzOnClose)="close()"
           >
             <form
+              id="formCreatePage"
               nz-form
               *nzDrawerContent
               nzLayout="vertical"
@@ -281,6 +282,100 @@
                         placeholder="Page number"
                         formControlName="page_number"
                       />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col nzSpan="24" class="mb-4">
+                  <button
+                    nz-button
+                    type="button"
+                    nzType="dashed"
+                    (click)="showModalText()"
+                  >
+                    Create Text
+                  </button>
+                  <nz-modal
+                    [(nzVisible)]="isVisibleText"
+                    nzTitle="Form Create new Text"
+                    (nzOnCancel)="handleCancelText()"
+                    (nzOnOk)="handleOkText()"
+                  >
+                    <ng-container *nzModalContent>
+                      <form
+                        [formGroup]="formCreateText"
+                        nz-form
+                        nzLayout="vertical"
+                        (ngSubmit)="handleSubmitCreateText()"
+                      >
+                        <nz-form-item>
+                          <nz-form-label nzRequired>Text </nz-form-label>
+                          <nz-form-control>
+                            <nz-input-group>
+                              <input
+                                type="text"
+                                nz-input
+                                placeholder="Please enter Text"
+                                formControlName="text"
+                              />
+                            </nz-input-group>
+                          </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                          <nz-form-label nzRequired>Icon </nz-form-label>
+                          <nz-form-control>
+                            <nz-input-group>
+                              <input
+                                type="text"
+                                nz-input
+                                placeholder="Please enter icon"
+                                formControlName="icon"
+                              />
+                            </nz-input-group>
+                          </nz-form-control>
+                        </nz-form-item>
+                        <div>
+                          <nz-form-item>
+                            <nz-form-label nzRequired>WordSync</nz-form-label>
+                            <nz-form-control>
+                              <nz-input-group>
+                                <textarea
+                                  nz-input
+                                  rows="4"
+                                  formControlName="wordSync"
+                                  placeholder="Enter wordSync"
+                                ></textarea>
+                              </nz-input-group>
+                            </nz-form-control>
+                          </nz-form-item>
+                        </div>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <button nz-button nzType="primary">Create</button>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </form>
+                    </ng-container>
+                  </nz-modal>
+                </div>
+                <div nz-col nzSpan="24">
+                  <nz-form-item>
+                    <nz-form-label>Text </nz-form-label>
+                    <nz-form-control>
+                      <nz-input-group>
+                        <nz-select
+                          nzShowSearch
+                          nzAllowClear
+                          nzPlaceHolder="Select Text"
+                          formControlName="text_id"
+                        >
+                          <nz-option
+                            *ngFor="let text of texts"
+                            [nzValue]="text.id"
+                            [nzLabel]="text.text"
+                          >
+                          </nz-option>
+                        </nz-select>
+                      </nz-input-group>
                     </nz-form-control>
                   </nz-form-item>
                 </div>
@@ -357,7 +452,9 @@
                   </nz-form-item>
                   <nz-form-item>
                     <nz-form-control>
-                      <button nz-button nzType="primary">Create</button>
+                      <button form="formCreatePage" nz-button nzType="primary">
+                        Create
+                      </button>
                     </nz-form-control>
                   </nz-form-item>
                 </div>
