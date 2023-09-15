@@ -10,4 +10,6 @@ export class Page {
   interactions!: Interaction[];
   image!: Image;
   texts!: Text[];
+  image_id!: number;
+  interactions_count!: number;
 }

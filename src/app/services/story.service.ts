@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { Story } from '../models/story.model';
 import { Observable } from 'rxjs';
@@ -15,9 +15,24 @@ export class StoryService {
     return this.http.get<any>(this.apiUrl);
   }
   getStory(id: string): Observable<any> {
-    return this.http.get<any>(this.apiUrl + `/find/${id}`);
+    return this.http.get<any>(this.apiUrl + `/detail/${id}`);
   }
-  getStoriesCard(): Observable<any> {
-    return this.http.get<any>(this.apiUrl + '/cards');
+  getStoriesCard(limit: number, page: number): Observable<any> {
+    return this.http.get<any>(
+      this.apiUrl + `/cards?limit=${limit}&page=${page}`
+    );
+  }
+  createStory(story: Story) {
+    const headersUrl: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer 2|QqDV876cwslxONGv4E4PTQrfhIeByaEcA3txgZY2`,
+    });
+    return this.http.post<any>(
+      this.apiUrl,
+      {
+        ...story,
+      }
+      // { headers: headersUrl }
+    );
   }
 }

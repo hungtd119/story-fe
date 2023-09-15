@@ -12,6 +12,7 @@ export class Story {
   updated_at!: string;
   image!: Image;
   pages!: Page[];
+  image_id!: number;
 
   constructor(
     id: number,
@@ -21,7 +22,7 @@ export class Story {
     coin: number,
     created_at: string,
     updated_at: string,
-    image: Image
+    image_id: number
   ) {
     this.id = id;
     this.title = title;
@@ -30,6 +31,6 @@ export class Story {
     this.coin = coin;
     this.created_at = created_at;
     this.updated_at = updated_at;
-    this.image = image;
+    this.image_id = image_id;
   }
 }

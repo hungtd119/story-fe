@@ -33,14 +33,14 @@ import { ConfigPageComponent } from '../config-page/config-page.component';
   ],
 })
 export class StoryPagesComponent implements OnInit {
-  id!: number;
+  id!: string;
 
   pages$: Observable<Page[]> = this.store.select(selectPages);
   constructor(private store: Store<PageState>, private route: ActivatedRoute) {
     this.route.params.subscribe((params) => {
       this.id = params['id'];
     });
-    this.store.dispatch(loadPages({ id: this.id }));
+    // this.store.dispatch(loadPages({ id: this.id }));
   }
   ngOnInit(): void {}
 }

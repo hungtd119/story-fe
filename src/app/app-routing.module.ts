@@ -25,7 +25,7 @@ const routes: Routes = [
   //   path: 'forgot-password',
   //   component: ForgotPasswordComponent,
   // },
-  { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
+  { path: '', pathMatch: 'full', redirectTo: '/dashboard/story' },
   {
     path: 'dashboard',
     loadChildren: () =>

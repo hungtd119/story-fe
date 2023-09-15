@@ -2,23 +2,225 @@
 <nz-page-header-subtitle>
   <p class="text-xl">Filter Story</p>
   <div class="d-flex align-items-center justify-end">
-    <div class="grid grid-cols-3 gap-2 my-2">
-      <nz-input-group>
-        <input nz-input placeholder="Enter Title" />
-      </nz-input-group>
-      <nz-input-group>
-        <input nz-input placeholder="Enter Id" />
-      </nz-input-group>
-      <nz-input-group>
-        <input nz-input placeholder="Enter Author" />
+    <div class="my-2 w-1/3">
+      <nz-input-group class="w-100">
+        <input nz-input placeholder="Enter your keyword" />
       </nz-input-group>
     </div>
     <button nz-button nzType="primary" class="ml-2">
       <span nz-icon nzType="search"></span>
     </button>
+    <button nz-button nzType="default" class="ml-2" (click)="showModal()">
+      <span nz-icon nzType="down"></span>
+    </button>
+    <nz-modal
+      [(nzVisible)]="isVisible"
+      nzTitle="Advance Search"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+    >
+      <ng-container *nzModalContent>
+        <div class="grid grid-cols-2 gap-2">
+          <nz-input-group>
+            <input nz-input placeholder="Enter your title" />
+          </nz-input-group>
+          <nz-input-group>
+            <input nz-input placeholder="Enter your id" />
+          </nz-input-group>
+          <nz-input-group>
+            <input nz-input placeholder="Enter your author" />
+          </nz-input-group>
+          <nz-input-group>
+            <input nz-input placeholder="Enter your illustrator" />
+          </nz-input-group>
+        </div>
+      </ng-container>
+    </nz-modal>
   </div>
 </nz-page-header-subtitle>
 <nz-page-header-content>
+  <nz-page-header-extra class="float-right">
+    <button
+      nz-button
+      nzType="primary"
+      class="d-flex align-items-center"
+      (click)="open()"
+    >
+      <span nz-icon nzType="plus"></span>
+      Create
+    </button>
+    <nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMaskClosable]="false"
+      [nzWidth]="720"
+      [nzVisible]="visible"
+      nzTitle="Create Story"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="close()"
+    >
+      <form
+        nz-form
+        *nzDrawerContent
+        nzLayout="vertical"
+        [formGroup]="formCreateStory"
+        (ngSubmit)="submitCreateStory()"
+      >
+        <div nz-row [nzGutter]="8">
+          <div nz-col nzSpan="24">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Title</nz-form-label>
+              <nz-form-control nzErrorTip="Please input title">
+                <input
+                  nz-input
+                  placeholder="Enter title"
+                  formControlName="title"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Author</nz-form-label>
+              <nz-form-control nzErrorTip="Please input author">
+                <input
+                  nz-input
+                  placeholder="Enter author"
+                  formControlName="author"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Illustrator</nz-form-label>
+              <nz-form-control nzErrorTip="Please input illustrator">
+                <input
+                  nz-input
+                  placeholder="Enter illustrator"
+                  formControlName="illustrator"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Level</nz-form-label>
+              <nz-form-control nzErrorTip="Please choose level">
+                <nz-select
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Select Level"
+                  formControlName="level"
+                >
+                  <nz-option
+                    *ngFor="let level of ['A', 'B', 'C', 'D', 'E', 'F']"
+                    [nzValue]="level"
+                    [nzLabel]="level"
+                  >
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Coin</nz-form-label>
+              <nz-form-control nzErrorTip="Please input coin">
+                <input
+                  nz-input
+                  placeholder="Enter coin"
+                  formControlName="coin"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="24">
+            <nz-badge [nzCount]="1">
+              <button
+                nz-button
+                nzType="dashed"
+                type="button"
+                (click)="showModalUploadImage()"
+              >
+                <span>Upload image</span>
+              </button>
+            </nz-badge>
+            <nz-modal
+              [(nzVisible)]="isVisibleUploadImage"
+              nzTitle="Upload Image"
+              (nzOnCancel)="handleCancelUploadImage()"
+              (nzOnOk)="handleOkUploadImage()"
+            >
+              <ng-container *nzModalContent>
+                <nz-upload
+                  nzAction="https://api.cloudinary.com/v1_1/dhhahwrmr/upload?upload_preset=ml_default"
+                  (nzChange)="handleChangeUploadImage($event)"
+                >
+                  <button nz-button class="d-flex align-items-center">
+                    <span nz-icon nzType="upload"></span>
+                    Click to Upload
+                  </button>
+                </nz-upload>
+              </ng-container>
+            </nz-modal>
+          </div>
+          <div nz-col nzSpan="24" class="mb-4">
+            <nz-badge [nzCount]="2">
+              <div class="w-[200px] h-[200px]">
+                <img
+                  nz-image
+                  width="200px"
+                  height="200px"
+                  [nzSrc]="pathPageImage"
+                  alt=""
+                />
+              </div>
+            </nz-badge>
+          </div>
+          <div nz-col nzSpan="24">
+            <nz-form-item>
+              <nz-form-label nzRequired="true">Image</nz-form-label>
+              <nz-form-control nzErrorTip="Please choose image id">
+                <nz-select
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Select Image"
+                  formControlName="image_id"
+                  [nzOptionHeightPx]="100"
+                >
+                  <nz-option
+                    nzCustomContent
+                    *ngFor="let image of images"
+                    [nzValue]="image.id"
+                    [nzLabel]="image.id"
+                  >
+                    <div class="w-[100px] h-[100px]">
+                      <img [src]="image.path" alt="image bg page" />
+                    </div>
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-control>
+                <button nz-button nzType="primary">Create</button>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </form>
+      <ng-template #footerTpl>
+        <div style="float: right">
+          <button nz-button style="margin-right: 8px" (click)="close()">
+            Cancel
+          </button>
+        </div>
+      </ng-template>
+    </nz-drawer>
+  </nz-page-header-extra>
+  <nz-page-header-subtitle>
+    <p class="text-xl">Danh sách story</p>
+  </nz-page-header-subtitle>
   <table
     *ngIf="stories$ | async as stories"
     class="table table-hover table-bordered w-100"
@@ -101,9 +303,39 @@
           </div>
         </td>
         <td>
-          <div class="d-flex justify-center"></div>
+          <div class="d-flex justify-center align-items-center">
+            <button
+              nz-button
+              nzType="default"
+              nzShape="circle"
+              (click)="gotoDetailStory(story.id)"
+            >
+              <span nz-icon nzType="select"></span>
+            </button>
+          </div>
+          <div class="d-flex justify-center align-items-center mt-2">
+            <button
+              nz-button
+              nzType="default"
+              nzShape="circle"
+              (click)="gotoPlayStory(story.id)"
+            >
+              <span nz-icon nzType="play-circle" nzTheme="outline"></span>
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
+  <div class="d-flex justify-center">
+    <nz-pagination
+      [nzPageIndex]="pageIndex"
+      [nzTotal]="count$ | async"
+      [nzPageSize]="perPageSize"
+      nzShowSizeChanger
+      [nzPageSizeOptions]="[2, 4, 8, 10]"
+      (nzPageIndexChange)="handleChangePageIndex($event)"
+      (nzPageSizeChange)="handleChangePerPageSize($event)"
+    ></nz-pagination>
+  </div>
 </nz-page-header-content>
