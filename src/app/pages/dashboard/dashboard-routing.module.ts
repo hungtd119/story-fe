@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
-import { StoryComponent } from 'src/app/components/story/story.component';
-import { StoryDetailComponent } from 'src/app/components/story-detail/story-detail.component';
-import { StoryConfigPageComponent } from 'src/app/components/story-config-page/story-config-page.component';
-import { StoryPlayRunComponent } from 'src/app/components/story-play-run/story-play-run.component';
-import { StoryPlayPageComponent } from 'src/app/components/story-play-page/story-play-page.component';
+import { StoryComponent } from '../story/story.component';
+import { StoryDetailComponent } from '../story-detail/story-detail.component';
+import { StoryPlayRunComponent } from '../story-play-run/story-play-run.component';
+import { StoryPlayPageComponent } from '../story-play-page/story-play-page.component';
+import { StoryConfigPageComponent } from '../story-config-page/story-config-page.component';
+import { StoryConfigOnePageComponent } from '../story-config-one-page/story-config-one-page.component';
 
 const routes: Routes = [
   {
@@ -17,8 +18,12 @@ const routes: Routes = [
       { path: 'story-play/:id', component: StoryPlayRunComponent },
       { path: 'story-play-page/:id', component: StoryPlayPageComponent },
       {
-        path: 'story-config-page/:storyId',
+        path: 'story-config-pages/:storyId',
         component: StoryConfigPageComponent,
+      },
+      {
+        path: 'story-config-page/:pageId',
+        component: StoryConfigOnePageComponent,
       },
     ],
   },
