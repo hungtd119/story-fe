@@ -6,12 +6,15 @@ import {
   Renderer2,
   ViewChild,
 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CanvasConfigObject } from 'src/app/models/canvasConfigObject.model';
 import { Interaction } from 'src/app/models/interaction.model';
 import { Page } from 'src/app/models/page.model';
+import { Position } from 'src/app/models/position.model';
+import { SyncText } from 'src/app/models/sycnText.model';
 import { loadPagePlay } from 'src/app/store/page/page.actions';
 import { selectPage } from 'src/app/store/page/page.selector';
 
@@ -21,18 +24,8 @@ import { selectPage } from 'src/app/store/page/page.selector';
   styleUrls: ['./story-play-page.component.scss'],
 })
 export class StoryPlayPageComponent implements OnInit, AfterViewInit {
-  syncText = [
-    { s: 0, e: 1200, w: 'Finally,' },
-    { s: 1200, e: 1490, w: 'I' },
-    { s: 1490, e: 1700, w: 'will' },
-    { s: 1700, e: 2100, w: 'add' },
-    { s: 2100, e: 2260, w: 'the' },
-    { s: 2260, e: 3580, w: 'dressing' },
-    { s: 3880, e: 3880, w: '' },
-  ];
-
-  x_root = 300;
-  y_root = 70;
+  syncText!: SyncText[];
+  formResolution!: FormGroup;
 
   @ViewChild('myCanvas', { static: true })
   myCanvasRef!: ElementRef<HTMLCanvasElement>;
@@ -53,11 +46,16 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
   currentIndex: number = 0;
   timerStartHightLight!: number;
   animationStarted = false;
+  width_device!: number;
+  height_device!: number;
+  page_width!: number;
+  page_height!: number;
 
   constructor(
     private routerActive: ActivatedRoute,
     private store: Store,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private fb: FormBuilder
   ) {
     this.routerActive.params.subscribe((params) => {
       this.pageId = params['id'];
@@ -70,6 +68,18 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
       this.interactionCanvas.nativeElement.getContext('2d')!;
     this.ctxText = this.textCanvasRef.nativeElement.getContext('2d')!;
     this.canvasObject = new CanvasConfigObject();
+    this.page$.subscribe((page) => {
+      this.width_device = page.width_device;
+      this.height_device = page.height_device;
+      this.page_width = page.width_device;
+      this.page_height = page.height_device;
+      this.formResolution = this.fb.group({
+        width_device: [page.width_device, Validators.required],
+        height_device: [page.height_device, Validators.required],
+      });
+      this.syncText = JSON.parse(page.texts[0].wordSync);
+      this.syncText.push({ ...this.syncText[this.syncText.length - 1], w: '' });
+    });
   }
   ngAfterViewInit(): void {
     this.page$.subscribe({
@@ -80,39 +90,23 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
       },
     });
   }
+  handleSubmitResolution() {
+    this.width_device = this.formResolution.value.width_device;
+    this.height_device = this.formResolution.value.height_device;
+    this.startCanvas();
+  }
   startCanvas() {
-    this.ctxRoot.clearRect(
-      0,
-      0,
-      this.myCanvasRef.nativeElement.width,
-      this.myCanvasRef.nativeElement.height
-    );
-    this.ctxInteraction.clearRect(
-      0,
-      0,
-      this.interactionCanvas.nativeElement.width,
-      this.interactionCanvas.nativeElement.height
-    );
-    this.ctxText.clearRect(
-      0,
-      0,
-      this.textCanvasRef.nativeElement.width,
-      this.textCanvasRef.nativeElement.height
-    );
+    this.ctxRoot.clearRect(0, 0, this.width_device, this.height_device);
+    this.ctxInteraction.clearRect(0, 0, this.width_device, this.height_device);
+    this.ctxText.clearRect(0, 0, this.width_device, this.height_device);
     const img = new Image();
     img.src = this.canvasObject.bg;
     img.onload = () => {
-      this.ctxRoot.drawImage(
-        img,
-        0,
-        0,
-        this.myCanvasRef.nativeElement.width,
-        this.myCanvasRef.nativeElement.height
-      );
+      this.ctxRoot.drawImage(img, 0, 0, this.width_device, this.height_device);
 
       this.drawText(
-        this.textCanvasRef.nativeElement.width / 4,
-        this.textCanvasRef.nativeElement.height / 10,
+        this.width_device / 4,
+        this.height_device / 10,
         '48px serif',
         'black'
       );
@@ -126,6 +120,19 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
           this.textCanvasRef.nativeElement.height / 10
         );
       }, 2000);
+
+      this.canvasObject.interactionsCanvas =
+        this.canvasObject.interactionsCanvas.map((interaction) => {
+          return {
+            ...interaction,
+            positions: interaction.positions.map((position) => {
+              return this.transformResolution(position);
+            }),
+          };
+        });
+      this.page_width = this.width_device;
+      this.page_height = this.height_device;
+
       this.canvasObject.interactionsCanvas.forEach((interaction) => {
         interaction.positions.forEach((position: any) => {
           this.ctxInteraction.fillStyle = interaction.bg;
@@ -170,6 +177,15 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
           );
         });
       });
+    };
+  }
+  transformResolution(position: Position) {
+    return {
+      ...position,
+      position_x: (this.width_device * position.position_x) / this.page_width,
+      position_y: (this.height_device * position.position_y) / this.page_height,
+      width: (this.width_device * position.width) / this.page_width,
+      height: (this.height_device * position.height) / this.page_height,
     };
   }
   showCom(x: number, y: number, textObj: any) {
@@ -234,7 +250,7 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
 
     const padding = 10;
     this.ctxText.font = '48px serif';
-    let currentX = this.x_root;
+    let currentX = this.width_device / 4;
     for (let index = 0; index < this.syncText.length; index++) {
       const word = this.syncText[index].w;
       this.ctxText.fillStyle = 'black';
@@ -244,18 +260,16 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
         interaction.text.text
       ) {
         this.ctxText.fillStyle = 'red';
-        const y_new = this.y_root - 20;
+        const y_new = this.height_device / 10 - 20;
         const wordWidth = this.ctxText.measureText(word).width;
         // add animation here
         const animate = () => {
-          console.log(currentX);
-
           this.ctxText.fillText(word, currentX, y_new);
         };
         animate();
         currentX += wordWidth + padding;
       } else {
-        this.ctxText.fillText(word, currentX, this.y_root);
+        this.ctxText.fillText(word, currentX, this.height_device / 10);
         const widthWord = this.ctxText.measureText(word).width;
         currentX += widthWord + padding;
       }
@@ -264,11 +278,15 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.clearCanvas(this.ctxText, this.textCanvasRef);
 
-      this.drawText(this.x_root, this.y_root, '48px serif', 'black');
+      this.drawText(
+        this.width_device / 4,
+        this.height_device / 10,
+        '48px serif',
+        'black'
+      );
     }, 1000);
   }
   drawText(x: number, y: number, font: string, color: string) {
-    const fontSize = 16;
     const padding = 10;
     this.ctxText.font = font;
     this.ctxText.textBaseline = 'middle';

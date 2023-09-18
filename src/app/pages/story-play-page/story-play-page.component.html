@@ -1,5 +1,48 @@
-<div class="w-[1170px] h-[571px]">
-  <canvas id="bg" #myCanvas width="1170px" height="571px"></canvas>
-  <canvas id="text" #textCanvas width="1170px" height="571px"></canvas>
-  <canvas id="com" #interactionCanvas width="1170px" height="571px"></canvas>
+<div>
+  <form
+    nz-form
+    [nzLayout]="'inline'"
+    [formGroup]="formResolution"
+    (ngSubmit)="handleSubmitResolution()"
+  >
+    <nz-form-item>
+      <nz-form-control>
+        <nz-input-group nzAddOnBefore="width">
+          <input formControlName="width_device" type="number" nz-input />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-input-group nzAddOnBefore="height">
+          <input formControlName="height_device" nz-input type="number" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <button nz-button nzType="primary">Update</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>
+<div [style.width.px]="width_device" [style.height.px]="height_device">
+  <canvas
+    id="bg"
+    #myCanvas
+    [width]="width_device"
+    [height]="height_device"
+  ></canvas>
+  <canvas
+    id="text"
+    #textCanvas
+    [width]="width_device"
+    [height]="height_device"
+  ></canvas>
+  <canvas
+    id="com"
+    #interactionCanvas
+    [width]="width_device"
+    [height]="height_device"
+  ></canvas>
 </div>

@@ -2,8 +2,8 @@
   <canvas
     #canvas
     id="canvas"
-    width="1170px"
-    height="571px"
+    [width]="width_device"
+    [height]="height_device"
     (mousedown)="onMouseDown($event)"
     (mousemove)="onMouseMove($event)"
     (mouseup)="onMouseUp()"
@@ -12,6 +12,93 @@
     [class.isDrag]="isDrag"
   ></canvas>
 </nz-card>
+<div class="grid grid-cols-2 gap-4">
+  <nz-card nzTitle="Sentence" class="mt-4" *ngIf="$page | async as page">
+    <form
+      nz-form
+      nzLayout="vertical"
+      *ngIf="page.texts"
+      [formGroup]="formUpdateSentence"
+    >
+      <div nz-row [nzGutter]="8">
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-control>
+              <nz-input-group nzAddOnBefore="Id">
+                <input nz-input formControlName="id" readonly />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-control>
+              <nz-input-group nzAddOnBefore="Text">
+                <input nz-input formControlName="text" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="24" class="grid grid-cols-2 gap-2">
+          <nz-input-group nzAddOnBefore="Created">
+            <input
+              type="text"
+              nz-input
+              readonly
+              [value]="page.texts[0].created_at | date : 'short'"
+            />
+          </nz-input-group>
+          <nz-input-group nzAddOnBefore="Updated">
+            <input
+              type="text"
+              nz-input
+              readonly
+              [value]="page.texts[0].updated_at | date : 'short'"
+            />
+          </nz-input-group>
+        </div>
+      </div>
+      <div nz-col nzSpan="12" class="mt-4">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button nzType="primary">Update</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </form>
+  </nz-card>
+  <nz-card nzTitle="Resolution" class="mt-4" *ngIf="$page | async as page">
+    <form nz-form nzLayout="vertical" [formGroup]="formResolution">
+      <div nz-row [nzGutter]="8">
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-control>
+              <nz-input-group nzAddOnBefore="Width">
+                <input nz-input formControlName="width_device" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-control>
+              <nz-input-group nzAddOnBefore="Height">
+                <input nz-input formControlName="height_device" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <div nz-col nzSpan="12" class="mt-4">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button nzType="primary">Update</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </form>
+  </nz-card>
+</div>
 <nz-card
   class="mt-4"
   nzTitle="Interactions config"

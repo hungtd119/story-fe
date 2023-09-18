@@ -92,6 +92,8 @@ export class StoryDetailComponent implements OnInit {
       this.pageCount$.subscribe((pageCount) => {
         this.formCreatePage = this.fb.group({
           page_number: [pageCount + 1, Validators.required],
+          width_device: [1170, Validators.required],
+          height_device: [571, Validators.required],
           image_id: ['', Validators.required],
           story_id: [story.id],
           text_id: ['', Validators.required],

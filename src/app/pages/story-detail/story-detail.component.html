@@ -289,7 +289,7 @@
               (ngSubmit)="handleSubmitFormCreatePage()"
             >
               <div nz-row [nzGutter]="8">
-                <div nz-col nzSpan="12">
+                <div nz-col nzSpan="24">
                   <nz-form-item>
                     <nz-form-label nzRequired="true">Page Number</nz-form-label>
                     <nz-form-control>
@@ -298,6 +298,36 @@
                         type="number"
                         placeholder="Page number"
                         formControlName="page_number"
+                      />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col nzSpan="12">
+                  <nz-form-item>
+                    <nz-form-label nzRequired="true"
+                      >Width device</nz-form-label
+                    >
+                    <nz-form-control>
+                      <input
+                        nz-input
+                        type="number"
+                        placeholder="Width device"
+                        formControlName="width_device"
+                      />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col nzSpan="12">
+                  <nz-form-item>
+                    <nz-form-label nzRequired="true"
+                      >Height device</nz-form-label
+                    >
+                    <nz-form-control>
+                      <input
+                        nz-input
+                        type="number"
+                        placeholder="Height device"
+                        formControlName="height_device"
                       />
                     </nz-form-control>
                   </nz-form-item>

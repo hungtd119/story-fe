@@ -8,6 +8,8 @@ export class Page {
   created_at!: string;
   updated_at!: string;
   interactions!: Interaction[];
+  width_device!: number;
+  height_device!: number;
   image!: Image;
   texts!: Text[];
   image_id!: number;
