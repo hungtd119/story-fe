@@ -136,7 +136,7 @@
         <div nz-row [nzGutter]="8">
           <div nz-col nzSpan="12">
             <nz-form-item>
-              <nz-form-label>Background</nz-form-label>
+              <nz-form-label nzRequired>Background</nz-form-label>
               <nz-form-control>
                 <input
                   nz-input
@@ -179,7 +179,7 @@
                   (ngSubmit)="handleSubmitCreateText()"
                 >
                   <nz-form-item>
-                    <nz-form-label>Text </nz-form-label>
+                    <nz-form-label nzRequired>Text </nz-form-label>
                     <nz-form-control>
                       <nz-input-group>
                         <input
@@ -294,7 +294,7 @@
           <div nz-col nzSpan="24">
             <nz-form-item>
               <nz-badge [nzCount]="3">
-                <nz-form-label nzRequired="true">Images</nz-form-label>
+                <nz-form-label>Image</nz-form-label>
               </nz-badge>
               <nz-form-control nzErrorTip="Please choose image id">
                 <nz-select

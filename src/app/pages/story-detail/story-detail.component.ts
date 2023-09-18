@@ -85,7 +85,7 @@ export class StoryDetailComponent implements OnInit {
     });
     this.formCreateText = this.fb.group({
       text: ['', Validators.required],
-      icon: ['', Validators.required],
+      icon: [''],
       wordSync: ['', Validators.required],
     });
     this.story$.subscribe((story) => {
