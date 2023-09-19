@@ -7,7 +7,6 @@ import en from '@angular/common/locales/en';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CloudinaryModule } from '@cloudinary/ng';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -19,6 +18,8 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
 import { StoryModule } from './pages/story/story.module';
 import * as interactionEffects from './store/Interaction/interaction.effects';
 import { interactionReducer } from './store/Interaction/interaction.reducers';
@@ -26,16 +27,17 @@ import * as pageEffects from './store/page/page.effects';
 import { pageReducer } from './store/page/page.reducers';
 import * as storyEffects from './store/story/story.effects';
 import { storyReducer } from './store/story/story.reducer';
-import { StoryConfigOnePageComponent } from './pages/story-config-one-page/story-config-one-page.component';
+import { userReducer } from './store/user/user.reducer';
 
 registerLocaleData(en);
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, LoginComponent, RegisterComponent],
   imports: [
     StoreModule.forRoot({
       story: storyReducer,
       pages: pageReducer,
       interactions: interactionReducer,
+      user: userReducer,
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
@@ -55,7 +57,6 @@ registerLocaleData(en);
     NzIconModule,
     NzModalModule,
     StoryModule,
-    CloudinaryModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],

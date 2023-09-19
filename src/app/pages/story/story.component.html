@@ -164,9 +164,9 @@
               </ng-container>
             </nz-modal>
           </div>
-          <div nz-col nzSpan="24" class="mb-4">
+          <div nz-col nzSpan="24" class="my-4">
             <nz-badge [nzCount]="2">
-              <div class="w-[200px] h-[200px]">
+              <div class="w-[200px]">
                 <img
                   nz-image
                   width="200px"
@@ -221,112 +221,126 @@
   <nz-page-header-subtitle>
     <p class="text-xl">Danh sách story</p>
   </nz-page-header-subtitle>
-  <table
-    *ngIf="stories$ | async as stories"
-    class="table table-hover table-bordered w-100"
-  >
-    <thead>
-      <tr class="text-center">
-        <th scope="col" class="w-1">Story Id</th>
-        <th scope="col">Thumbnail</th>
-        <th scope="col">Content</th>
-        <th scope="col">Pages</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let story of stories">
-        <th class="text-center text-sm">[{{ story.id }}]</th>
-        <td>
-          <div class="max-h-[200px] rounded-md d-flex justify-center">
-            <img
-              class="rounded-md"
-              [src]="story.image.path"
-              alt="thumbnail"
-              width="150"
-            />
-          </div>
-        </td>
-        <td>
-          <table>
-            <tr>
-              <td class="text-sm font-bold">Title :</td>
-              <td class="text-sm px-2 py-[2px]">{{ story.title }}</td>
-            </tr>
-            <tr>
-              <td class="text-sm font-bold">Level :</td>
-              <td class="text-sm px-2 py-[2px]">{{ story.level }}</td>
-            </tr>
-            <tr>
-              <td class="text-sm font-bold">Coin :</td>
-              <td class="text-sm px-2 py-[2px]">{{ story.coin }}</td>
-            </tr>
-            <tr>
-              <td class="text-sm font-bold">Author :</td>
-              <td class="text-sm px-2 py-[2px]">{{ story.author }}</td>
-            </tr>
-            <tr>
-              <td class="text-sm font-bold">Illustrator :</td>
-              <td class="text-sm px-2 py-[2px]">{{ story.illustrator }}</td>
-            </tr>
-            <tr>
-              <td class="text-sm font-bold">Created at :</td>
-              <td class="text-sm px-2 py-[2px]">
-                {{ story.created_at | date : "short" }}
-              </td>
-            </tr>
-            <tr>
-              <td class="text-sm font-bold">Updated at :</td>
-              <td class="text-sm px-2 py-[2px]">
-                {{ story.updated_at | date : "short" }}
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <div>
-            <div
-              *ngFor="let page of story.pages"
-              class="bg-slate-200 p-2 rounded-md my-2"
-            >
+  <div *ngIf="!isLoading; else loading">
+    <div *ngIf="stories$ | async as stories">
+      <table
+        *ngIf="stories.length > 0; else nodata"
+        class="table table-hover table-bordered w-100"
+      >
+        <thead>
+          <tr class="text-center">
+            <th scope="col" class="w-1">Story Id</th>
+            <th scope="col">Thumbnail</th>
+            <th scope="col">Content</th>
+            <th scope="col">Pages</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let story of stories">
+            <th class="text-center text-sm">[{{ story.id }}]</th>
+            <td>
+              <div class="max-h-[200px] rounded-md d-flex justify-center">
+                <img
+                  class="rounded-md"
+                  [src]="story.image.path"
+                  alt="thumbnail"
+                  width="150"
+                />
+              </div>
+            </td>
+            <td>
               <table>
                 <tr>
-                  <td class="text-xs font-bold">ID :</td>
-                  <td class="text-xs px-2 py-[2px]">{{ page.id }}</td>
+                  <td class="text-sm font-bold">Title :</td>
+                  <td class="text-sm px-2 py-[2px]">{{ story.title }}</td>
                 </tr>
                 <tr>
-                  <td class="text-xs font-bold">Page Number :</td>
-                  <td class="text-xs px-2 py-[2px]">{{ page.page_number }}</td>
+                  <td class="text-sm font-bold">Level :</td>
+                  <td class="text-sm px-2 py-[2px]">{{ story.level }}</td>
+                </tr>
+                <tr>
+                  <td class="text-sm font-bold">Coin :</td>
+                  <td class="text-sm px-2 py-[2px]">{{ story.coin }}</td>
+                </tr>
+                <tr>
+                  <td class="text-sm font-bold">Author :</td>
+                  <td class="text-sm px-2 py-[2px]">{{ story.author }}</td>
+                </tr>
+                <tr>
+                  <td class="text-sm font-bold">Illustrator :</td>
+                  <td class="text-sm px-2 py-[2px]">{{ story.illustrator }}</td>
+                </tr>
+                <tr>
+                  <td class="text-sm font-bold">Created at :</td>
+                  <td class="text-sm px-2 py-[2px]">
+                    {{ story.created_at | date : "short" }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-sm font-bold">Updated at :</td>
+                  <td class="text-sm px-2 py-[2px]">
+                    {{ story.updated_at | date : "short" }}
+                  </td>
                 </tr>
               </table>
-            </div>
-          </div>
-        </td>
-        <td>
-          <div class="d-flex justify-center align-items-center">
-            <button
-              nz-button
-              nzType="default"
-              nzShape="circle"
-              (click)="gotoDetailStory(story.id)"
-            >
-              <span nz-icon nzType="select"></span>
-            </button>
-          </div>
-          <div class="d-flex justify-center align-items-center mt-2">
-            <button
-              nz-button
-              nzType="default"
-              nzShape="circle"
-              (click)="gotoPlayStory(story.id)"
-            >
-              <span nz-icon nzType="play-circle" nzTheme="outline"></span>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            </td>
+            <td>
+              <div>
+                <div
+                  *ngFor="let page of story.pages"
+                  class="bg-slate-200 p-2 rounded-md my-2"
+                >
+                  <table>
+                    <tr>
+                      <td class="text-xs font-bold">ID :</td>
+                      <td class="text-xs px-2 py-[2px]">{{ page.id }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-xs font-bold">Page Number :</td>
+                      <td class="text-xs px-2 py-[2px]">
+                        {{ page.page_number }}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex justify-center align-items-center">
+                <button
+                  nz-button
+                  nzType="default"
+                  nzShape="circle"
+                  (click)="gotoDetailStory(story.id)"
+                >
+                  <span nz-icon nzType="select"></span>
+                </button>
+              </div>
+              <div class="d-flex justify-center align-items-center mt-2">
+                <button
+                  nz-button
+                  nzType="default"
+                  nzShape="circle"
+                  (click)="gotoPlayStory(story.id)"
+                >
+                  <span nz-icon nzType="play-circle" nzTheme="outline"></span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <ng-template #nodata> <nz-empty></nz-empty> </ng-template>
+  <ng-template #loading>
+    <div class="d-flex justify-center align-items-center h-[200px]">
+      <nz-spin [nzSize]="'large'" nzSimple></nz-spin>
+    </div>
+  </ng-template>
+
   <div class="d-flex justify-center">
     <nz-pagination
       [nzPageIndex]="pageIndex"

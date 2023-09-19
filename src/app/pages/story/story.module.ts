@@ -26,6 +26,8 @@ import { StoryPlayRunComponent } from '../story-play-run/story-play-run.componen
 import { StoryComponent } from './story.component';
 import { StoryPlayPageComponent } from '../story-play-page/story-play-page.component';
 import { StoryConfigOnePageComponent } from '../story-config-one-page/story-config-one-page.component';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,8 @@ import { StoryConfigOnePageComponent } from '../story-config-one-page/story-conf
     NzUploadModule,
     NzImageModule,
     NzLayoutModule,
+    NzEmptyModule,
+    NzSpinModule,
   ],
 })
 export class StoryModule {}

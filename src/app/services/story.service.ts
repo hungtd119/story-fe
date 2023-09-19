@@ -35,4 +35,7 @@ export class StoryService {
       // { headers: headersUrl }
     );
   }
+  updateStory(body: any): Observable<any> {
+    return this.http.put(this.apiUrl + `?id=${body.id}`, { ...body });
+  }
 }

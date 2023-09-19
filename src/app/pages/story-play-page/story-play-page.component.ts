@@ -104,8 +104,14 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
     img.onload = () => {
       this.ctxRoot.drawImage(img, 0, 0, this.width_device, this.height_device);
 
+      this.ctxText.font = '48px serif';
+
       this.drawText(
-        this.width_device / 4,
+        this.width_device / 2 -
+          this.ctxText.measureText(
+            this.syncText.map((text) => text.w).join(' ')
+          ).width /
+            2,
         this.height_device / 10,
         '48px serif',
         'black'
@@ -116,7 +122,11 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
       }
       this.timerStartHightLight = window.setTimeout(() => {
         this.hightLightText(
-          this.textCanvasRef.nativeElement.width / 4,
+          this.width_device / 2 -
+            this.ctxText.measureText(
+              this.syncText.map((text) => text.w).join(' ')
+            ).width /
+              2,
           this.textCanvasRef.nativeElement.height / 10
         );
       }, 2000);
@@ -250,7 +260,11 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
 
     const padding = 10;
     this.ctxText.font = '48px serif';
-    let currentX = this.width_device / 4;
+    let currentX =
+      this.width_device / 2 -
+      this.ctxText.measureText(this.syncText.map((text) => text.w).join(' '))
+        .width /
+        2;
     for (let index = 0; index < this.syncText.length; index++) {
       const word = this.syncText[index].w;
       this.ctxText.fillStyle = 'black';
@@ -279,7 +293,11 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
       this.clearCanvas(this.ctxText, this.textCanvasRef);
 
       this.drawText(
-        this.width_device / 4,
+        this.width_device / 2 -
+          this.ctxText.measureText(
+            this.syncText.map((text) => text.w).join(' ')
+          ).width /
+            2,
         this.height_device / 10,
         '48px serif',
         'black'

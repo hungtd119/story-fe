@@ -1,6 +1,9 @@
 <div *ngIf="story$ | async as story">
   <nz-page-header nzTitle="Story Detail"></nz-page-header>
-  <nz-page-header-content class="grid grid-cols-1 gap-4">
+  <nz-page-header-content
+    class="grid grid-cols-1 gap-4"
+    *ngIf="!isLoading; else loading"
+  >
     <div class="grid grid-cols-2 gap-2">
       <div>
         <nz-ribbon
@@ -34,17 +37,21 @@
               </nz-form-item>
               <div class="grid grid-cols-2 gap-2">
                 <nz-form-item>
-                  <nz-form-label nzRequired="true" class="font-bold"
-                    >Level</nz-form-label
-                  >
-                  <nz-form-control nzErrorTip="Please input story level!">
-                    <nz-input-group>
-                      <input
-                        formControlName="level"
-                        nz-input
-                        placeholder="Level"
-                      />
-                    </nz-input-group>
+                  <nz-form-label nzRequired="true">Level</nz-form-label>
+                  <nz-form-control nzErrorTip="Please choose level">
+                    <nz-select
+                      nzShowSearch
+                      nzAllowClear
+                      nzPlaceHolder="Select Level"
+                      formControlName="level"
+                    >
+                      <nz-option
+                        *ngFor="let level of ['A', 'B', 'C', 'D', 'E', 'F']"
+                        [nzValue]="level"
+                        [nzLabel]="level"
+                      >
+                      </nz-option>
+                    </nz-select>
                   </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
@@ -149,7 +156,10 @@
     </div>
     <div *ngIf="pages$ | async as pages">
       <nz-card nzTitle="Pages information" [nzExtra]="actionPage">
-        <table class="table table-hover table-bordered w-100">
+        <table
+          class="table table-hover table-bordered w-100"
+          *ngIf="pages.length > 0; else nodata"
+        >
           <thead>
             <tr class="text-center">
               <th scope="col" class="w-1">Page Id</th>
@@ -239,6 +249,10 @@
             </tr>
           </tbody>
         </table>
+        <ng-template #nodata>
+          <nz-empty></nz-empty>
+        </ng-template>
+
         <div class="d-flex justify-center">
           <nz-pagination
             [nzPageIndex]="pageIndex"
@@ -458,7 +472,7 @@
                 </div>
                 <div nz-col nzSpan="24" class="mb-4">
                   <nz-badge [nzCount]="2">
-                    <div class="w-[200px] h-[200px]">
+                    <div class="w-[200px]">
                       <img
                         nz-image
                         width="200px"
@@ -519,4 +533,9 @@
       </ng-template>
     </div>
   </nz-page-header-content>
+  <ng-template #loading>
+    <div class="d-flex justify-center align-items-center h-[200px]">
+      <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    </div>
+  </ng-template>
 </div>

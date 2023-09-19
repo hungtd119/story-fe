@@ -13,6 +13,7 @@ const routes: Routes = [
     path: '',
     component: DashboardComponent,
     children: [
+      { path: '', pathMatch: 'full', redirectTo: '/dashboard/story' },
       { path: 'story', component: StoryComponent },
       { path: 'story-detail/:id', component: StoryDetailComponent },
       { path: 'story-play/:id', component: StoryPlayRunComponent },
