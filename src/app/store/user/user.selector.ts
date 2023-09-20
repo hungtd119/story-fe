@@ -6,3 +6,7 @@ export const selectIsAuth = createSelector(
   userFeature,
   (state: UserState) => state.isAuthenticate
 );
+export const selectIsLoading = createSelector(
+  userFeature,
+  (state: UserState) => state.isLoading
+);

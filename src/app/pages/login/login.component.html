@@ -1,1 +1,43 @@
-<p>login works!</p>
+<div class="w-100 h-[70vh] d-flex justify-center align-items-center">
+  <form
+    nz-form
+    [formGroup]="formLogin"
+    class="login-form min-w-[500px]"
+    (ngSubmit)="submitForm()"
+  >
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Please input your username!">
+        <nz-input-group nzPrefixIcon="user">
+          <input
+            type="text"
+            nz-input
+            formControlName="email"
+            placeholder="Email"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Please input your Password!">
+        <nz-input-group nzPrefixIcon="lock">
+          <input
+            type="password"
+            nz-input
+            formControlName="password"
+            placeholder="Password"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+
+    <button
+      nz-button
+      class="login-form-button login-form-margin"
+      [nzType]="'primary'"
+    >
+      Log in
+    </button>
+    Or
+    <a routerLink="/register" class="text-blue-600">register now!</a>
+  </form>
+</div>

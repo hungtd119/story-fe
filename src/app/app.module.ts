@@ -28,6 +28,8 @@ import { pageReducer } from './store/page/page.reducers';
 import * as storyEffects from './store/story/story.effects';
 import { storyReducer } from './store/story/story.reducer';
 import { userReducer } from './store/user/user.reducer';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 registerLocaleData(en);
 @NgModule({
@@ -56,7 +58,9 @@ registerLocaleData(en);
     NzMenuModule,
     NzIconModule,
     NzModalModule,
+    NzInputModule,
     StoryModule,
+    NzFormModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],
