@@ -17,6 +17,7 @@ import { Image as ImageModel } from 'src/app/models/image.model';
 import { NewPosition } from 'src/app/models/newPosition.model';
 import { Position } from 'src/app/models/position.model';
 import { Text } from 'src/app/models/text.model';
+import { AudioService } from 'src/app/services/audio.service';
 import { ImageService } from 'src/app/services/image.service';
 import { InteractionService } from 'src/app/services/interaction.service';
 import { PositionService } from 'src/app/services/position.service';
@@ -60,6 +61,7 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
   isVisible = false;
   isVisibleText = false;
   isVisibleAddPosition = false;
+  text_id!: number;
   isLoading = true;
   min_rect_size = 10;
   pathPageImage =
@@ -75,7 +77,8 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
     private interactionService: InteractionService,
     private notification: NzNotificationService,
     private modal: NzModalService,
-    private positionService: PositionService
+    private positionService: PositionService,
+    private audioService: AudioService
   ) {}
   ngOnInit(): void {
     this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
@@ -267,8 +270,35 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
           text.text = response.data.text;
           this.texts.unshift(text);
           this.formCreateInteraction.patchValue({ text_id: text.id });
+          this.text_id = text.id;
         }
       });
+  }
+  handleChangeUploadAudio(info: NzUploadChangeParam) {
+    if (info.file.status !== 'uploading') {
+      const path = info.file.response.url;
+      const filename = info.file.response.original_filename;
+
+      this.audioService
+        .createAudio({
+          filename,
+          path,
+          time: 10,
+          text_id: this.text_id,
+        })
+        .subscribe((response) => {
+          if (response.success) {
+            this.createNotification('success', response.message);
+          } else {
+            this.createNotification('error', response.message);
+          }
+        });
+    }
+    if (info.file.status === 'done') {
+      console.log(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      console.log(`${info.file.name} file upload failed.`);
+    }
   }
   handleSubmitCreateInteraction() {
     this.interactionService

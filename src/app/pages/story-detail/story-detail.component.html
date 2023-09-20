@@ -347,14 +347,16 @@
                   </nz-form-item>
                 </div>
                 <div nz-col nzSpan="24" class="mb-4">
-                  <button
-                    nz-button
-                    type="button"
-                    nzType="dashed"
-                    (click)="showModalText()"
-                  >
-                    Create Sentence
-                  </button>
+                  <nz-badge [nzCount]="1">
+                    <button
+                      nz-button
+                      type="button"
+                      nzType="dashed"
+                      (click)="showModalText()"
+                    >
+                      Create Sentence
+                    </button>
+                  </nz-badge>
                   <nz-modal
                     [(nzVisible)]="isVisibleText"
                     nzTitle="Form Create new Text"
@@ -369,7 +371,9 @@
                         (ngSubmit)="handleSubmitCreateText()"
                       >
                         <nz-form-item>
-                          <nz-form-label nzRequired>Text </nz-form-label>
+                          <nz-badge [nzCount]="2">
+                            <nz-form-label nzRequired>Text </nz-form-label>
+                          </nz-badge>
                           <nz-form-control>
                             <nz-input-group>
                               <input
@@ -440,8 +444,8 @@
                     </nz-form-control>
                   </nz-form-item>
                 </div>
-                <div nz-col nzSpan="24" class="mb-4">
-                  <nz-badge [nzCount]="1">
+                <div nz-col nzSpan="12" class="mb-4">
+                  <nz-badge [nzCount]="3">
                     <button
                       nz-button
                       nzType="dashed"
@@ -470,8 +474,24 @@
                     </ng-container>
                   </nz-modal>
                 </div>
+                <div nz-col nzSpan="12">
+                  <nz-upload
+                    nzAction="https://api.cloudinary.com/v1_1/dhhahwrmr/upload?upload_preset=ml_default"
+                    (nzChange)="handleChangeUploadAudio($event)"
+                  >
+                    <button
+                      nz-button
+                      type="button"
+                      nzType="dashed"
+                      class="d-flex align-items-center"
+                    >
+                      <span nz-icon nzType="upload"></span>
+                      Click to Upload Audio
+                    </button>
+                  </nz-upload>
+                </div>
                 <div nz-col nzSpan="24" class="mb-4">
-                  <nz-badge [nzCount]="2">
+                  <nz-badge [nzCount]="4">
                     <div class="w-[200px]">
                       <img
                         nz-image
@@ -486,7 +506,7 @@
 
                 <div nz-col nzSpan="24">
                   <nz-form-item>
-                    <nz-badge [nzCount]="3">
+                    <nz-badge [nzCount]="5">
                       <nz-form-label nzRequired="true">Images</nz-form-label>
                     </nz-badge>
                     <nz-form-control nzErrorTip="Please choose image id">

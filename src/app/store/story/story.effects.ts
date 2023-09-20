@@ -54,8 +54,8 @@ export const getStoriesCard = createEffect(
   (actions$ = inject(Actions), storyService = inject(StoryService)) => {
     return actions$.pipe(
       ofType(loadStoriesCard),
-      exhaustMap(({ limit, pageNumber }) =>
-        storyService.getStoriesCard(limit, pageNumber).pipe(
+      exhaustMap(({ limit, pageNumber, keywords }) =>
+        storyService.getStoriesCard(limit, pageNumber, keywords).pipe(
           map((response) => {
             return loadStoriesSuccess({ value: response.data });
           }),

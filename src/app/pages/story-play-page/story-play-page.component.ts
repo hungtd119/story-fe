@@ -50,6 +50,7 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
   height_device!: number;
   page_width!: number;
   page_height!: number;
+  audioSrc = '';
 
   constructor(
     private routerActive: ActivatedRoute,
@@ -79,6 +80,7 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
       });
       this.syncText = JSON.parse(page.texts[0].wordSync);
       this.syncText.push({ ...this.syncText[this.syncText.length - 1], w: '' });
+      this.audioSrc = page.texts[0].audio.path;
     });
   }
   ngAfterViewInit(): void {
@@ -172,7 +174,9 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
                   y >= position.position_y &&
                   y <= position.position_y + position.height
                 ) {
-                  // play audio
+                  const audio = new Audio();
+                  audio.src = interaction.text.audio.path;
+                  audio.play();
 
                   this.clearCanvas(this.ctxInteraction, this.interactionCanvas);
                   this.showCom(
@@ -318,10 +322,9 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
     }
   }
   hightLightText(x: number, y: number) {
-    // this.audio = new Audio();
-    // this.audio.src =
-    //   'https://firebasestorage.googleapis.com/v0/b/monkey-22059.appspot.com/o/wzEzNjrTTb9fLv10XTZNtQ1672993841348.mp3?alt=media&token=6abb7540-036e-4531-9b27-d98eb5c9c4ac';
-    // this.audio.play();
+    this.audio = new Audio();
+    this.audio.src = this.audioSrc;
+    this.audio.play();
     this.currentIndex = 0;
     this.animateHightLight(x, y);
   }

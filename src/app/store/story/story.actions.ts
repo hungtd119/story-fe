@@ -21,7 +21,7 @@ export const loadStorySuccess = createAction(
 );
 export const loadStoriesCard = createAction(
   '[Stories Page] Load Stories Card',
-  props<{ limit: number; pageNumber: number }>()
+  props<{ limit: number; pageNumber: number; keywords: string }>()
 );
 
 export const postStory = createAction(

@@ -118,6 +118,17 @@
         </div> -->
       </form>
     </nz-card>
+    <nz-card
+      nzTitle="Audio sentence"
+      class="mt-4"
+      *ngIf="$page | async as page"
+    >
+      <audio
+        *ngIf="page.texts"
+        [src]="page.texts[0].audio.path"
+        controls
+      ></audio>
+    </nz-card>
   </div>
   <nz-card
     class="mt-4"
@@ -182,7 +193,12 @@
               </nz-form-item>
             </div>
             <div nz-col nzSpan="24" class="mb-4">
-              <button nz-button nzType="primary" (click)="showModalText()">
+              <button
+                nz-button
+                type="button"
+                nzType="dashed"
+                (click)="showModalText()"
+              >
                 Create Text
               </button>
               <nz-modal
@@ -268,7 +284,7 @@
                 </nz-form-control>
               </nz-form-item>
             </div>
-            <div nz-col nzSpan="24">
+            <div nz-col nzSpan="12">
               <nz-badge [nzCount]="1">
                 <button
                   nz-button
@@ -297,6 +313,22 @@
                   </nz-upload>
                 </ng-container>
               </nz-modal>
+            </div>
+            <div nz-col nzSpan="12">
+              <nz-upload
+                nzAction="https://api.cloudinary.com/v1_1/dhhahwrmr/upload?upload_preset=ml_default"
+                (nzChange)="handleChangeUploadAudio($event)"
+              >
+                <button
+                  nz-button
+                  type="button"
+                  nzType="dashed"
+                  class="d-flex align-items-center"
+                >
+                  <span nz-icon nzType="upload"></span>
+                  Click to Upload Audio
+                </button>
+              </nz-upload>
             </div>
             <div nz-col nzSpan="24" class="my-4">
               <nz-badge [nzCount]="2">
@@ -424,6 +456,9 @@
                 >
                   <input nz-input [value]="interaction.text.text" readonly />
                 </nz-input-group>
+              </div>
+              <div *ngIf="interaction.text.audio">
+                <audio [src]="interaction.text.audio.path" controls></audio>
               </div>
               <div class="grid grid-cols-2 gap-2">
                 <nz-input-group nzAddOnBefore="Created">

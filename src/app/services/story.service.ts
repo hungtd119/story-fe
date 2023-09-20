@@ -17,9 +17,13 @@ export class StoryService {
   getStory(id: string): Observable<any> {
     return this.http.get<any>(this.apiUrl + `/detail/${id}`);
   }
-  getStoriesCard(limit: number, page: number): Observable<any> {
+  getStoriesCard(
+    limit: number,
+    page: number,
+    keywords: string
+  ): Observable<any> {
     return this.http.get<any>(
-      this.apiUrl + `/cards?limit=${limit}&page=${page}`
+      this.apiUrl + `/cards?limit=${limit}&page=${page}&keyword=${keywords}`
     );
   }
   createStory(story: Story) {
