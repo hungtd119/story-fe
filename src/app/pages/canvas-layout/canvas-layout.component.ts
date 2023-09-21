@@ -105,8 +105,6 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
     });
     this.formCreateText = this.fb.group({
       text: ['', Validators.required],
-      icon: [''],
-      wordSync: [''],
     });
     this.formCreatePosition = this.fb.group({
       position_x: [0, Validators.min(0)],
@@ -119,7 +117,6 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
         bg: ['', Validators.required],
         blink: [''],
         text_id: ['', Validators.required],
-        image_id: [''],
         page_id: [page.id, Validators.required],
       });
 

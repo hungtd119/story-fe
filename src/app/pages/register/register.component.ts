@@ -48,7 +48,7 @@ export class RegisterComponent {
             localStorage.setItem('accessToken', response.token);
             this.router.navigate(['/dashboard/story']);
           } else {
-            this.notification.create(
+            this.notification.create( 
               'error',
               'Register notification',
               response.message

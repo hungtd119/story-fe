@@ -118,21 +118,6 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
         '48px serif',
         'black'
       );
-
-      if (this.timerStartHightLight) {
-        clearTimeout(this.timerStartHightLight);
-      }
-      this.timerStartHightLight = window.setTimeout(() => {
-        this.hightLightText(
-          this.width_device / 2 -
-            this.ctxText.measureText(
-              this.syncText.map((text) => text.w).join(' ')
-            ).width /
-              2,
-          this.textCanvasRef.nativeElement.height / 10
-        );
-      }, 2000);
-
       this.canvasObject.interactionsCanvas =
         this.canvasObject.interactionsCanvas.map((interaction) => {
           return {
@@ -192,6 +177,18 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
         });
       });
     };
+  }
+  handleClickStart() {
+    this.hightLightText(
+      this.width_device / 2 -
+        this.ctxText.measureText(this.syncText.map((text) => text.w).join(' '))
+          .width /
+          2,
+      this.textCanvasRef.nativeElement.height / 10
+    );
+    this.audio = new Audio();
+    this.audio.src = this.audioSrc;
+    this.audio.play();
   }
   transformResolution(position: Position) {
     return {
@@ -322,9 +319,6 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
     }
   }
   hightLightText(x: number, y: number) {
-    this.audio = new Audio();
-    this.audio.src = this.audioSrc;
-    this.audio.play();
     this.currentIndex = 0;
     this.animateHightLight(x, y);
   }

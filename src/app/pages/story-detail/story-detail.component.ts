@@ -95,7 +95,6 @@ export class StoryDetailComponent implements OnInit {
     });
     this.formCreateText = this.fb.group({
       text: ['', Validators.required],
-      icon: [''],
       wordSync: ['', Validators.required],
     });
     this.story$.subscribe((story) => {
@@ -309,7 +308,6 @@ export class StoryDetailComponent implements OnInit {
         this.isVisibleText = false;
         const text = new Text();
         text.id = response.data.id;
-        text.icon = response.data.icon;
         text.wordSync = response.data.wordSync;
         text.text = response.data.text;
         this.texts.unshift(text);

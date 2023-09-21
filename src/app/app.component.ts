@@ -18,7 +18,11 @@ import { selectIsAuth, selectIsLoading } from './store/user/user.selector';
 export class AppComponent implements OnInit {
   title = 'story-fe';
   isCollapsed = false;
-  constructor(private userService: UserService, private store: Store) {}
+  constructor(
+    private userService: UserService,
+    private store: Store,
+    private router: Router
+  ) {}
   ngOnInit() {
     this.userService
       .loadUser(localStorage.getItem('accessToken'))
@@ -33,5 +37,9 @@ export class AppComponent implements OnInit {
           localStorage.removeItem('accessToken');
         }
       });
+  }
+  handleClickLogout() {
+    localStorage.removeItem('accessToken');
+    this.router.navigate(['/login']);
   }
 }

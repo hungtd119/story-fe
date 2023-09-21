@@ -82,53 +82,55 @@
         </div>
       </form>
     </nz-card>
-    <nz-card nzTitle="Resolution" class="mt-4" *ngIf="$page | async as page">
-      <form
-        nz-form
-        nzLayout="vertical"
-        [formGroup]="formResolution"
-        (ngSubmit)="handleSubmitChangeResolution()"
+    <div class="mt-4" *ngIf="$page | async as page">
+      <nz-card nzTitle="Resolution">
+        <form
+          nz-form
+          nzLayout="vertical"
+          [formGroup]="formResolution"
+          (ngSubmit)="handleSubmitChangeResolution()"
+        >
+          <div nz-row [nzGutter]="8">
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-control>
+                  <nz-input-group nzAddOnBefore="Width">
+                    <input nz-input formControlName="width_device" />
+                  </nz-input-group>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-control>
+                  <nz-input-group nzAddOnBefore="Height">
+                    <input nz-input formControlName="height_device" />
+                  </nz-input-group>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+          <!-- <div nz-col nzSpan="12" class="mt-4">
+            <nz-form-item>
+              <nz-form-control>
+                <button nz-button nzType="primary">Update</button>
+              </nz-form-control>
+            </nz-form-item>
+          </div> -->
+        </form>
+      </nz-card>
+      <nz-card
+        nzTitle="Audio sentence"
+        class="mt-4"
+        *ngIf="$page | async as page"
       >
-        <div nz-row [nzGutter]="8">
-          <div nz-col nzSpan="12">
-            <nz-form-item>
-              <nz-form-control>
-                <nz-input-group nzAddOnBefore="Width">
-                  <input nz-input formControlName="width_device" />
-                </nz-input-group>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-          <div nz-col nzSpan="12">
-            <nz-form-item>
-              <nz-form-control>
-                <nz-input-group nzAddOnBefore="Height">
-                  <input nz-input formControlName="height_device" />
-                </nz-input-group>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-        </div>
-        <!-- <div nz-col nzSpan="12" class="mt-4">
-          <nz-form-item>
-            <nz-form-control>
-              <button nz-button nzType="primary">Update</button>
-            </nz-form-control>
-          </nz-form-item>
-        </div> -->
-      </form>
-    </nz-card>
-    <nz-card
-      nzTitle="Audio sentence"
-      class="mt-4"
-      *ngIf="$page | async as page"
-    >
-      <audio
-        *ngIf="page.texts"
-        [src]="page.texts[0].audio.path"
-        controls
-      ></audio>
-    </nz-card>
+        <audio
+          *ngIf="page.texts"
+          [src]="page.texts[0].audio.path"
+          controls
+        ></audio>
+      </nz-card>
+    </div>
   </div>
   <nz-card
     class="mt-4"
@@ -185,7 +187,7 @@
                     <input
                       type="text"
                       nz-input
-                      placeholder="please enter blink"
+                      placeholder="Please enter blink"
                       formControlName="blink"
                     />
                   </nz-input-group>
@@ -221,34 +223,8 @@
                           <input
                             type="text"
                             nz-input
-                            placeholder="please enter Text"
+                            placeholder="Please enter Text"
                             formControlName="text"
-                          />
-                        </nz-input-group>
-                      </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label>Icon </nz-form-label>
-                      <nz-form-control>
-                        <nz-input-group>
-                          <input
-                            type="text"
-                            nz-input
-                            placeholder="please enter icon"
-                            formControlName="icon"
-                          />
-                        </nz-input-group>
-                      </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label>WordSync </nz-form-label>
-                      <nz-form-control>
-                        <nz-input-group>
-                          <input
-                            type="text"
-                            nz-input
-                            placeholder="please enter wordSync"
-                            formControlName="wordSync"
                           />
                         </nz-input-group>
                       </nz-form-control>
@@ -285,36 +261,6 @@
               </nz-form-item>
             </div>
             <div nz-col nzSpan="12">
-              <nz-badge [nzCount]="1">
-                <button
-                  nz-button
-                  nzType="dashed"
-                  type="button"
-                  (click)="showModal()"
-                >
-                  <span>Upload image</span>
-                </button>
-              </nz-badge>
-              <nz-modal
-                [(nzVisible)]="isVisible"
-                nzTitle="Upload Image"
-                (nzOnCancel)="handleCancel()"
-                (nzOnOk)="handleOk()"
-              >
-                <ng-container *nzModalContent>
-                  <nz-upload
-                    nzAction="https://api.cloudinary.com/v1_1/dhhahwrmr/upload?upload_preset=ml_default"
-                    (nzChange)="handleChange($event)"
-                  >
-                    <button nz-button class="d-flex align-items-center">
-                      <span nz-icon nzType="upload"></span>
-                      Click to Upload
-                    </button>
-                  </nz-upload>
-                </ng-container>
-              </nz-modal>
-            </div>
-            <div nz-col nzSpan="12">
               <nz-upload
                 nzAction="https://api.cloudinary.com/v1_1/dhhahwrmr/upload?upload_preset=ml_default"
                 (nzChange)="handleChangeUploadAudio($event)"
@@ -331,45 +277,6 @@
               </nz-upload>
             </div>
             <div nz-col nzSpan="24" class="my-4">
-              <nz-badge [nzCount]="2">
-                <div class="w-[200px]">
-                  <img
-                    nz-image
-                    width="200px"
-                    height="200px"
-                    [nzSrc]="pathPageImage"
-                    alt=""
-                  />
-                </div>
-              </nz-badge>
-            </div>
-            <div nz-col nzSpan="24">
-              <nz-form-item>
-                <nz-badge [nzCount]="3">
-                  <nz-form-label>Image</nz-form-label>
-                </nz-badge>
-                <nz-form-control nzErrorTip="Please choose image id">
-                  <nz-select
-                    nzShowSearch
-                    nzAllowClear
-                    nzPlaceHolder="Select Image"
-                    [nzOptionHeightPx]="100"
-                    formControlName="image_id"
-                  >
-                    <nz-option
-                      nzCustomContent
-                      *ngFor="let image of images"
-                      [nzValue]="image.id"
-                      [nzLabel]="image.id"
-                    >
-                      <div class="w-[100px] h-[100px]">
-                        <img [src]="image.path" alt="image bg page" />
-                      </div>
-                    </nz-option>
-                  </nz-select>
-                </nz-form-control>
-              </nz-form-item>
-
               <nz-form-item>
                 <nz-form-control>
                   <button nz-button nzType="primary">Create</button>
@@ -457,9 +364,6 @@
                   <input nz-input [value]="interaction.text.text" readonly />
                 </nz-input-group>
               </div>
-              <div *ngIf="interaction.text.audio">
-                <audio [src]="interaction.text.audio.path" controls></audio>
-              </div>
               <div class="grid grid-cols-2 gap-2">
                 <nz-input-group nzAddOnBefore="Created">
                   <input
@@ -477,6 +381,9 @@
                     [value]="interaction.text.updated_at | date : 'short'"
                   />
                 </nz-input-group>
+              </div>
+              <div *ngIf="interaction.text.audio" class="my-2">
+                <audio [src]="interaction.text.audio.path" controls></audio>
               </div>
             </div>
           </nz-card>
