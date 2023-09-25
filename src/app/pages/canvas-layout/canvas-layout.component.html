@@ -1,4 +1,4 @@
-<nz-card>
+<nz-card [nzExtra]="action">
   <canvas
     #canvas
     id="canvas"
@@ -11,6 +11,401 @@
     [class.isNResize]="isNResize"
     [class.isDrag]="isDrag"
   ></canvas>
+  <ng-template #action>
+    <button
+      nz-button
+      nzDanger
+      class="mr-2"
+      nzType="primary"
+      (click)="showConfirm()"
+    >
+      Save
+    </button>
+    <nz-modal> </nz-modal>
+    <button nz-button nzType="primary" (click)="open()">Add</button>
+    <nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMaskClosable]="false"
+      [nzWidth]="720"
+      [nzVisible]="visible"
+      nzTitle="Add More Interaction"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="close()"
+    >
+      <form
+        nz-form
+        *nzDrawerContent
+        [formGroup]="formCreateInteraction"
+        nzLayout="vertical"
+        (ngSubmit)="handleSubmitCreateInteraction()"
+      >
+        <div nz-row [nzGutter]="8">
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzRequired>Background</nz-form-label>
+              <nz-form-control>
+                <input
+                  nz-input
+                  placeholder="please enter background color"
+                  formControlName="bg"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label>Blink </nz-form-label>
+              <nz-form-control>
+                <nz-input-group>
+                  <input
+                    type="text"
+                    nz-input
+                    placeholder="Please enter blink"
+                    formControlName="blink"
+                  />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="24" class="mb-4">
+            <button
+              nz-button
+              type="button"
+              nzType="dashed"
+              (click)="showModalText()"
+            >
+              Create Text
+            </button>
+            <nz-modal
+              [(nzVisible)]="isVisibleText"
+              nzTitle="Form Create new Text"
+              (nzOnCancel)="handleCancelText()"
+              (nzOnOk)="handleOkText()"
+            >
+              <ng-container *nzModalContent>
+                <form
+                  [formGroup]="formCreateText"
+                  nz-form
+                  nzLayout="vertical"
+                  (ngSubmit)="handleSubmitCreateText()"
+                >
+                  <nz-form-item>
+                    <nz-form-label nzRequired>Text </nz-form-label>
+                    <nz-form-control>
+                      <nz-input-group>
+                        <input
+                          type="text"
+                          nz-input
+                          placeholder="Please enter Text"
+                          formControlName="text"
+                        />
+                      </nz-input-group>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-control>
+                      <button nz-button nzType="primary">Create</button>
+                    </nz-form-control>
+                  </nz-form-item>
+                </form>
+              </ng-container>
+            </nz-modal>
+          </div>
+          <div nz-col nzSpan="24">
+            <nz-form-item>
+              <nz-form-label>Text </nz-form-label>
+              <nz-form-control>
+                <nz-input-group>
+                  <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    nzPlaceHolder="Select Text"
+                    formControlName="text_id"
+                  >
+                    <nz-option
+                      *ngFor="let text of texts"
+                      [nzValue]="text.id"
+                      [nzLabel]="text.text"
+                    >
+                    </nz-option>
+                  </nz-select>
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-upload
+              nzAction="https://api.cloudinary.com/v1_1/dhhahwrmr/upload?upload_preset=ml_default"
+              (nzChange)="handleChangeUploadAudio($event)"
+            >
+              <button
+                nz-button
+                type="button"
+                nzType="dashed"
+                class="d-flex align-items-center"
+              >
+                <span nz-icon nzType="upload"></span>
+                Click to Upload Audio
+              </button>
+            </nz-upload>
+          </div>
+          <div nz-col nzSpan="24" class="my-4">
+            <nz-form-item>
+              <nz-form-control>
+                <button nz-button nzType="primary">Create</button>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </form>
+
+      <ng-template #footerTpl>
+        <div style="float: right">
+          <button nz-button style="margin-right: 8px" (click)="close()">
+            Cancel
+          </button>
+          <button nz-button nzType="primary" (click)="close()">Submit</button>
+        </div>
+      </ng-template>
+    </nz-drawer>
+  </ng-template>
+</nz-card>
+<nz-card
+  class="mt-4"
+  nzTitle="Interactions config"
+  *ngIf="$page | async as page"
+>
+  <nz-tabset
+    nzTabPosition="left"
+    *ngIf="page.interactions?.length > 0; else nodata"
+  >
+    <nz-tab
+      *ngFor="let interaction of canvasObject.interactionsCanvas; let i = index"
+      [nzTitle]="'Interaction ' + (i + 1)"
+    >
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <nz-ribbon
+          [nzText]="interaction.id.toString()"
+          [nzColor]="interaction.bg"
+        >
+          <nz-card>
+            <div class="grid grid-cols-1 gap-2">
+              <div class="grid grid-cols-2 gap-2">
+                <nz-input-group nzAddOnBefore="Positions">
+                  <input
+                    type="number"
+                    nz-input
+                    readonly
+                    [value]="interaction.positions.length"
+                  />
+                </nz-input-group>
+                <nz-input-group nzAddOnBefore="Background">
+                  <input
+                    type="text"
+                    nz-input
+                    [value]="interaction.bg"
+                    readonly
+                  />
+                </nz-input-group>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <nz-input-group nzAddOnBefore="Created">
+                  <input
+                    type="text"
+                    nz-input
+                    readonly
+                    [value]="interaction.created_at | date : 'short'"
+                  />
+                </nz-input-group>
+                <nz-input-group nzAddOnBefore="Updated">
+                  <input
+                    type="text"
+                    nz-input
+                    readonly
+                    [value]="interaction.updated_at | date : 'short'"
+                  />
+                </nz-input-group>
+              </div>
+            </div>
+          </nz-card>
+        </nz-ribbon>
+        <nz-card>
+          <div class="grid grid-cols-1 gap-2">
+            <div>
+              <nz-input-group
+                nzAddOnBefore="Text"
+                [nzAddOnAfter]="interaction.text.id.toString()"
+              >
+                <input nz-input [value]="interaction.text.text" readonly />
+              </nz-input-group>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <nz-input-group nzAddOnBefore="Created">
+                <input
+                  type="text"
+                  nz-input
+                  readonly
+                  [value]="interaction.text.created_at | date : 'short'"
+                />
+              </nz-input-group>
+              <nz-input-group nzAddOnBefore="Updated">
+                <input
+                  type="text"
+                  nz-input
+                  readonly
+                  [value]="interaction.text.updated_at | date : 'short'"
+                />
+              </nz-input-group>
+            </div>
+            <div *ngIf="interaction.text.audio" class="my-2">
+              <audio [src]="interaction.text.audio.path" controls></audio>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+      <div class="grid grid-cols-4 gap-2">
+        <div *ngFor="let position of interaction.positions">
+          <nz-ribbon
+            [nzText]="
+              position.id
+                ? position.id.toString()
+                : interaction.positions.length.toString()
+            "
+            [nzColor]="interaction.bg"
+          >
+            <nz-card nzTitle="Position">
+              <div class="grid grid-cols-2 gap-2">
+                <nz-input-group nzAddOnBefore="x">
+                  <input
+                    type="number"
+                    nz-input
+                    [ngModel]="position.position_x"
+                    readonly
+                  />
+                </nz-input-group>
+                <nz-input-group nzAddOnBefore="y">
+                  <input
+                    type="number"
+                    nz-input
+                    [(ngModel)]="position.position_y"
+                    readonly
+                  />
+                </nz-input-group>
+              </div>
+              <div class="grid grid-cols-2 gap-2 mt-2">
+                <nz-input-group nzAddOnBefore="w">
+                  <input
+                    type="number"
+                    nz-input
+                    [(ngModel)]="position.width"
+                    readonly
+                  />
+                </nz-input-group>
+                <nz-input-group nzAddOnBefore="h">
+                  <input
+                    type="number"
+                    nz-input
+                    [(ngModel)]="position.height"
+                    readonly
+                  />
+                </nz-input-group>
+              </div>
+            </nz-card>
+          </nz-ribbon>
+        </div>
+        <div class="d-flex justify-center align-items-center">
+          <button
+            nz-button
+            nzType="dashed"
+            class="d-flex align-items-center"
+            (click)="showModalAddPosition(interaction.id)"
+          >
+            <span nz-icon nzType="plus"></span>
+            Add
+          </button>
+          <nz-modal
+            [(nzVisible)]="isVisibleAddPosition"
+            nzTitle="Enter initial position values"
+            (nzOnCancel)="handleCancelAddPosition()"
+            (nzOnOk)="handleOkAddPosition()"
+          >
+            <ng-container *nzModalContent>
+              <form
+                [formGroup]="formCreatePosition"
+                nz-form
+                nzLayout="vertical"
+                (ngSubmit)="handleSubmitCreatePosition()"
+                class="grid grid-cols-2 gap-2"
+              >
+                <nz-form-item>
+                  <nz-form-label>Initial X </nz-form-label>
+                  <nz-form-control>
+                    <nz-input-group>
+                      <input
+                        type="number"
+                        nz-input
+                        placeholder="please enter initial X"
+                        formControlName="position_x"
+                      />
+                    </nz-input-group>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-label>Initial Y </nz-form-label>
+                  <nz-form-control>
+                    <nz-input-group>
+                      <input
+                        type="number"
+                        nz-input
+                        placeholder="please enter initial Y"
+                        formControlName="position_y"
+                      />
+                    </nz-input-group>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-label>Width </nz-form-label>
+                  <nz-form-control>
+                    <nz-input-group>
+                      <input
+                        type="number"
+                        nz-input
+                        placeholder="please enter initial width"
+                        formControlName="width"
+                      />
+                    </nz-input-group>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label>Height </nz-form-label>
+                    <nz-form-control>
+                      <nz-input-group>
+                        <input
+                          type="number"
+                          nz-input
+                          placeholder="please enter initial height"
+                          formControlName="height"
+                        />
+                      </nz-input-group>
+                    </nz-form-control>
+                  </nz-form-item>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button nzType="primary">Create</button>
+                  </nz-form-control>
+                </nz-form-item>
+              </form>
+            </ng-container>
+          </nz-modal>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+  <ng-template #nodata>
+    <nz-empty></nz-empty>
+  </ng-template>
 </nz-card>
 <div *ngIf="!isLoading; else loading">
   <div class="grid grid-cols-2 gap-4">
@@ -132,406 +527,6 @@
       </nz-card>
     </div>
   </div>
-  <nz-card
-    class="mt-4"
-    nzTitle="Interactions config"
-    *ngIf="$page | async as page"
-    [nzExtra]="action"
-  >
-    <ng-template #action>
-      <button
-        nz-button
-        nzDanger
-        class="mr-2"
-        nzType="primary"
-        (click)="showConfirm()"
-      >
-        Save
-      </button>
-      <nz-modal> </nz-modal>
-      <button nz-button nzType="primary" (click)="open()">Add</button>
-      <nz-drawer
-        [nzBodyStyle]="{ overflow: 'auto' }"
-        [nzMaskClosable]="false"
-        [nzWidth]="720"
-        [nzVisible]="visible"
-        nzTitle="Add More Interaction"
-        [nzFooter]="footerTpl"
-        (nzOnClose)="close()"
-      >
-        <form
-          nz-form
-          *nzDrawerContent
-          [formGroup]="formCreateInteraction"
-          nzLayout="vertical"
-          (ngSubmit)="handleSubmitCreateInteraction()"
-        >
-          <div nz-row [nzGutter]="8">
-            <div nz-col nzSpan="12">
-              <nz-form-item>
-                <nz-form-label nzRequired>Background</nz-form-label>
-                <nz-form-control>
-                  <input
-                    nz-input
-                    placeholder="please enter background color"
-                    formControlName="bg"
-                  />
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-            <div nz-col nzSpan="12">
-              <nz-form-item>
-                <nz-form-label>Blink </nz-form-label>
-                <nz-form-control>
-                  <nz-input-group>
-                    <input
-                      type="text"
-                      nz-input
-                      placeholder="Please enter blink"
-                      formControlName="blink"
-                    />
-                  </nz-input-group>
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-            <div nz-col nzSpan="24" class="mb-4">
-              <button
-                nz-button
-                type="button"
-                nzType="dashed"
-                (click)="showModalText()"
-              >
-                Create Text
-              </button>
-              <nz-modal
-                [(nzVisible)]="isVisibleText"
-                nzTitle="Form Create new Text"
-                (nzOnCancel)="handleCancelText()"
-                (nzOnOk)="handleOkText()"
-              >
-                <ng-container *nzModalContent>
-                  <form
-                    [formGroup]="formCreateText"
-                    nz-form
-                    nzLayout="vertical"
-                    (ngSubmit)="handleSubmitCreateText()"
-                  >
-                    <nz-form-item>
-                      <nz-form-label nzRequired>Text </nz-form-label>
-                      <nz-form-control>
-                        <nz-input-group>
-                          <input
-                            type="text"
-                            nz-input
-                            placeholder="Please enter Text"
-                            formControlName="text"
-                          />
-                        </nz-input-group>
-                      </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-control>
-                        <button nz-button nzType="primary">Create</button>
-                      </nz-form-control>
-                    </nz-form-item>
-                  </form>
-                </ng-container>
-              </nz-modal>
-            </div>
-            <div nz-col nzSpan="24">
-              <nz-form-item>
-                <nz-form-label>Text </nz-form-label>
-                <nz-form-control>
-                  <nz-input-group>
-                    <nz-select
-                      nzShowSearch
-                      nzAllowClear
-                      nzPlaceHolder="Select Text"
-                      formControlName="text_id"
-                    >
-                      <nz-option
-                        *ngFor="let text of texts"
-                        [nzValue]="text.id"
-                        [nzLabel]="text.text"
-                      >
-                      </nz-option>
-                    </nz-select>
-                  </nz-input-group>
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-            <div nz-col nzSpan="12">
-              <nz-upload
-                nzAction="https://api.cloudinary.com/v1_1/dhhahwrmr/upload?upload_preset=ml_default"
-                (nzChange)="handleChangeUploadAudio($event)"
-              >
-                <button
-                  nz-button
-                  type="button"
-                  nzType="dashed"
-                  class="d-flex align-items-center"
-                >
-                  <span nz-icon nzType="upload"></span>
-                  Click to Upload Audio
-                </button>
-              </nz-upload>
-            </div>
-            <div nz-col nzSpan="24" class="my-4">
-              <nz-form-item>
-                <nz-form-control>
-                  <button nz-button nzType="primary">Create</button>
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-          </div>
-        </form>
-
-        <ng-template #footerTpl>
-          <div style="float: right">
-            <button nz-button style="margin-right: 8px" (click)="close()">
-              Cancel
-            </button>
-            <button nz-button nzType="primary" (click)="close()">Submit</button>
-          </div>
-        </ng-template>
-      </nz-drawer>
-    </ng-template>
-
-    <nz-tabset
-      nzTabPosition="left"
-      *ngIf="page.interactions?.length > 0; else nodata"
-    >
-      <nz-tab
-        *ngFor="
-          let interaction of canvasObject.interactionsCanvas;
-          let i = index
-        "
-        [nzTitle]="'Interaction ' + (i + 1)"
-      >
-        <div class="grid grid-cols-2 gap-4 mb-4">
-          <nz-ribbon
-            [nzText]="interaction.id.toString()"
-            [nzColor]="interaction.bg"
-          >
-            <nz-card>
-              <div class="grid grid-cols-1 gap-2">
-                <div class="grid grid-cols-2 gap-2">
-                  <nz-input-group nzAddOnBefore="Positions">
-                    <input
-                      type="number"
-                      nz-input
-                      readonly
-                      [value]="interaction.positions.length"
-                    />
-                  </nz-input-group>
-                  <nz-input-group nzAddOnBefore="Background">
-                    <input
-                      type="text"
-                      nz-input
-                      [value]="interaction.bg"
-                      readonly
-                    />
-                  </nz-input-group>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <nz-input-group nzAddOnBefore="Created">
-                    <input
-                      type="text"
-                      nz-input
-                      readonly
-                      [value]="interaction.created_at | date : 'short'"
-                    />
-                  </nz-input-group>
-                  <nz-input-group nzAddOnBefore="Updated">
-                    <input
-                      type="text"
-                      nz-input
-                      readonly
-                      [value]="interaction.updated_at | date : 'short'"
-                    />
-                  </nz-input-group>
-                </div>
-              </div>
-            </nz-card>
-          </nz-ribbon>
-          <nz-card>
-            <div class="grid grid-cols-1 gap-2">
-              <div>
-                <nz-input-group
-                  nzAddOnBefore="Text"
-                  [nzAddOnAfter]="interaction.text.id.toString()"
-                >
-                  <input nz-input [value]="interaction.text.text" readonly />
-                </nz-input-group>
-              </div>
-              <div class="grid grid-cols-2 gap-2">
-                <nz-input-group nzAddOnBefore="Created">
-                  <input
-                    type="text"
-                    nz-input
-                    readonly
-                    [value]="interaction.text.created_at | date : 'short'"
-                  />
-                </nz-input-group>
-                <nz-input-group nzAddOnBefore="Updated">
-                  <input
-                    type="text"
-                    nz-input
-                    readonly
-                    [value]="interaction.text.updated_at | date : 'short'"
-                  />
-                </nz-input-group>
-              </div>
-              <div *ngIf="interaction.text.audio" class="my-2">
-                <audio [src]="interaction.text.audio.path" controls></audio>
-              </div>
-            </div>
-          </nz-card>
-        </div>
-        <div class="grid grid-cols-4 gap-2">
-          <div *ngFor="let position of interaction.positions">
-            <nz-ribbon
-              [nzText]="
-                position.id
-                  ? position.id.toString()
-                  : interaction.positions.length.toString()
-              "
-              [nzColor]="interaction.bg"
-            >
-              <nz-card nzTitle="Position">
-                <div class="grid grid-cols-2 gap-2">
-                  <nz-input-group nzAddOnBefore="x">
-                    <input
-                      type="number"
-                      nz-input
-                      [ngModel]="position.position_x"
-                      readonly
-                    />
-                  </nz-input-group>
-                  <nz-input-group nzAddOnBefore="y">
-                    <input
-                      type="number"
-                      nz-input
-                      [(ngModel)]="position.position_y"
-                      readonly
-                    />
-                  </nz-input-group>
-                </div>
-                <div class="grid grid-cols-2 gap-2 mt-2">
-                  <nz-input-group nzAddOnBefore="w">
-                    <input
-                      type="number"
-                      nz-input
-                      [(ngModel)]="position.width"
-                      readonly
-                    />
-                  </nz-input-group>
-                  <nz-input-group nzAddOnBefore="h">
-                    <input
-                      type="number"
-                      nz-input
-                      [(ngModel)]="position.height"
-                      readonly
-                    />
-                  </nz-input-group>
-                </div>
-              </nz-card>
-            </nz-ribbon>
-          </div>
-          <div class="d-flex justify-center align-items-center">
-            <button
-              nz-button
-              nzType="dashed"
-              class="d-flex align-items-center"
-              (click)="showModalAddPosition(interaction.id)"
-            >
-              <span nz-icon nzType="plus"></span>
-              Add
-            </button>
-            <nz-modal
-              [(nzVisible)]="isVisibleAddPosition"
-              nzTitle="Enter initial position values"
-              (nzOnCancel)="handleCancelAddPosition()"
-              (nzOnOk)="handleOkAddPosition()"
-            >
-              <ng-container *nzModalContent>
-                <form
-                  [formGroup]="formCreatePosition"
-                  nz-form
-                  nzLayout="vertical"
-                  (ngSubmit)="handleSubmitCreatePosition()"
-                  class="grid grid-cols-2 gap-2"
-                >
-                  <nz-form-item>
-                    <nz-form-label>Initial X </nz-form-label>
-                    <nz-form-control>
-                      <nz-input-group>
-                        <input
-                          type="number"
-                          nz-input
-                          placeholder="please enter initial X"
-                          formControlName="position_x"
-                        />
-                      </nz-input-group>
-                    </nz-form-control>
-                  </nz-form-item>
-                  <nz-form-item>
-                    <nz-form-label>Initial Y </nz-form-label>
-                    <nz-form-control>
-                      <nz-input-group>
-                        <input
-                          type="number"
-                          nz-input
-                          placeholder="please enter initial Y"
-                          formControlName="position_y"
-                        />
-                      </nz-input-group>
-                    </nz-form-control>
-                  </nz-form-item>
-                  <nz-form-item>
-                    <nz-form-label>Width </nz-form-label>
-                    <nz-form-control>
-                      <nz-input-group>
-                        <input
-                          type="number"
-                          nz-input
-                          placeholder="please enter initial width"
-                          formControlName="width"
-                        />
-                      </nz-input-group>
-                    </nz-form-control>
-                  </nz-form-item>
-                  <nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label>Height </nz-form-label>
-                      <nz-form-control>
-                        <nz-input-group>
-                          <input
-                            type="number"
-                            nz-input
-                            placeholder="please enter initial height"
-                            formControlName="height"
-                          />
-                        </nz-input-group>
-                      </nz-form-control>
-                    </nz-form-item>
-                  </nz-form-item>
-                  <nz-form-item>
-                    <nz-form-control>
-                      <button nz-button nzType="primary">Create</button>
-                    </nz-form-control>
-                  </nz-form-item>
-                </form>
-              </ng-container>
-            </nz-modal>
-          </div>
-        </div>
-      </nz-tab>
-    </nz-tabset>
-    <ng-template #nodata>
-      <nz-empty></nz-empty>
-    </ng-template>
-  </nz-card>
 </div>
 <ng-template #loading>
   <div class="d-flex justify-center align-items-center h-[400px]">

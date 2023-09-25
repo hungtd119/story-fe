@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
       );
     } else {
       this.userService.login(this.formLogin.value).subscribe((response) => {
-        if (response.status_code === 200) {
+        if (response.success) {
           this.store.dispatch(setIsAuthenticate({ value: true }));
           this.notification.create(
             'success',
