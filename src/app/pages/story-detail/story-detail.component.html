@@ -261,7 +261,7 @@
                     nz-button
                     nzType="default"
                     nzShape="circle"
-                    (click)="gotoConfigPage(page.id)"
+                    (click)="gotoConfigPage(page.id, story.type.toString())"
                   >
                     <span nz-icon nzType="select"></span>
                   </button>
@@ -292,7 +292,7 @@
             nz-button
             nzType="default"
             nzShape="circle"
-            (click)="gotoConfigPages(story.id)"
+            (click)="gotoConfigPages(story.id, story.type.toString())"
             class="mr-2"
           >
             <span nz-icon nzType="edit"></span>

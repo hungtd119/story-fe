@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -16,6 +17,7 @@ import { CanvasConfigObject } from 'src/app/models/canvasConfigObject.model';
 import { Image as ImageModel } from 'src/app/models/image.model';
 import { NewPosition } from 'src/app/models/newPosition.model';
 import { Position } from 'src/app/models/position.model';
+import { SyncText } from 'src/app/models/sycnText.model';
 import { Text } from 'src/app/models/text.model';
 import { AudioService } from 'src/app/services/audio.service';
 import { ImageService } from 'src/app/services/image.service';
@@ -53,6 +55,7 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
   texts!: Text[];
   interactionId!: number;
   pageId!: number;
+  syncText!: SyncText[];
 
   stroke = 3;
   isEResize = false;
@@ -65,11 +68,20 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
   text_id!: number;
   isLoading = true;
   min_rect_size = 10;
+  storyType!: number;
   pathPageImage =
     'data:image/png;base64,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';
   text = '';
   width_device!: number;
   height_device!: number;
+
+  words = [
+    {
+      text: 'Roy',
+      icon: 'https://res.cloudinary.com/dhhahwrmr/image/upload/v1695695289/f4f5dcaa85909646e04bde9b5f9b3f04_rlhuju.png',
+    },
+  ];
+
   constructor(
     private store: Store,
     private fb: FormBuilder,
@@ -79,8 +91,13 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
     private notification: NzNotificationService,
     private modal: NzModalService,
     private positionService: PositionService,
-    private audioService: AudioService
-  ) {}
+    private audioService: AudioService,
+    private router: ActivatedRoute
+  ) {
+    router.params.subscribe((param) => {
+      this.storyType = param['storyType'];
+    });
+  }
   ngOnInit(): void {
     this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
     this.$page.subscribe((page) => {
@@ -102,6 +119,7 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
         text: [page?.texts[0].text, Validators.required],
         wordSync: [page?.texts[0].wordSync, Validators.required],
       });
+      this.syncText = JSON.parse(page.texts[0].wordSync);
       this.drawCanvas();
     });
     this.formCreateText = this.fb.group({
@@ -513,8 +531,44 @@ export class CanvasLayoutComponent implements OnInit, AfterViewInit {
         this.canvasRef.nativeElement.width,
         this.canvasRef.nativeElement.height
       );
+      console.log(this.storyType);
+
+      this.drawSentence();
+
       this.drawInteractions();
     };
+  }
+  drawSentence() {
+    if (this.storyType == 1) {
+      let x = this.width_device / 2;
+      let y = this.height_device / 10;
+      const padding = 20;
+      this.ctx.font = '28px serif';
+      this.ctx.textBaseline = 'middle';
+      let currentX = x - x / 3;
+      for (let index = 0; index < this.syncText.length; index++) {
+        const word = this.syncText[index].w;
+        if (currentX >= this.width_device / 2 - x / 3 + 350) {
+          currentX = this.width_device / 2 - x / 3;
+          y += 70;
+        }
+        if (word === this.words[0].text) {
+          const image = new Image();
+          image.src = this.words[0].icon;
+          const x = currentX;
+          const y_c = y - 30;
+          image.onload = () => {
+            this.ctx.drawImage(image, x, y_c, 30, 70);
+          };
+          currentX += 30 + padding;
+        } else {
+          this.ctx.fillStyle = 'black';
+          this.ctx.fillText(word, currentX, y);
+          const wordWidth = this.ctx.measureText(word).width;
+          currentX += wordWidth + padding;
+        }
+      }
+    }
   }
 
   drawInteractions() {

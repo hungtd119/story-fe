@@ -22,11 +22,11 @@ const routes: Routes = [
         component: StoryPlayPageComponent,
       },
       {
-        path: 'story-config-pages/:storyId',
+        path: 'story-config-pages/:storyId/:storyType',
         component: StoryConfigPageComponent,
       },
       {
-        path: 'story-config-page/:pageId',
+        path: 'story-config-page/:pageId/:storyType',
         component: StoryConfigOnePageComponent,
       },
     ],
