@@ -10,6 +10,7 @@ export class Page {
   interactions!: Interaction[];
   width_device!: number;
   height_device!: number;
+  story_id!: string;
   image!: Image;
   texts!: Text[];
   image_id!: number;

@@ -42,4 +42,7 @@ export class StoryService {
   updateStory(body: any): Observable<any> {
     return this.http.put(this.apiUrl + `?id=${body.id}`, { ...body });
   }
+  getStoryType(id: string): Observable<any> {
+    return this.http.get(this.apiUrl + `/type?id=${id}`);
+  }
 }

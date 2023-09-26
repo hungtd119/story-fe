@@ -69,6 +69,33 @@
                   </nz-form-control>
                 </nz-form-item>
               </div>
+              <div>
+                <nz-form-item>
+                  <nz-form-label nzRequired="true" class="font-bold"
+                    >Type</nz-form-label
+                  >
+                  <nz-form-control nzErrorTip="Please choose story type!">
+                    <nz-input-group>
+                      <nz-select
+                        nzPlaceHolder="Choose Type"
+                        formControlName="type"
+                      >
+                        <nz-option
+                          *ngFor="
+                            let type of [
+                              { label: 'Truyện tĩnh', value: 0 },
+                              { label: 'Truyện icon', value: 1 }
+                            ]
+                          "
+                          [nzValue]="type.value"
+                          [nzLabel]="type.label"
+                        >
+                        </nz-option>
+                      </nz-select>
+                    </nz-input-group>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
               <div class="grid grid-cols-2 gap-2">
                 <nz-form-item>
                   <nz-form-label class="font-bold">Created at</nz-form-label>
@@ -211,12 +238,6 @@
               </td>
               <td>
                 <table>
-                  <!-- <tr *ngFor="let text of page.texts; let i = index">
-                    <td class="text-xs font-bold">Text[{{ i }}] :</td>
-                    <td class="text-sm px-2 py-[2px]">
-                      {{ text.text }}
-                    </td>
-                  </tr> -->
                   <tr>
                     <td class="text-xs font-bold">Sentence:</td>
                     <td class="text-sm px-2 py-[2px]">
@@ -371,17 +392,15 @@
                         (ngSubmit)="handleSubmitCreateText()"
                       >
                         <nz-form-item>
-                          <nz-badge [nzCount]="2">
-                            <nz-form-label nzRequired>Text </nz-form-label>
-                          </nz-badge>
+                          <nz-form-label nzRequired>Text </nz-form-label>
                           <nz-form-control>
                             <nz-input-group>
-                              <input
-                                type="text"
+                              <textarea
                                 nz-input
                                 placeholder="Please enter Text"
+                                [nzAutosize]="{ minRows: 2, maxRows: 6 }"
                                 formControlName="text"
-                              />
+                              ></textarea>
                             </nz-input-group>
                           </nz-form-control>
                         </nz-form-item>
@@ -411,7 +430,9 @@
                 </div>
                 <div nz-col nzSpan="24">
                   <nz-form-item>
-                    <nz-form-label>Text </nz-form-label>
+                    <nz-badge [nzCount]="2">
+                      <nz-form-label>Text </nz-form-label>
+                    </nz-badge>
                     <nz-form-control>
                       <nz-input-group>
                         <nz-select
@@ -431,8 +452,26 @@
                     </nz-form-control>
                   </nz-form-item>
                 </div>
+                <div nz-col nzSpan="24" class="mb-4">
+                  <nz-upload
+                    nzAction="https://api.cloudinary.com/v1_1/dhhahwrmr/upload?upload_preset=ml_default"
+                    (nzChange)="handleChangeUploadAudio($event)"
+                  >
+                    <nz-badge [nzCount]="3">
+                      <button
+                        nz-button
+                        type="button"
+                        nzType="dashed"
+                        class="d-flex align-items-center"
+                      >
+                        <span nz-icon nzType="upload"></span>
+                        Click to Upload Audio
+                      </button>
+                    </nz-badge>
+                  </nz-upload>
+                </div>
                 <div nz-col nzSpan="12" class="mb-4">
-                  <nz-badge [nzCount]="3">
+                  <nz-badge [nzCount]="4">
                     <button
                       nz-button
                       nzType="dashed"
@@ -461,24 +500,8 @@
                     </ng-container>
                   </nz-modal>
                 </div>
-                <div nz-col nzSpan="12">
-                  <nz-upload
-                    nzAction="https://api.cloudinary.com/v1_1/dhhahwrmr/upload?upload_preset=ml_default"
-                    (nzChange)="handleChangeUploadAudio($event)"
-                  >
-                    <button
-                      nz-button
-                      type="button"
-                      nzType="dashed"
-                      class="d-flex align-items-center"
-                    >
-                      <span nz-icon nzType="upload"></span>
-                      Click to Upload Audio
-                    </button>
-                  </nz-upload>
-                </div>
                 <div nz-col nzSpan="24" class="mb-4">
-                  <nz-badge [nzCount]="4">
+                  <nz-badge [nzCount]="5">
                     <div class="w-[200px]">
                       <img
                         nz-image
@@ -493,7 +516,7 @@
 
                 <div nz-col nzSpan="24">
                   <nz-form-item>
-                    <nz-badge [nzCount]="5">
+                    <nz-badge [nzCount]="6">
                       <nz-form-label nzRequired="true">Images</nz-form-label>
                     </nz-badge>
                     <nz-form-control nzErrorTip="Please choose image id">

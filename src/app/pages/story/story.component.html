@@ -77,6 +77,26 @@
         <div nz-row [nzGutter]="8">
           <div nz-col nzSpan="24">
             <nz-form-item>
+              <nz-form-label nzRequired="true">Type</nz-form-label>
+              <nz-form-control nzErrorTip="Please choose type">
+                <nz-select nzPlaceHolder="Choose Type" formControlName="type">
+                  <nz-option
+                    *ngFor="
+                      let type of [
+                        { label: 'Truyện tĩnh', value: 0 },
+                        { label: 'Truyện icon', value: 1 }
+                      ]
+                    "
+                    [nzValue]="type.value"
+                    [nzLabel]="type.label"
+                  >
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="24">
+            <nz-form-item>
               <nz-form-label nzRequired="true">Title</nz-form-label>
               <nz-form-control nzErrorTip="Please input title">
                 <input
@@ -115,12 +135,7 @@
             <nz-form-item>
               <nz-form-label nzRequired="true">Level</nz-form-label>
               <nz-form-control nzErrorTip="Please choose level">
-                <nz-select
-                  nzShowSearch
-                  nzAllowClear
-                  nzPlaceHolder="Select Level"
-                  formControlName="level"
-                >
+                <nz-select nzPlaceHolder="Select Level" formControlName="level">
                   <nz-option
                     *ngFor="let level of ['A', 'B', 'C', 'D', 'E', 'F']"
                     [nzValue]="level"
@@ -191,8 +206,6 @@
               <nz-form-label nzRequired="true">Image</nz-form-label>
               <nz-form-control nzErrorTip="Please choose image id">
                 <nz-select
-                  nzShowSearch
-                  nzAllowClear
                   nzPlaceHolder="Select Image"
                   formControlName="image_id"
                   [nzOptionHeightPx]="100"

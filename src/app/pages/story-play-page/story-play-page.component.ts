@@ -51,6 +51,15 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
   page_width!: number;
   page_height!: number;
   audioSrc = '';
+  font = '28px serif';
+  storyType!: string;
+
+  words = [
+    {
+      text: '',
+      icon: '',
+    },
+  ];
 
   constructor(
     private routerActive: ActivatedRoute,
@@ -60,6 +69,7 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
   ) {
     this.routerActive.params.subscribe((params) => {
       this.pageId = params['id'];
+      this.storyType = params['storyType'];
     });
   }
   ngOnInit(): void {
@@ -79,7 +89,11 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
         height_device: [page.height_device, Validators.required],
       });
       this.syncText = JSON.parse(page.texts[0].wordSync);
-      this.syncText.push({ ...this.syncText[this.syncText.length - 1], w: '' });
+      this.syncText.push({
+        ...this.syncText[this.syncText.length - 1],
+        s: this.syncText[this.syncText.length - 1].s + 1,
+        w: '',
+      });
       this.audioSrc = page.texts[0].audio.path;
     });
   }
@@ -106,16 +120,18 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
     img.onload = () => {
       this.ctxRoot.drawImage(img, 0, 0, this.width_device, this.height_device);
 
-      this.ctxText.font = '48px serif';
+      this.ctxText.font = this.font;
 
       this.drawText(
-        this.width_device / 2 -
-          this.ctxText.measureText(
-            this.syncText.map((text) => text.w).join(' ')
-          ).width /
-            2,
+        this.storyType === '1'
+          ? this.width_device / 2
+          : this.width_device / 2 -
+              this.ctxText.measureText(
+                this.syncText.map((text) => text.w).join(' ')
+              ).width /
+                2,
         this.height_device / 10,
-        '48px serif',
+        this.font,
         'black'
       );
       this.canvasObject.interactionsCanvas =
@@ -260,7 +276,7 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
     this.clearCanvas(this.ctxText, this.textCanvasRef);
 
     const padding = 10;
-    this.ctxText.font = '48px serif';
+    this.ctxText.font = this.font;
     let currentX =
       this.width_device / 2 -
       this.ctxText.measureText(this.syncText.map((text) => text.w).join(' '))
@@ -294,24 +310,27 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
       this.clearCanvas(this.ctxText, this.textCanvasRef);
 
       this.drawText(
-        this.width_device / 2 -
-          this.ctxText.measureText(
-            this.syncText.map((text) => text.w).join(' ')
-          ).width /
-            2,
+        this.width_device / 2,
         this.height_device / 10,
-        '48px serif',
+        this.font,
         'black'
       );
     }, 1000);
   }
   drawText(x: number, y: number, font: string, color: string) {
-    const padding = 10;
+    const padding = this.storyType === '1' ? 20 : 10;
     this.ctxText.font = font;
     this.ctxText.textBaseline = 'middle';
-    let currentX = x;
+    let currentX = x - x / 3;
     for (let index = 0; index < this.syncText.length; index++) {
       const word = this.syncText[index].w;
+      if (
+        currentX >= this.width_device / 2 - x / 3 + 350 &&
+        this.storyType === '1'
+      ) {
+        currentX = this.width_device / 2 - x / 3;
+        y += 70;
+      }
       this.ctxText.fillStyle = color;
       this.ctxText.fillText(word, currentX, y);
       const wordWidth = this.ctxText.measureText(word).width;
@@ -336,7 +355,11 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
         (currentTime - startTime) / (currentWord.e - currentWord.s);
       if (process >= 1) {
         this.clearCanvas(this.ctxText, this.textCanvasRef);
-        this.hightLightingText(currentWord, x, y);
+        this.hightLightingText(
+          currentWord,
+          this.storyType === '1' ? this.width_device / 2 : x,
+          y
+        );
         this.currentIndex++;
 
         if (this.currentIndex < this.syncText.length) {
@@ -344,7 +367,11 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
         }
       } else {
         this.clearCanvas(this.ctxText, this.textCanvasRef);
-        this.hightLightingText(currentWord, x, y);
+        this.hightLightingText(
+          currentWord,
+          this.storyType === '1' ? this.width_device / 2 : x,
+          y
+        );
         requestAnimationFrame(animate);
       }
     };
@@ -359,13 +386,20 @@ export class StoryPlayPageComponent implements OnInit, AfterViewInit {
     );
   }
   hightLightingText(currentWord: any, x: number, y: number) {
-    const padding = 10;
-    this.ctxText.font = '48px serif';
-    let currentX = x;
+    const padding = this.storyType === '1' ? 20 : 10;
+    this.ctxText.font = this.font;
+    let currentX = x - x / 3;
     for (let i = 0; i < this.syncText.length; i++) {
       const word = this.syncText[i].w;
+      if (
+        currentX >= this.width_device / 2 - x / 3 + 350 &&
+        this.storyType === '1'
+      ) {
+        currentX = this.width_device / 2 - x / 3;
+        y += 70;
+      }
       this.ctxText.fillStyle = 'black';
-      if (this.syncText[i].w === currentWord.w) this.ctxText.fillStyle = 'red';
+      if (this.syncText[i].s === currentWord.s) this.ctxText.fillStyle = 'red';
       this.ctxText.fillText(word, currentX, y);
       const wordWidth = this.ctxText.measureText(word).width;
       currentX += wordWidth + padding;

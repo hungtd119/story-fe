@@ -57,6 +57,7 @@ export class StoryComponent implements OnInit {
       illustrator: ['', Validators.required],
       level: ['', Validators.required],
       coin: [0, Validators.required],
+      type: [0, Validators.required],
       image_id: ['', Validators.required],
     });
   }

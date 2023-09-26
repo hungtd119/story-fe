@@ -21,6 +21,7 @@ import { AudioService } from 'src/app/services/audio.service';
 import { ImageService } from 'src/app/services/image.service';
 import { InteractionService } from 'src/app/services/interaction.service';
 import { PositionService } from 'src/app/services/position.service';
+import { StoryService } from 'src/app/services/story.service';
 import { TextService } from 'src/app/services/text.service';
 import { loadInteractionByPageId } from 'src/app/store/Interaction/interaction.actions';
 import { selectInteractions } from 'src/app/store/Interaction/interaction.selector';

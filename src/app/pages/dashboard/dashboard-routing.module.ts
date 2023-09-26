@@ -17,7 +17,10 @@ const routes: Routes = [
       { path: 'story', component: StoryComponent },
       { path: 'story-detail/:id', component: StoryDetailComponent },
       { path: 'story-play/:id', component: StoryPlayRunComponent },
-      { path: 'story-play-page/:id', component: StoryPlayPageComponent },
+      {
+        path: 'story-play-page/:id/:storyType',
+        component: StoryPlayPageComponent,
+      },
       {
         path: 'story-config-pages/:storyId',
         component: StoryConfigPageComponent,

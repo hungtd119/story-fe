@@ -86,6 +86,7 @@ export class StoryDetailComponent implements OnInit {
         title: [story.title, [Validators.required]],
         level: [story.level, Validators.required],
         coin: [story.coin, Validators.required],
+        type: [story.type, Validators.required],
       });
       this.formStoryCreator = this.fb.group({
         id: [story.id, Validators.required],
